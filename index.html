@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunReady Smart Engine</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: #f4f7f6;
+            transition: background 0.5s;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            width: 100%;
+            transition: transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .data-row {
+            font-size: 16px;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: left;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        #final-status {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .loader {
+            font-size: 14px;
+            color: #007bff;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>🏃‍♂️ RunReady SG</h2>
+        <p style="color: #666; margin-bottom: 30px;">Run Forrest Run!!!!</p>
+
+        <button id="runBtn" onclick="startEngine()">Can I run right now?</button>
+        <div id="loading" class="loader">📍 Requesting GPS permission...</div>
+
+        <div id="step1" class="data-row"><span class="label">1. Your Location</span><span class="value"
+                id="val1">Locating...</span></div>
+        <div id="step2" class="data-row"><span class="label">2. Current Temperature</span><span class="value"
+                id="val2">Fetching...</span></div>
+        <div id="step3" class="data-row"><span class="label">3. 2-Hour Weather Condition</span><span class="value"
+                id="val3">Analyzing clouds...</span></div>
+        <div id="step4" class="data-row"><span class="label">4. Heat Stress (WBGT)</span><span class="value"
+                id="val4">Calculating...</span></div>
+        <div id="step5" class="data-row"><span class="label">5. 30-Min Projection</span><span class="value"
+                id="val5">Forecasting...</span></div>
+
+        <div id="final-status"></div>
+    </div>
+
+    <script>
+        // Helper: Artificial delay for the "thinking" UX
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // Helper: Find nearest station using simple Euclidean distance
+        function getNearest(lat, lng, metadataArray) {
+            let nearest = null;
+            let shortestDist = Infinity;
+
+            metadataArray.forEach(item => {
+                const itemLat = item.label_location ? item.label_location.latitude : item.location.latitude;
+                const itemLng = item.label_location ? item.label_location.longitude : item.location.longitude;
+                // Simple distance formula
+                const dist = Math.sqrt(Math.pow(lat - itemLat, 2) + Math.pow(lng - itemLng, 2));
+                if (dist < shortestDist) {
+                    shortestDist = dist;
+                    nearest = item;
+                }
+            });
+            return nearest;
+        }
+
+        async function showStep(id, text) {
+            const el = document.getElementById(id);
+            document.getElementById('val' + id.replace('step', '')).innerText = text;
+            el.style.display = 'block';
+            // Slight delay to allow CSS to register the display change before fading in
+            await sleep(50);
+            el.style.opacity = 1;
+            await sleep(1200); // The 1.2 second "thinking" delay
+        }
+
+        async function startEngine() {
+            document.getElementById('runBtn').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            [1, 2, 3, 4, 5].forEach(i => document.getElementById('step' + i).style.display = 'none');
+            document.getElementById('final-status').style.display = 'none';
+
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                document.getElementById('loading').innerText = "⚙️ Querying RunReady Backend...";
+                const myLat = pos.coords.latitude;
+                const myLng = pos.coords.longitude;
+
+                try {
+
+                    const backendUrl = `http://localhost:8000/api/check-run?lat=${myLat}&lng=${myLng}`;
+                    const response = await fetch(backendUrl);
+                    const result = await response.json();
+
+                    if (result.error) {
+                        alert("Backend Error: " + result.error);
+                        return;
+                    }
+
+                    document.getElementById('loading').style.display = 'none';
+
+                    // Reveal the data exactly as the backend formatted it
+                    await showStep('step1', result.data["1_location"]);
+                    await showStep('step2', result.data["2_current_temperature"]);
+                    await showStep('step3', result.data["3_weather_condition"]);
+                    await showStep('step4', result.data["4_wbgt"]);
+                    await showStep('step5', result.data["5_projection"]);
+
+                    // Final Decision
+                    const statusBox = document.getElementById('final-status');
+                    statusBox.style.display = 'block';
+                    if (result.status === "SAFE") {
+                        document.body.style.backgroundColor = "#e6f4ea";
+                        statusBox.style.backgroundColor = "#d4edda";
+                        statusBox.style.color = "#155724";
+                        statusBox.innerText = "🟢 SAFE TO RUN";
+                    } else {
+                        document.body.style.backgroundColor = "#fce8e6";
+                        statusBox.style.backgroundColor = "#f8d7da";
+                        statusBox.style.color = "#721c24";
+                        statusBox.innerText = "🔴 MODIFY OR MOVE INDOORS";
+                    }
+
+                } catch (err) {
+                    alert("Failed to connect to Python backend. Is uvicorn running?");
+                    console.error(err);
+                }
+            }, (error) => {
+                alert("You must allow location access!");
+            });
+        }
+    </script>
+</body>
+
+</html>
