@@ -25,7 +25,7 @@ We use:
 # - create necessary indexes
 
 # After that, load the data:
-python parse_park_fac_into_sql.py
+python parse_shelters_into_sql.py
 
 # NOTE:
 # This will take a few minutes to run.
