@@ -2,84 +2,65 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RunReady Smart Engine</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RunReady Shelters + Route</title>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            text-align: center;
             padding: 20px;
             background: #f4f7f6;
-            transition: background 0.5s;
+            text-align: center;
         }
 
         .card {
             background: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-            max-width: 400px;
-            margin: 0 auto;
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
 
         button {
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
+            padding: 14px;
+            width: 100%;
+            border-radius: 40px;
+            border: none;
             background: #ff6b6b;
             color: white;
-            border: none;
-            border-radius: 50px;
-            width: 100%;
-            transition: transform 0.1s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .data-row {
+            font-weight: bold;
             font-size: 16px;
-            margin: 15px 0;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            text-align: left;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s;
+            cursor: pointer;
         }
 
-        .label {
-            font-size: 12px;
-            color: #6c757d;
-            text-transform: uppercase;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #212529;
-        }
-
-        #final-status {
-            font-size: 24px;
-            font-weight: bold;
+        #map {
+            height: 400px;
             margin-top: 20px;
-            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .shelter {
+            background: #f8f9fa;
+            margin-top: 10px;
+            padding: 12px;
             border-radius: 10px;
-            display: none;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .shelter:hover {
+            background: #e9ecef;
         }
 
         .loader {
-            font-size: 14px;
-            color: #007bff;
             margin-top: 10px;
+            color: #007bff;
             display: none;
         }
     </style>
@@ -87,114 +68,114 @@
 
 <body>
 
-    <div class="card">
-        <h2>🏃‍♂️ RunReady SG</h2>
-        <p style="color: #666; margin-bottom: 30px;">Run Forrest Run!!!!</p>
+<div class="card">
+    <h2>🏃‍♂️ RunReady SG</h2>
+    <p>Find shelters & navigate to them</p>
 
-        <button id="runBtn" onclick="startEngine()">Can I run right now?</button>
-        <div id="loading" class="loader">📍 Requesting GPS permission...</div>
+    <button onclick="findShelters()">Find Nearby Shelters</button>
+    <div class="loader" id="loading">📍 Getting location...</div>
 
-        <div id="step1" class="data-row"><span class="label">1. Your Location</span><span class="value"
-                id="val1">Locating...</span></div>
-        <div id="step2" class="data-row"><span class="label">2. Current Temperature</span><span class="value"
-                id="val2">Fetching...</span></div>
-        <div id="step3" class="data-row"><span class="label">3. 2-Hour Weather Condition</span><span class="value"
-                id="val3">Analyzing clouds...</span></div>
-        <div id="step4" class="data-row"><span class="label">4. Heat Stress (WBGT)</span><span class="value"
-                id="val4">Calculating...</span></div>
-        <div id="step5" class="data-row"><span class="label">5. 30-Min Projection</span><span class="value"
-                id="val5">Forecasting...</span></div>
+    <div id="results"></div>
 
-        <div id="final-status"></div>
-    </div>
+    <div id="map"></div>
+</div>
 
-    <script>
-        // Helper: Artificial delay for the "thinking" UX
-        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+<script>
+const API_BASE = "http://localhost:8000";
 
-        // Helper: Find nearest station using simple Euclidean distance
-        function getNearest(lat, lng, metadataArray) {
-            let nearest = null;
-            let shortestDist = Infinity;
+let map;
+let userMarker;
+let routeLayer;
 
-            metadataArray.forEach(item => {
-                const itemLat = item.label_location ? item.label_location.latitude : item.location.latitude;
-                const itemLng = item.label_location ? item.label_location.longitude : item.location.longitude;
-                // Simple distance formula
-                const dist = Math.sqrt(Math.pow(lat - itemLat, 2) + Math.pow(lng - itemLng, 2));
-                if (dist < shortestDist) {
-                    shortestDist = dist;
-                    nearest = item;
-                }
-            });
-            return nearest;
-        }
+// Init map
+function initMap(lat, lng) {
+    if (map) map.remove();
 
-        async function showStep(id, text) {
-            const el = document.getElementById(id);
-            document.getElementById('val' + id.replace('step', '')).innerText = text;
-            el.style.display = 'block';
-            // Slight delay to allow CSS to register the display change before fading in
-            await sleep(50);
-            el.style.opacity = 1;
-            await sleep(1200); // The 1.2 second "thinking" delay
-        }
+    map = L.map('map').setView([lat, lng], 14);
 
-        async function startEngine() {
-            document.getElementById('runBtn').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-            [1, 2, 3, 4, 5].forEach(i => document.getElementById('step' + i).style.display = 'none');
-            document.getElementById('final-status').style.display = 'none';
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
 
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                document.getElementById('loading').innerText = "⚙️ Querying RunReady Backend...";
-                const myLat = pos.coords.latitude;
-                const myLng = pos.coords.longitude;
+    userMarker = L.marker([lat, lng]).addTo(map)
+        .bindPopup("You are here")
+        .openPopup();
+}
 
-                try {
+// Draw route
+function drawRoute(geometry) {
+    if (routeLayer) {
+        map.removeLayer(routeLayer);
+    }
 
-                    const backendUrl = `http://localhost:8000/api/check-run?lat=${myLat}&lng=${myLng}`;
-                    const response = await fetch(backendUrl);
-                    const result = await response.json();
+    const coords = geometry.coordinates.map(c => [c[1], c[0]]);
 
-                    if (result.error) {
-                        alert("Backend Error: " + result.error);
-                        return;
-                    }
+    routeLayer = L.polyline(coords, {
+        weight: 5
+    }).addTo(map);
 
-                    document.getElementById('loading').style.display = 'none';
+    map.fitBounds(routeLayer.getBounds());
+}
 
-                    // Reveal the data exactly as the backend formatted it
-                    await showStep('step1', result.data["1_location"]);
-                    await showStep('step2', result.data["2_current_temperature"]);
-                    await showStep('step3', result.data["3_weather_condition"]);
-                    await showStep('step4', result.data["4_wbgt"]);
-                    await showStep('step5', result.data["5_projection"]);
+// Add shelter marker
+function addShelterMarker(lat, lng, name) {
+    L.marker([lat, lng]).addTo(map)
+        .bindPopup(name);
+}
 
-                    // Final Decision
-                    const statusBox = document.getElementById('final-status');
-                    statusBox.style.display = 'block';
-                    if (result.status === "SAFE") {
-                        document.body.style.backgroundColor = "#e6f4ea";
-                        statusBox.style.backgroundColor = "#d4edda";
-                        statusBox.style.color = "#155724";
-                        statusBox.innerText = "🟢 SAFE TO RUN";
-                    } else {
-                        document.body.style.backgroundColor = "#fce8e6";
-                        statusBox.style.backgroundColor = "#f8d7da";
-                        statusBox.style.color = "#721c24";
-                        statusBox.innerText = "🔴 MODIFY OR MOVE INDOORS";
-                    }
+// Fetch shelters
+async function findShelters() {
+    document.getElementById("loading").style.display = "block";
 
-                } catch (err) {
-                    alert("Failed to connect to Python backend. Is uvicorn running?");
-                    console.error(err);
-                }
-            }, (error) => {
-                alert("You must allow location access!");
-            });
-        }
-    </script>
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        initMap(lat, lng);
+
+        const res = await fetch(`${API_BASE}/api/nearby-shelters?lat=${lat}&lng=${lng}`);
+        const data = await res.json();
+
+        document.getElementById("loading").style.display = "none";
+
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+
+        data.data.items.forEach(shelter => {
+            const div = document.createElement("div");
+            div.className = "shelter";
+
+            div.innerHTML = `
+                <strong>${shelter.name}</strong><br/>
+                Distance: ${shelter.distance_m} m
+            `;
+
+            // CLICK → GET ROUTE
+            div.onclick = () => getRoute(lat, lng, shelter);
+
+            resultsDiv.appendChild(div);
+
+            // add marker
+            addShelterMarker(shelter.lat, shelter.lon, shelter.name);
+        });
+
+    }, () => {
+        alert("Location permission required!");
+    });
+}
+
+// Fetch route
+async function getRoute(userLat, userLng, shelter) {
+
+    const url = `${API_BASE}/api/route-to-shelter?user_lat=${userLat}&user_lng=${userLng}&shelter_lat=${shelter.lat}&shelter_lng=${shelter.lon}&shelter_name=${encodeURIComponent(shelter.name)}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    drawRoute(data.data.route.geometry);
+}
+
+</script>
+
 </body>
-
 </html>
