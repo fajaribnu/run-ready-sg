@@ -2,7 +2,6 @@
 
 This guide explains how to run the RunReady SG prototype, which now includes:
 
-- 🌦️ Run Decision Engine (weather-based safety check)  
 - 🏠 Nearby Shelter Finder + Navigation (PostGIS + routing + map)
 
 We use:
@@ -12,143 +11,91 @@ We use:
 
 ---
 
-### 1. Start the Backend
+### 1. Database Setup (PostgreSQL + PostGIS)
 
-The backend is responsible for:
-- Fetching real-time weather data (data.gov.sg)
-- Querying nearby shelters using PostGIS
-- Generating routes using a routing engine (OSRM)
+# Create a PostgreSQL database (e.g. "run-ready") using your preferred method
+# (pgAdmin, psql, or any GUI)
 
-#### Prerequisites
-- Python 3 installed  
-- PostgreSQL with PostGIS enabled  
-- data.gov.sg API key  
+# Then run the provided SQL script:
+# sql_script.sql
 
-#### Setup
+# This script will:
+# - enable PostGIS extension
+# - create the facilities table
+# - create necessary indexes
 
-Install dependencies:
-pip install fastapi uvicorn requests psycopg2-binary
+# After that, load the data:
+python parse_park_fac_into_sql.py
 
-#### Configure
+# NOTE:
+# This will take a few minutes to run.
+---
 
-In main.py:
-- Add your data.gov.sg API key
-- Set your PostgreSQL DB config
+### 2. Start the Backend
 
-Example:
-DB_CONFIG = {
-    "host": "...",
-    "dbname": "...",
-    "user": "...",
-    "password": "...",
-    "port": ...
-}
+# Install dependencies
+pip install -r requirements.txt
 
-#### Run backend
+# Configure DB + API key inside main.py
 
+# Run backend
 uvicorn main:app --reload
 
-Backend runs at:
-http://localhost:8000
+# Backend runs at:
+# http://localhost:8000
 
 ---
 
-### 2. Start the Frontend
+### 3. Start the Frontend
 
+# From folder containing index.html
 python3 -m http.server 8001
 
-Then open:
-http://localhost:8001
+# Open in browser:
+# http://localhost:8001
 
 ---
 
-### 3. Features Overview
+### 4. Overview
 
 ---
 
-## 🌦️ Feature 1: Can I Run?
+## 🏠 Feature: Find Nearby Shelters + Route
 
-### Step 1: Capture User Location
-The browser requests GPS coordinates (latitude, longitude).
+# Step 1: Capture user location
 
-### Step 2: Fetch Live Weather Data
-Backend calls:
-- Air Temperature API  
-- 2-Hour Forecast API  
-- WBGT (Heat Stress) API  
+# Step 2: PostGIS query:
+# - ST_DWithin → filter within 5km
+# - ST_Distance → compute distance
+# - ORDER BY → nearest first
 
-### Step 3: Spatial Matching
-The backend finds the nearest weather station to the user using distance calculation.
+# Step 3: Return top 10 shelters
 
-### Step 4: Decision Rules
-- Rain → unsafe  
-- WBGT > 32°C → unsafe  
+# Step 4: User selects shelter
 
-### Step 5: Output
-Returns:
-- SAFE (green)  
-- WARNING (red)  
-- with explanation  
+# Step 5: Backend calls OSRM:
+# user → shelter route
+
+# Step 6: Frontend (Leaflet):
+# - display markers
+# - draw route
 
 ---
 
-## 🏠 Feature 2: Nearby Shelters + Route (NEW)
+### 🧠 Architecture
 
-### Step 1: Capture User Location
-User clicks “Find Nearby Shelters”, browser provides GPS coordinates.
-
-### Step 2: Query PostGIS (Spatial Database)
-
-The backend uses:
-- ST_DWithin → filter shelters within 5km  
-- ST_Distance → compute distance  
-- ORDER BY → get nearest shelters  
-
-This enables efficient spatial querying.
-
-### Step 3: Return Top Shelters
-Backend returns:
-- Top 10 nearest shelters  
-- Distance to each shelter  
-
-### Step 4: User Selection (Frontend)
-User clicks on a shelter from the list.
-
-### Step 5: Route Generation
-Backend calls routing engine (OSRM):
-
-User → Shelter path (walking route)
-
-Returns:
-- route geometry (polyline)
-- distance
-- estimated duration
-
-### Step 6: Map Visualization
-Frontend (Leaflet):
-- shows user marker  
-- shows shelter markers  
-- draws route  
-
----
-
-### 🧠 Key Architecture Insight
-
-- data.gov.sg API → weather data  
-- PostGIS → spatial queries (nearest shelters)  
-- OSRM → routing (actual path)  
-- Leaflet → visualization  
+# PostgreSQL/PostGIS → spatial query
+# OSRM → routing
+# Leaflet → visualization
 
 ---
 
 ### 🚀 Summary
 
-The system combines:
-- real-time weather intelligence  
-- geospatial querying  
-- route planning  
-- interactive map UI  
+# Combines:
+# - geospatial querying
+# - routing
+# - map UI
 
-to help users:
-- decide whether to run  
-- and navigate to nearby shelters if needed  
+# Helps users:
+# - navigate to nearest shelter
