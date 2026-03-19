@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  # PostgreSQL + PostGIS database
+  db:
+    image: postgis/postgis:15-3.4
+    container_name: runready-db
+    environment:
+      POSTGRES_DB: runready
+      POSTGRES_USER: runready_user
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Auto-run schema on first startup
+      - ../database/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U runready_user -d runready"]
+      interval: 5s
+      retries: 5
+
+  # FastAPI backend
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: runready-backend
+    env_file:
+      - ../backend/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    # For local dev, mount source code for hot reload
+    volumes:
+      - ../backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  pgdata:

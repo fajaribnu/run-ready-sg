@@ -1,0 +1,8 @@
+# RunReady SG — Cron Jobs
+# Install: crontab infra/crontab (on EC2 instance)
+
+# Ingest weather data every 15 minutes
+*/15 * * * * cd /home/ubuntu/run-ready-sg/backend && /usr/bin/python3 -m ingestion.ingest_weather >> /var/log/runready/ingestion.log 2>&1
+
+# Check alert subscriptions every 15 minutes (after ingestion)
+*/15 * * * * sleep 60 && curl -s http://localhost:8000/api/alerts/check >> /var/log/runready/alerts.log 2>&1
