@@ -5,10 +5,12 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    host: "0.0.0.0",
     port: 5173,
+    allowedHosts: [
+      "vitriolic-parsimoniously-melodi.ngrok-free.dev"
+    ],
     proxy: {
-      // Proxy /api requests to FastAPI backend during local dev
-      // This avoids CORS issues without the backend needing allow_origins=["*"]
       "/api": {
         target: "http://localhost:8000",
         changeOrigin: true,
