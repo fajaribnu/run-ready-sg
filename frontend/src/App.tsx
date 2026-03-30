@@ -1,35 +1,77 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { TopBar } from './components/TopBar';
-import { BottomNav } from './components/BottomNav';
-import { HomeView } from './components/HomeView';
-import { ShelterView } from './components/ShelterView';
-import { RouteView } from './components/RouteView';
-import { TimeView } from './components/TimeView';
-import { type Tab } from './types';
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { TopBar } from "./components/TopBar";
+import { BottomNav } from "./components/BottomNav";
+import { HomeView } from "./components/HomeView";
+import { ShelterView } from "./components/ShelterView";
+import { RouteView } from "./components/RouteView";
+import { TimeView } from "./components/TimeView";
+import { getCurrentPosition, checkRun } from "./services/api";
+import { type Tab } from "./types";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('home');
+  const [activeTab, setActiveTab] = useState<Tab>("home");
+
+  const [runCheckLoading, setRunCheckLoading] = useState(false);
+  const [runCheckResult, setRunCheckResult] = useState(null);
+
+  const handleCheckRunNow = async () => {
+    setRunCheckLoading(true);
+
+    try {
+      const pos = await getCurrentPosition();
+      const result = await checkRun(pos.lat, pos.lng);
+      setRunCheckResult(result);
+    } catch (err) {
+      console.error("Failed to check run condition:", err);
+
+      const fallbackLat = 1.35;
+      const fallbackLng = 103.82;
+
+      try {
+        const result = await checkRun(fallbackLat, fallbackLng);
+        setRunCheckResult(result);
+      } catch (fallbackErr) {
+        console.error("Fallback check also failed:", fallbackErr);
+      }
+    } finally {
+      setRunCheckLoading(false);
+    }
+  };
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'home':
-        return <HomeView onNavigate={setActiveTab} />;
-      case 'shelter':
+      case "home":
+        return (
+          <HomeView
+            onNavigate={setActiveTab}
+            loading={runCheckLoading}
+            runResult={runCheckResult}
+            onCheckRunNow={handleCheckRunNow}
+          />
+        );
+      case "shelter":
         return <ShelterView />;
-      case 'route':
+      case "route":
         return <RouteView />;
-      case 'time':
+      case "time":
         return <TimeView />;
       default:
-        return <HomeView onNavigate={setActiveTab} />;
+        return (
+          <HomeView
+            onNavigate={setActiveTab}
+            loading={runCheckLoading}
+            runResult={runCheckResult}
+            onCheckRunNow={handleCheckRunNow}
+          />
+        );
     }
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <TopBar activeTab={activeTab} />
-      
+
       <main className="flex-1 px-6 pt-4 overflow-x-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -45,9 +87,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Spacer for floating nav */}
       <div className="h-32" />
-      
+
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );

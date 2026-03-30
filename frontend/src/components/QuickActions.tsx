@@ -1,4 +1,5 @@
 import { Umbrella, Map as MapIcon, Clock, ChevronRight } from "lucide-react";
+import { type Tab } from "../types";
 
 const actions = [
   { label: "Find Shelter", icon: Umbrella, tab: "shelter" },
@@ -7,7 +8,7 @@ const actions = [
 ];
 
 type QuickActionsProps = {
-  onNavigate: (tab: "home" | "shelter" | "route" | "time") => void;
+  onNavigate: (tab: Tab) => void;
 };
 
 export default function QuickActions({ onNavigate }: QuickActionsProps) {

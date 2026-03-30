@@ -32,7 +32,6 @@ export default function RunStatusCard({ result }) {
             <AlertTriangle
               size={48}
               className="text-on-error-container"
-              fill="currentColor"
             />
           )}
         </div>
@@ -74,7 +73,7 @@ export default function RunStatusCard({ result }) {
             {data.reasons.map((reason) => (
                 <p
                 key={reason}
-                className="text-sm text-on-error-container/80 text-center leading-snug"
+                className="text-xs font-bold text-on-error-container/80 text-center leading-snug"
                 >
                 • {reason}
                 </p>

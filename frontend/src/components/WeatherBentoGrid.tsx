@@ -48,10 +48,6 @@ function getHeatStressText(data: any) {
       return "Heat levels are high. Consider delaying or seeking shelter.";
     }
 
-    if (wbgtValue >= 28) {
-      return "Moderate heat. Stay hydrated and take breaks.";
-    }
-
     return "Conditions look comfortable for outdoor activity.";
   }
 
