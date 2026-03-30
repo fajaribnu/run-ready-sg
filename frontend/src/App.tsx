@@ -14,7 +14,7 @@ export default function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return <HomeView />;
+        return <HomeView onNavigate={setActiveTab} />;
       case 'shelter':
         return <ShelterView />;
       case 'route':
@@ -22,7 +22,7 @@ export default function App() {
       case 'time':
         return <TimeView />;
       default:
-        return <HomeView />;
+        return <HomeView onNavigate={setActiveTab} />;
     }
   };
 
