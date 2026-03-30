@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
-import HomeHero from "./HomeHero";
-import RunStatusCard from "./RunStatusCard";
-import WeatherBentoGrid from "./WeatherBentoGrid";
-import QuickActions from "./QuickActions";
+import HomeHero from "../components/CheckRun";
+import RunStatusCard from "../components/RunStatusCard";
+import WeatherBentoGrid from "../components/WeatherBentoGrid";
+import QuickActions from "../components/QuickActions";
 import { type Tab } from "../types";
 
 type HomeViewProps = {

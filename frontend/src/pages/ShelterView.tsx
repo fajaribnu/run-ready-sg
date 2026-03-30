@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { AlertCircle, X } from "lucide-react";
 import polyline from "@mapbox/polyline";
-import ShelterControls from "./ShelterControls";
-import ShelterBottomSheet from "./ShelterBottomSheet";
+import ShelterControls from "../components/ShelterControls";
+import ShelterBottomSheet from "../components/ShelterBottomSheet";
 import { findShelter, getCurrentPosition } from "../services/api";
 import useLeafletMap from "../map/useLeafletMap";
 
@@ -192,13 +192,12 @@ export const ShelterView = () => {
   };
 
   const onExitNavigation = () => {
-    setNavigationMode(false);
-    setRouteGeoJson(null);
-    setAutoFollowUser(false);
-    setShowRecenter(true);
     showWholeRoute?.();
+    setNavigationMode(false);
+    setAutoFollowUser(false);
+    setShowRecenter(false);
+    setRouteGeoJson(null);
 
-    // restore the shelter-picking mode
     if (shelters.length > 0) {
       setSelectedShelter((prev) => prev ?? shelters[0]);
     }
@@ -217,17 +216,32 @@ export const ShelterView = () => {
         showRecenter={showRecenter}
       />
 
-      <ShelterBottomSheet
-        navigationMode={navigationMode}
-        shelterName={
-          selectedShelter?.name ??
-          (loading ? "Finding nearby shelters..." : "No shelter selected")
-        }
-        distanceM={selectedShelter?.distance_m ?? 0}
-        durationMin={selectedShelter?.walk_time_min ?? 0}
-        onNavigate={onNavigate}
-        onExitNavigation={onExitNavigation}
-      />
+      {!navigationMode && (
+        <ShelterBottomSheet
+          navigationMode={navigationMode}
+          shelterName={
+            selectedShelter?.name ??
+            (loading ? "Finding nearby shelters..." : "No shelter selected")
+          }
+          distanceM={selectedShelter?.distance_m ?? 0}
+          durationMin={selectedShelter?.walk_time_min ?? 0}
+          onNavigate={onNavigate}
+          onExitNavigation={onExitNavigation}
+          isShelterReady={shelters.length > 0 && selectedShelter != null}
+        />
+      )}
+
+      {navigationMode && (
+        <div className="absolute bottom-6 left-1/2 z-40 -translate-x-1/2">
+          <button
+            onClick={onExitNavigation}
+            className="flex items-center justify-center gap-2 rounded-full bg-surface-container-lowest px-6 py-4 font-bold text-on-surface shadow-lg transition-all hover:bg-surface-container-high active:scale-95"
+          >
+            <X size={20} />
+            Exit Navigation
+          </button>
+        </div>
+      )}
 
       {popup.open && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/30 px-6">

@@ -5,7 +5,18 @@ import {
   Footprints,
   Share2,
   XCircle,
+  Loader2,
 } from "lucide-react";
+
+type ShelterBottomSheetProps = {
+  navigationMode?: boolean;
+  shelterName?: string;
+  distanceM?: number;
+  durationMin?: number;
+  onNavigate: () => void;
+  onExitNavigation: () => void;
+  isShelterReady: boolean;
+};
 
 export default function ShelterBottomSheet({
   navigationMode = false,
@@ -14,7 +25,8 @@ export default function ShelterBottomSheet({
   durationMin = 5,
   onNavigate,
   onExitNavigation,
-}) {
+  isShelterReady,
+}: ShelterBottomSheetProps) {
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
@@ -22,7 +34,7 @@ export default function ShelterBottomSheet({
       transition={{ delay: 0.2 }}
       className="absolute bottom-6 left-4 right-4 z-40"
     >
-      <div className="border border-outline-variant/10 bg-surface-container-lowest rounded-3xl p-6 shadow-[0_20px_50px_rgba(0,94,83,0.12)]">
+      <div className="rounded-3xl border border-outline-variant/10 bg-surface-container-lowest p-6 shadow-[0_20px_50px_rgba(0,94,83,0.12)]">
         <div className="mx-auto mb-6 h-1.5 w-12 rounded-full bg-surface-container-high"></div>
 
         {!navigationMode ? (
@@ -76,10 +88,20 @@ export default function ShelterBottomSheet({
             <div className="flex gap-3">
               <button
                 onClick={onNavigate}
-                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-4 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
+                disabled={!isShelterReady}
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-4 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                <Navigation size={20} fill="currentColor" />
-                Navigate Now
+                {isShelterReady ? (
+                  <>
+                    <Navigation size={20} fill="currentColor" />
+                    Navigate Now
+                  </>
+                ) : (
+                  <>
+                    <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
+                    Finding Shelter...
+                  </>
+                )}
               </button>
             </div>
           </>

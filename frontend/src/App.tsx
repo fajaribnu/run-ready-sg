@@ -2,10 +2,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { TopBar } from "./components/TopBar";
 import { BottomNav } from "./components/BottomNav";
-import { HomeView } from "./components/HomeView";
-import { ShelterView } from "./components/ShelterView";
-import { RouteView } from "./components/RouteView";
-import { TimeView } from "./components/TimeView";
+import { HomeView } from "./pages/HomeView";
+import { ShelterView } from "./pages/ShelterView";
+import { RouteView } from "./pages/RouteView";
+import { TimeView } from "./pages/TimeView";
 import { getCurrentPosition, checkRun } from "./services/api";
 import { type Tab } from "./types";
 

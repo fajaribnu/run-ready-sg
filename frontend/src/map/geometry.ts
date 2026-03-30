@@ -1,4 +1,20 @@
-export function getHeadingDegrees(from, to) {
+type LatLng = [number, number];
+
+type Geometry =
+  | {
+      type: "LineString";
+      coordinates: [number, number][];
+    }
+  | {
+      type: "MultiLineString";
+      coordinates: [number, number][][];
+    };
+
+type FeatureLike = {
+  geometry?: Geometry | null;
+};
+
+export function getHeadingDegrees(from: LatLng, to: LatLng): number {
   const lat1 = (from[0] * Math.PI) / 180;
   const lon1 = (from[1] * Math.PI) / 180;
   const lat2 = (to[0] * Math.PI) / 180;
@@ -11,11 +27,11 @@ export function getHeadingDegrees(from, to) {
     Math.cos(lat1) * Math.sin(lat2) -
     Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
 
-  let bearing = (Math.atan2(y, x) * 180) / Math.PI;
+  const bearing = (Math.atan2(y, x) * 180) / Math.PI;
   return (bearing + 360) % 360;
 }
 
-export function getFeatureCoords(feature) {
+export function getFeatureCoords(feature: FeatureLike): LatLng[] {
   if (!feature?.geometry) return [];
 
   const geom = feature.geometry;
@@ -31,13 +47,16 @@ export function getFeatureCoords(feature) {
   return [];
 }
 
-export function squaredDistance(a, b) {
+export function squaredDistance(a: LatLng, b: LatLng): number {
   const dx = a[0] - b[0];
   const dy = a[1] - b[1];
   return dx * dx + dy * dy;
 }
 
-export function findNearestRoutePoint(latlng, feature) {
+export function findNearestRoutePoint(
+  latlng: LatLng,
+  feature: FeatureLike
+): LatLng | null {
   const coords = getFeatureCoords(feature);
   if (!coords.length) return null;
 
@@ -55,9 +74,14 @@ export function findNearestRoutePoint(latlng, feature) {
   return nearest;
 }
 
-export function getRouteHeading(lat, lng, feature, fallback = 0) {
+export function getRouteHeading(
+  lat: number,
+  lng: number,
+  feature: FeatureLike,
+  fallback = 0
+): number {
   const coords = getFeatureCoords(feature);
-  if (!coords.length || coords.length < 2) return fallback;
+  if (coords.length < 2) return fallback;
 
   let nearestIdx = 0;
   let best = Infinity;

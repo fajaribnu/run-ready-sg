@@ -1,10 +1,32 @@
 import React, { useEffect, useRef } from "react";
-import L, { LatLngExpression, Map as LeafletMap, LayerGroup, Marker, Polyline } from "leaflet";
+import L, {
+  LatLngExpression,
+  Map as LeafletMap,
+  LayerGroup,
+  Marker,
+  Polyline,
+} from "leaflet";
 import { findNearestRoutePoint } from "./geometry";
-import type { Feature, FeatureCollection, LineString, MultiLineString } from "geojson";
+import type {
+  Feature,
+  FeatureCollection,
+  LineString,
+  MultiLineString,
+} from "geojson";
+
+import { renderToStaticMarkup } from "react-dom/server";
+import { Umbrella } from "lucide-react";
+
+/* =========================================================
+ * MAP CONSTANTS
+ * ======================================================= */
 
 const ROUTE_OVERVIEW_PADDING: L.PointTuple = [20, 20];
 const NAV_ZOOM = 19;
+
+/* =========================================================
+ * TYPES
+ * ======================================================= */
 
 type UserPosition = {
   lat: number;
@@ -23,7 +45,6 @@ type Shelter = {
 };
 
 type RouteFeature = Feature<LineString | MultiLineString>;
-
 type RouteGeoJson = FeatureCollection<LineString | MultiLineString>;
 
 type UseLeafletMapParams = {
@@ -68,6 +89,44 @@ type AnimatePolylineResult = {
   cancel: () => void;
 } | null;
 
+/* =========================================================
+ * ROUTE GEOMETRY / MATH HELPERS
+ * =======================================================
+ * These helpers are shared by route rendering and
+ * navigation-progress updates.
+ * ======================================================= */
+/* =========================================================
+ * ROUTE GEOMETRY / MATH HELPERS
+ * =======================================================
+ * These helpers convert route data into map-friendly coordinates
+ * and compute progress along a route.
+ *
+ * In this file:
+ * - GeoJSON route coordinates are stored as [lng, lat]
+ * - Leaflet / our route math usually works with [lat, lng]
+ * So several helpers below are mainly about converting formats
+ * and measuring distance along the route.
+ * ======================================================= */
+
+/**
+ * Project a user point onto one route segment AB.
+ *
+ * Why:
+ * If the user is near a route, they are usually not exactly on one of the
+ * route's stored points. This function finds the closest point on the line
+ * segment between A and B.
+ *
+ * Output:
+ * - t: how far along segment AB the projected point is
+ *      0   = exactly at A
+ *      1   = exactly at B
+ *      0.5 = halfway between A and B
+ * - latlng: the snapped point on the segment
+ *
+ * Used for:
+ * - finding where the user currently is along the route
+ * - updating completed route progress smoothly
+ */
 function projectPointToSegment(point: L.LatLng, a: L.LatLng, b: L.LatLng) {
   const px = point.lng;
   const py = point.lat;
@@ -96,6 +155,22 @@ function projectPointToSegment(point: L.LatLng, a: L.LatLng, b: L.LatLng) {
   };
 }
 
+/**
+ * Build cumulative distance information for a route.
+ *
+ * Example:
+ * If a route has points P0 -> P1 -> P2, this returns:
+ * cumulative = [0, distance(P0,P1), distance(P0,P1)+distance(P1,P2)]
+ *
+ * Why:
+ * This lets us convert "which segment am I on?" into
+ * "how many meters along the full route am I?"
+ *
+ * Used for:
+ * - route animation
+ * - completed route progress
+ * - finish detection
+ */
 function buildRouteMetrics(latlngs: [number, number][]) {
   const cumulative = [0];
   let total = 0;
@@ -110,7 +185,27 @@ function buildRouteMetrics(latlngs: [number, number][]) {
   return { cumulative, total };
 }
 
-function getNearestProgressOnRoute(latlngs: [number, number][], point: [number, number]) {
+/**
+ * Find the user's nearest progress point on the route.
+ *
+ * What it does:
+ * - checks every route segment
+ * - projects the user onto each segment
+ * - picks the closest projected point
+ *
+ * Returns:
+ * - distanceToUser: how far the user is from the route
+ * - distanceAlongRoute: how many meters from route start to that snapped point
+ * - snappedLatLng: the nearest point on the route itself
+ *
+ * Why:
+ * We need a stable "progress along route" value, not just nearest vertex.
+ * This makes the blue completed-route overlay advance smoothly.
+ */
+function getNearestProgressOnRoute(
+  latlngs: [number, number][],
+  point: [number, number]
+) {
   if (!latlngs || latlngs.length < 2) return null;
 
   const { cumulative } = buildRouteMetrics(latlngs);
@@ -131,7 +226,8 @@ function getNearestProgressOnRoute(latlngs: [number, number][], point: [number, 
     const distanceToUser = snapped.distanceTo(userPoint);
     const segmentLength = a.distanceTo(b);
 
-    const distanceAlongRoute = cumulative[i - 1] + segmentLength * projection.t;
+    const distanceAlongRoute =
+      cumulative[i - 1] + segmentLength * projection.t;
 
     if (!best || distanceToUser < best.distanceToUser) {
       best = {
@@ -145,7 +241,21 @@ function getNearestProgressOnRoute(latlngs: [number, number][], point: [number, 
   return best;
 }
 
-function splitRouteByDistance(latlngs: [number, number][], targetDistance: number) {
+/**
+ * Keep only the completed part of the route up to a target distance.
+ *
+ * Example:
+ * If the full route is 1000m and the user has completed 420m,
+ * this returns route points only up to 420m.
+ *
+ * Why:
+ * The completed-route polyline should stop where the user currently is,
+ * not always draw the entire route.
+ */
+function splitRouteByDistance(
+  latlngs: [number, number][],
+  targetDistance: number
+) {
   if (!latlngs.length) return { done: [], remaining: [] as [number, number][] };
   if (latlngs.length === 1) {
     return { done: [latlngs[0]], remaining: [latlngs[0]] };
@@ -154,15 +264,11 @@ function splitRouteByDistance(latlngs: [number, number][], targetDistance: numbe
   const { cumulative, total } = buildRouteMetrics(latlngs);
 
   if (targetDistance <= 0) {
-    return {
-      done: [latlngs[0]],
-    };
+    return { done: [latlngs[0]] };
   }
 
   if (targetDistance >= total) {
-    return {
-      done: latlngs,
-    };
+    return { done: latlngs };
   }
 
   const done: [number, number][] = [latlngs[0]];
@@ -195,112 +301,27 @@ function splitRouteByDistance(latlngs: [number, number][], targetDistance: numbe
   return { done };
 }
 
-function createArrowIcon(heading = 0) {
-  const radius = 40;
-  const spread = 50;
-
-  const start = (-spread / 2) * (Math.PI / 180);
-  const end = (spread / 2) * (Math.PI / 180);
-
-  const x1 = radius * Math.cos(start);
-  const y1 = radius * Math.sin(start);
-  const x2 = radius * Math.cos(end);
-  const y2 = radius * Math.sin(end);
-
-  const path = `
-    M 0 0
-    L ${x1} ${y1}
-    A ${radius} ${radius} 0 0 1 ${x2} ${y2}
-    Z
-  `;
-
-  return L.divIcon({
-    className: "custom-user-dot-icon",
-    html: `
-      <div style="
-        position: relative;
-        width: 24px;
-        height: 24px;
-      ">
-        <svg
-          width="${radius * 2}"
-          height="${radius * 2}"
-          viewBox="${-radius} ${-radius} ${radius * 2} ${radius * 2}"
-          style="
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) rotate(${heading}deg);
-            pointer-events: none;
-          "
-        >
-          <path
-            d="${path}"
-            fill="rgba(59,130,246,0.25)"
-          />
-        </svg>
-
-        <div style="
-          position: absolute;
-          inset: 0;
-          border-radius: 50%;
-          background: #2f80ff;
-          border: 3px solid white;
-          box-shadow: 0 1px 6px rgba(0,0,0,0.28);
-        "></div>
-      </div>
-    `,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
-  });
-}
-
-function createShelterIcon(isSelected = false, label = "") {
-  return L.divIcon({
-    className: "custom-shelter-marker",
-    html: `
-      <div style="display:flex; flex-direction:column; align-items:center;">
-        <div style="
-          width: 40px;
-          height: 40px;
-          border-radius: 16px;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:${isSelected ? "#005e53" : "#ffffff"};
-          color:${isSelected ? "#ffffff" : "#005e53"};
-          border:2px solid #005e53;
-          box-shadow:0 8px 20px rgba(0,0,0,0.18);
-          font-size:20px;
-          transform:${isSelected ? "scale(1.08)" : "scale(1)"};
-          transition:all 0.2s ease;
-        ">
-          ☂
-        </div>
-        ${
-          label
-            ? `<div style="
-                margin-top:6px;
-                padding:4px 10px;
-                border-radius:999px;
-                background:#ffffff;
-                color:#005e53;
-                font-size:10px;
-                font-weight:700;
-                box-shadow:0 2px 8px rgba(0,0,0,0.12);
-                white-space:nowrap;
-              ">${label}</div>`
-            : ""
-        }
-      </div>
-    `,
-    iconSize: [40, 52],
-    iconAnchor: [20, 20],
-    popupAnchor: [0, -20],
-  });
-}
-
-function getLatLngsFromFeature(feature: RouteFeature | null | undefined): [number, number][] {
+/**
+ * Convert one GeoJSON route feature into Leaflet-friendly coordinates.
+ *
+ * IMPORTANT:
+ * GeoJSON stores coordinates as [lng, lat]
+ * but Leaflet usually expects [lat, lng]
+ *
+ * So this function flips every point from:
+ *   [lng, lat] -> [lat, lng]
+ *
+ * It supports:
+ * - LineString
+ * - MultiLineString
+ *
+ * Why:
+ * Almost all route drawing / route math below expects [lat, lng].
+ * This function is the bridge between backend GeoJSON and frontend map logic.
+ */
+function getLatLngsFromFeature(
+  feature: RouteFeature | null | undefined
+): [number, number][] {
   if (!feature) return [];
 
   if (feature.geometry?.type === "LineString") {
@@ -314,10 +335,35 @@ function getLatLngsFromFeature(feature: RouteFeature | null | undefined): [numbe
   return [];
 }
 
+/**
+ * Smooth easing function for animation.
+ *
+ * Why:
+ * A route animation that moves at constant raw speed can feel robotic.
+ * This makes the line draw:
+ * - slower at the start
+ * - faster in the middle
+ * - slower near the end
+ *
+ * Used by:
+ * - initial route drawing animation
+ */
 function easeInOutCubic(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
+/**
+ * Return only the visible portion of a route up to a target distance.
+ *
+ * Similar to splitRouteByDistance, but used mainly for animation frames.
+ *
+ * Example:
+ * During animation, if we want to show only the first 35% of the route,
+ * this returns just that visible partial line.
+ *
+ * Used for:
+ * - animated route drawing on first load
+ */
 function getPartialLatLngsByDistance(
   latlngs: [number, number][],
   cumulative: number[],
@@ -359,6 +405,143 @@ function getPartialLatLngsByDistance(
   return partial;
 }
 
+/* =========================================================
+ * ICON HELPERS
+ * ======================================================= */
+
+function createArrowIcon(heading = 0) {
+  const radius = 40;
+  const spread = 50;
+
+  const start = (-spread / 2) * (Math.PI / 180);
+  const end = (spread / 2) * (Math.PI / 180);
+
+  const x1 = radius * Math.cos(start);
+  const y1 = radius * Math.sin(start);
+  const x2 = radius * Math.cos(end);
+  const y2 = radius * Math.sin(end);
+
+  const path = `
+    M 0 0
+    L ${x1} ${y1}
+    A ${radius} ${radius} 0 0 1 ${x2} ${y2}
+    Z
+  `;
+
+  return L.divIcon({
+    className: "custom-user-dot-icon",
+    html: `
+      <div style="
+        position: relative;
+        width: 24px;
+        height: 24px;
+      ">
+        <svg
+          width="${radius * 2}"
+          height="${radius * 2}"
+          viewBox="${-radius} ${-radius} ${radius * 2} ${radius * 2}"
+          style="
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(${heading}deg);
+            pointer-events: none;
+          "
+        >
+          <path d="${path}" fill="rgba(59,130,246,0.25)" />
+        </svg>
+
+        <div style="
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: #2f80ff;
+          border: 3px solid white;
+          box-shadow: 0 1px 6px rgba(0,0,0,0.28);
+        "></div>
+      </div>
+    `,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+  });
+}
+
+function createShelterIcon(isSelected = false, label = "") {
+  const iconSvg = renderToStaticMarkup(
+    React.createElement(Umbrella, {
+      size: 24,
+      color: isSelected ? "white" : "#005e53",
+      fill: "currentColor",
+      strokeWidth: 2,
+    })
+  );
+
+  return L.divIcon({
+    className: "custom-shelter-marker",
+    html: `
+      <div class="flex flex-col items-center">
+        <div
+          class="
+            w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center hover:opacity-90 transition-opacity active:scale-95
+            ${
+              isSelected
+                ? "scale-105"
+                : "bg-surface-container-lowest border border-primary/20"
+            }
+          "
+          style="${isSelected ? "" : "color:#005e53;"}"
+        >
+          ${iconSvg}
+        </div>
+
+        ${
+          label
+            ? `<div class="
+                mt-2 px-3 py-1 rounded-full shadow-sm
+                bg-surface-container-lowest text-primary
+                text-[10px] font-bold whitespace-nowrap
+              ">
+                ${label}
+              </div>`
+            : ""
+        }
+      </div>
+    `,
+    iconSize: [56, 78],
+    iconAnchor: [28, 28],
+  });
+}
+
+/* =========================================================
+ * ROUTE COLORING STATUS
+ * =======================================================
+ * Current implementation:
+ * - The route is rendered as a single continuous line
+ *   (no distinction between sheltered vs exposed segments yet)
+ * - A separate overlay is used to indicate user progress along the route
+ * - Colors are temporary placeholders and not aligned with the app theme
+ *
+ * Intended behavior:
+ * - Sheltered route segments should be visually distinct (e.g. safer color)
+ * - Exposed route segments should use a different contrasting color
+ * - All colors should eventually follow design system / theme tokens
+ *
+ * Missing pieces:
+ * 1. Data support:
+ *    - Need segment-level information indicating sheltered vs exposed areas
+ * 2. Rendering logic:
+ *    - Split the route into multiple polylines based on segment type
+ * 3. Styling:
+ *    - Replace placeholder colors with final theme-approved colors for:
+ *      • sheltered segments
+ *      • exposed segments
+ *      • completed (progress) route overlay
+ *
+ * Temporary colors (for development only):
+ * - Red-ish: route animation and base underlay
+ * - Blue: completed progress overlay
+ * ======================================================= */
+
 function animatePolylineDraw(
   group: LayerGroup,
   latlngs: [number, number][],
@@ -371,6 +554,7 @@ function animatePolylineDraw(
 ): AnimatePolylineResult {
   if (!group || latlngs.length < 2) return null;
 
+  // Dark outline below the route to help it stand out on the basemap.
   const outlineUnderlay = L.polyline(latlngs, {
     color: "#000",
     weight: 10,
@@ -378,6 +562,8 @@ function animatePolylineDraw(
     interactive: false,
   }).addTo(group);
 
+  // Temporary route underlay. This is currently one uniform color.
+  // Later this should be replaced by sheltered vs exposed segment colors.
   const routeUnderlay = L.polyline(latlngs, {
     color: underlayColor,
     weight: 8,
@@ -385,6 +571,8 @@ function animatePolylineDraw(
     interactive: false,
   }).addTo(group);
 
+  // Animated foreground line. Also currently one uniform color.
+  // Later this should animate segment groups with theme-based colors.
   const animatedLine = L.polyline([latlngs[0]], {
     color,
     weight: 8,
@@ -393,6 +581,7 @@ function animatePolylineDraw(
     interactive: false,
   }).addTo(group);
 
+  // Wide invisible hitbox reserved for future interaction if needed.
   const hitbox = L.polyline(latlngs, {
     color,
     weight: 20,
@@ -431,7 +620,11 @@ function animatePolylineDraw(
     const easedT = easeInOutCubic(rawT);
     const targetDistance = total * easedT;
 
-    const partialLatLngs = getPartialLatLngsByDistance(latlngs, cumulative, targetDistance);
+    const partialLatLngs = getPartialLatLngsByDistance(
+      latlngs,
+      cumulative,
+      targetDistance
+    );
     animatedLine.setLatLngs(partialLatLngs as LatLngExpression[]);
 
     if (rawT < 1) {
@@ -463,14 +656,23 @@ function animatePolylineDraw(
       cancelled = true;
       if (rafId != null) cancelAnimationFrame(rafId);
 
-      [outlineUnderlay, routeUnderlay, animatedLine, hitbox, startMarker, endMarker].forEach(
-        (layer) => {
-          if (group.hasLayer(layer)) group.removeLayer(layer);
-        }
-      );
+      [
+        outlineUnderlay,
+        routeUnderlay,
+        animatedLine,
+        hitbox,
+        startMarker,
+        endMarker,
+      ].forEach((layer) => {
+        if (group.hasLayer(layer)) group.removeLayer(layer);
+      });
     },
   };
 }
+
+/* =========================================================
+ * MAIN HOOK
+ * ======================================================= */
 
 export default function useLeafletMap({
   mapContainerRef,
@@ -487,20 +689,38 @@ export default function useLeafletMap({
   onSelectShelter,
   fitSheltersOnLoad = false,
 }: UseLeafletMapParams) {
+  /* =====================================================
+   * SHARED REFS
+   * =================================================== */
+
   const mapRef = useRef<LeafletMap | null>(null);
   const navArrowRef = useRef<Marker | null>(null);
   const guideLineRef = useRef<Polyline | null>(null);
+
   const routeLayerGroupRef = useRef<LayerGroup | null>(null);
   const shelterLayerGroupRef = useRef<LayerGroup | null>(null);
+
   const programmaticMoveRef = useRef(false);
   const hasInitCenteredRef = useRef(false);
+  const hasFittedSheltersRef = useRef(false);
+
+  /* =====================================================
+   * ROUTE-SPECIFIC REFS
+   * =================================================== */
+
   const routeAnimationRef = useRef<AnimatePolylineResult>(null);
-  const routeAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const routeAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
   const completedRouteRef = useRef<Polyline | null>(null);
   const lastProgressDistanceRef = useRef(0);
   const routeLatLngsRef = useRef<[number, number][]>([]);
   const hasStartedNavRef = useRef(false);
   const hasFinishedRouteRef = useRef(false);
+
+  /* =====================================================
+   * MAP SETUP / TEARDOWN
+   * =================================================== */
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
@@ -561,8 +781,17 @@ export default function useLeafletMap({
       completedRouteRef.current = null;
       routeLatLngsRef.current = [];
       lastProgressDistanceRef.current = 0;
+      hasFittedSheltersRef.current = false;
     };
   }, [mapContainerRef, currentUserPos, setAutoFollowUser, setShowRecenter]);
+
+  /* =====================================================
+   * SHARED MAP STATE
+   * =================================================== */
+
+  useEffect(() => {
+    hasFittedSheltersRef.current = false;
+  }, [shelters]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -590,10 +819,22 @@ export default function useLeafletMap({
 
     if (navigationMode && autoFollowUser) {
       programmaticMoveRef.current = true;
-      map.setView([currentUserPos.lat, currentUserPos.lng], NAV_ZOOM, { animate: false });
+      map.setView([currentUserPos.lat, currentUserPos.lng], NAV_ZOOM, {
+        animate: false,
+      });
       setShowRecenter(false);
     }
   }, [currentUserPos, navigationMode, autoFollowUser, setShowRecenter]);
+
+  /* =====================================================
+   * SHELTER MODE
+   * =======================================================
+   * Responsible for:
+   * - rendering shelter markers
+   * - selecting a shelter
+   * - focusing clicked shelter
+   * - initial fit-to-shelters behavior
+   * =================================================== */
 
   useEffect(() => {
     const map = mapRef.current;
@@ -612,13 +853,11 @@ export default function useLeafletMap({
         : []
       : shelters;
 
-    sheltersToRender.forEach((shelter, index) => {
+    sheltersToRender.forEach((shelter) => {
       if (shelter?.lat == null || shelter?.lng == null) return;
 
       const isSelected = selectedShelter?.name === shelter.name;
-
-      const showLabel = navigationMode || isSelected || index === 0;
-
+      const showLabel = true;
       const highlight = navigationMode ? true : isSelected;
 
       const marker = L.marker([shelter.lat, shelter.lng], {
@@ -630,7 +869,6 @@ export default function useLeafletMap({
         if (navigationMode) return;
 
         onSelectShelter?.(shelter);
-
         setAutoFollowUser(false);
         setShowRecenter(true);
 
@@ -645,8 +883,12 @@ export default function useLeafletMap({
       bounds.push([shelter.lat, shelter.lng]);
     });
 
-    // only fit bounds when NOT navigating
-    if (!navigationMode && fitSheltersOnLoad && bounds.length > 0) {
+    if (
+      !navigationMode &&
+      fitSheltersOnLoad &&
+      !hasFittedSheltersRef.current &&
+      bounds.length > 0
+    ) {
       const latLngBounds = L.latLngBounds(bounds);
 
       if (currentUserPos) {
@@ -654,6 +896,7 @@ export default function useLeafletMap({
       }
 
       if (latLngBounds.isValid()) {
+        hasFittedSheltersRef.current = true;
         programmaticMoveRef.current = true;
         map.flyToBounds(latLngBounds, {
           padding: ROUTE_OVERVIEW_PADDING,
@@ -668,7 +911,19 @@ export default function useLeafletMap({
     onSelectShelter,
     currentUserPos,
     fitSheltersOnLoad,
+    setAutoFollowUser,
+    setShowRecenter,
   ]);
+
+  /* =====================================================
+   * ROUTE MODE: INITIAL DRAW + ANIMATION
+   * =======================================================
+   * Responsible for:
+   * - clearing old route state
+   * - drawing the currently selected route
+   * - animating the route appearance
+   * - setting up the completed-progress route overlay
+   * =================================================== */
 
   useEffect(() => {
     const map = mapRef.current;
@@ -702,7 +957,10 @@ export default function useLeafletMap({
     lastProgressDistanceRef.current = 0;
     if (latlngs.length < 2) return;
 
+    // Temporary placeholder color.
+    // Later this should be replaced by a segmented sheltered/exposed palette.
     const color = "#ff6b6b";
+
     const startLatLng = latlngs[0];
     const bounds = L.latLngBounds(latlngs);
 
@@ -716,10 +974,17 @@ export default function useLeafletMap({
         onDone: ({ routeUnderlay }) => {
           routeAnimationRef.current = null;
 
-          if (completedRouteRef.current && group.hasLayer(completedRouteRef.current)) {
+          if (
+            completedRouteRef.current &&
+            group.hasLayer(completedRouteRef.current)
+          ) {
             group.removeLayer(completedRouteRef.current);
           }
 
+          // Temporary completed-progress color.
+          // This is currently blue only for progress visibility.
+          // Later this should also be aligned with theme tokens and
+          // may need different logic if sheltered/exposed progress is split.
           completedRouteRef.current = L.polyline([latlngs[0]], {
             color: "#2563eb",
             weight: 8,
@@ -766,6 +1031,10 @@ export default function useLeafletMap({
     }
   }, [routeGeoJson]);
 
+  /* =====================================================
+   * ROUTE MODE: USER-TO-ROUTE GUIDE LINE
+   * =================================================== */
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -780,7 +1049,10 @@ export default function useLeafletMap({
     const feature = routeGeoJson.features[0] as RouteFeature | undefined;
     if (!feature) return;
 
-    const nearestPoint = findNearestRoutePoint([currentUserPos.lat, currentUserPos.lng], feature);
+    const nearestPoint = findNearestRoutePoint(
+      [currentUserPos.lat, currentUserPos.lng],
+      feature
+    );
 
     if (nearestPoint) {
       guideLineRef.current = L.polyline(
@@ -789,6 +1061,10 @@ export default function useLeafletMap({
       ).addTo(map);
     }
   }, [navigationMode, currentUserPos, routeGeoJson]);
+
+  /* =====================================================
+   * ROUTE MODE: COMPLETED PROGRESS UPDATE
+   * =================================================== */
 
   useEffect(() => {
     const group = routeLayerGroupRef.current;
@@ -799,7 +1075,10 @@ export default function useLeafletMap({
     const latlngs = routeLatLngsRef.current;
     if (!latlngs || latlngs.length < 2) return;
 
-    const progress = getNearestProgressOnRoute(latlngs, [currentUserPos.lat, currentUserPos.lng]);
+    const progress = getNearestProgressOnRoute(latlngs, [
+      currentUserPos.lat,
+      currentUserPos.lng,
+    ]);
     if (!progress) return;
 
     const clampedProgress = Math.max(
@@ -812,6 +1091,10 @@ export default function useLeafletMap({
     const { done } = splitRouteByDistance(latlngs, clampedProgress);
     completedRouteRef.current.setLatLngs(done as LatLngExpression[]);
   }, [currentUserPos]);
+
+  /* =====================================================
+   * ROUTE MODE: FINISH DETECTION
+   * =================================================== */
 
   useEffect(() => {
     if (!navigationMode) return;
@@ -832,11 +1115,18 @@ export default function useLeafletMap({
     const distanceToEnd = user.distanceTo(end);
     const totalRouteDistance = buildRouteMetrics(coords).total;
 
-    if (distanceToEnd <= 1 && lastProgressDistanceRef.current >= totalRouteDistance * 0.8) {
+    if (
+      distanceToEnd <= 1 &&
+      lastProgressDistanceRef.current >= totalRouteDistance * 0.8
+    ) {
       hasFinishedRouteRef.current = true;
       onRouteFinished?.();
     }
   }, [currentUserPos, navigationMode, routeGeoJson, onRouteFinished]);
+
+  /* =====================================================
+   * EXPOSED ACTIONS
+   * =================================================== */
 
   function recenterOnUser() {
     const map = mapRef.current;

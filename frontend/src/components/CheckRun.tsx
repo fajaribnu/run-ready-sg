@@ -1,6 +1,6 @@
-import { Bolt, Loader2 } from "lucide-react";
+import { Footprints, Loader2 } from "lucide-react";
 
-export default function HomeHero({ loading, hasChecked, onCheckRunNow }) {
+export default function CheckRun({ loading, hasChecked, onCheckRunNow }) {
   return (
     <section className="space-y-6">
       <div className="space-y-2">
@@ -28,7 +28,7 @@ export default function HomeHero({ loading, hasChecked, onCheckRunNow }) {
         {loading ? (
           <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
         ) : (
-          <Bolt size={20} />
+          <Footprints size={20} fill="currentColor" />
         )}
       </button>
     </section>

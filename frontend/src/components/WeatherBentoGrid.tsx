@@ -44,7 +44,7 @@ function getHeatStressText(data: any) {
   }
 
   if (!Number.isNaN(wbgtValue)) {
-    if (wbgtValue >= 32) {
+    if (wbgtValue > 32) {
       return "Heat levels are high. Consider delaying or seeking shelter.";
     }
 
@@ -54,28 +54,66 @@ function getHeatStressText(data: any) {
   return "No projection available.";
 }
 
+function isHeatAlert(data: any) {
+  const rawProjection = String(data?.projection || "");
+  const projection = rawProjection.toLowerCase();
+
+  const wbgtValue = parseFloat(
+    String(data?.wbgt || "").replace("°C", "")
+  );
+
+  const mentionsHeat =
+    projection.includes("wbgt") ||
+    projection.includes("heat") ||
+    projection.includes("heat stress");
+
+  return mentionsHeat || (!Number.isNaN(wbgtValue) && wbgtValue > 32);
+}
+
 export default function WeatherBentoGrid({ result }) {
   const data = result?.data ?? {};
   const ForecastIcon = getForecastIcon(data?.forecast);
   const heatStressText = getHeatStressText(data);
+  const isHeat = isHeatAlert(data);
 
   return (
     <section className="grid grid-cols-2 gap-4">
-      <div className="col-span-2 flex items-center justify-between rounded-2xl bg-surface-container-lowest p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+      <div
+        className={`col-span-2 flex items-center justify-between rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] ${
+          isHeat ? "bg-orange-100" : "bg-surface-container-lowest"
+        }`}
+      >
         <div className="space-y-1">
-          <span className="flex items-center gap-1 text-sm font-medium uppercase tracking-wider text-on-surface-variant">
+          <span
+            className={`flex items-center gap-1 text-sm font-medium uppercase tracking-wider ${
+              isHeat ? "text-on-error-container" : "text-on-surface-variant"
+            }`}
+          >
             <Thermometer size={16} /> Heat Stress
           </span>
-          <h3 className="text-4xl font-bold text-on-surface">
+
+          <h3
+            className={`text-4xl font-bold ${
+              isHeat ? "text-on-error-container" : "text-on-surface"
+            }`}
+          >
             {data?.wbgt?.replace("°C", "") || "--"}
             <span className="text-xl font-medium">°C</span>
           </h3>
         </div>
 
-        <div className="h-12 w-1.5 rounded-full bg-secondary-container"></div>
+        <div
+          className={`h-12 w-1.5 rounded-full ${
+            isHeat ? "bg-on-error-container/15" : "bg-secondary-container"
+          }`}
+        ></div>
 
-        <p className="max-w-[220px] text-sm font-medium text-on-surface-variant leading-snug text-left">
-            {heatStressText}
+        <p
+          className={`max-w-[220px] text-left text-sm font-medium leading-snug ${
+            isHeat ? "text-on-error-container" : "text-on-surface-variant"
+          }`}
+        >
+          {heatStressText}
         </p>
       </div>
 

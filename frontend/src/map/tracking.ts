@@ -1,72 +1,48 @@
 import { getHeadingDegrees, getRouteHeading } from "./geometry";
 
-// ==============================
-// 🧪 MOCK TRACKING (REMOVE LATER)
-// ==============================
+type RefObject<T> = {
+  current: T;
+};
 
-let mockTimer = null;
+type UserPosition = {
+  lat: number;
+  lng: number;
+  heading: number;
+};
 
-export function startMockTracking({
-  routeLatLngs,
-  setCurrentUserPos,
-  intervalMs = 400,
-}) {
-  if (!routeLatLngs?.length) return;
+type GeoWatchIdRef = RefObject<number | null>;
 
-  stopMockTracking();
-
-  let i = 0;
-
-  mockTimer = setInterval(() => {
-    const curr = routeLatLngs[i];
-    const next = routeLatLngs[Math.min(i + 1, routeLatLngs.length - 1)];
-
-    const heading = getHeadingDegrees(curr, next);
-
-    setCurrentUserPos({
-      lat: curr[0],
-      lng: curr[1],
-      heading,
-    });
-
-    i += 1;
-
-    if (i >= routeLatLngs.length) {
-      clearInterval(mockTimer);
-      mockTimer = null;
-    }
-  }, intervalMs);
-}
-
-export function stopMockTracking() {
-  if (mockTimer) {
-    clearInterval(mockTimer);
-    mockTimer = null;
-  }
-}
-
-// ==============================
-// 🧪 END MOCK TRACKING (REMOVE LATER)
-// ==============================
-
-export function stopGeoTracking(geoWatchIdRef) {
+export function stopGeoTracking(geoWatchIdRef: GeoWatchIdRef): void {
   if (geoWatchIdRef.current != null) {
     navigator.geolocation.clearWatch(geoWatchIdRef.current);
     geoWatchIdRef.current = null;
   }
 }
 
+type LatestState = {
+  currentUserPos: UserPosition | null;
+  compassHeading: number | null;
+  navigationMode: boolean;
+  selectedRouteFeature: unknown;
+};
+
+type StartGeoTrackingParams = {
+  geoWatchIdRef: GeoWatchIdRef;
+  latestStateRef: RefObject<LatestState>;
+  setCurrentUserPos: (pos: UserPosition) => void;
+};
+
 export function startGeoTracking({
   geoWatchIdRef,
   latestStateRef,
   setCurrentUserPos,
-}) {
+}: StartGeoTrackingParams): void {
   stopGeoTracking(geoWatchIdRef);
 
   if (!navigator.geolocation) return;
 
   geoWatchIdRef.current = navigator.geolocation.watchPosition(
-    (pos) => {
+    (pos: GeolocationPosition) => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
 
@@ -105,7 +81,7 @@ export function startGeoTracking({
 
       setCurrentUserPos({ lat, lng, heading });
     },
-    (err) => {
+    (err: GeolocationPositionError) => {
       console.error("Tracking error:", err);
     },
     {
@@ -116,10 +92,26 @@ export function startGeoTracking({
   );
 }
 
+type CompassStartedRef = RefObject<boolean>;
+
+type EnsureCompassStartedParams = {
+  compassStartedRef: CompassStartedRef;
+  setCompassHeading: (heading: number) => void;
+};
+
+type DeviceOrientationEventWithWebkit = DeviceOrientationEvent & {
+  webkitCompassHeading?: number;
+};
+
+type DeviceOrientationEventConstructorWithPermission =
+  typeof DeviceOrientationEvent & {
+    requestPermission?: () => Promise<"granted" | "denied">;
+  };
+
 export async function ensureCompassStarted({
   compassStartedRef,
   setCompassHeading,
-}) {
+}: EnsureCompassStartedParams): Promise<boolean> {
   if (compassStartedRef.current) return true;
 
   const isProbablyMobile =
@@ -129,13 +121,14 @@ export async function ensureCompassStarted({
   if (!isProbablyMobile) return false;
   if (!window.DeviceOrientationEvent) return false;
 
-  function handleOrientation(event) {
-    let heading = null;
+  function handleOrientation(event: Event): void {
+    const e = event as DeviceOrientationEventWithWebkit;
+    let heading: number | null = null;
 
-    if (event.webkitCompassHeading != null) {
-      heading = event.webkitCompassHeading;
-    } else if (event.alpha != null) {
-      heading = 360 - event.alpha;
+    if (e.webkitCompassHeading != null) {
+      heading = e.webkitCompassHeading;
+    } else if (e.alpha != null) {
+      heading = 360 - e.alpha;
     }
 
     if (heading != null && !Number.isNaN(heading)) {
@@ -144,8 +137,11 @@ export async function ensureCompassStarted({
   }
 
   try {
-    if (typeof DeviceOrientationEvent.requestPermission === "function") {
-      const permission = await DeviceOrientationEvent.requestPermission();
+    const DOE =
+      DeviceOrientationEvent as DeviceOrientationEventConstructorWithPermission;
+
+    if (typeof DOE.requestPermission === "function") {
+      const permission = await DOE.requestPermission();
       if (permission !== "granted") return false;
     }
 

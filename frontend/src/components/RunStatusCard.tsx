@@ -26,7 +26,6 @@ export default function RunStatusCard({ result }) {
             <CheckCircle2
               size={48}
               className="text-on-secondary-container"
-              fill="currentColor"
             />
           ) : (
             <AlertTriangle
