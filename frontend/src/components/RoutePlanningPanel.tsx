@@ -1,4 +1,5 @@
 import { Sparkles, Loader2, CloudRain, MapPin } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 type RoutePlanningPanelProps = {
   distance: number;
@@ -32,53 +33,62 @@ export function RoutePlanningPanel({
 
   return (
     <section className="space-y-6">
-      {hasRoute && (
-        <>
-          <div className="grid grid-cols-3 gap-4">
-            {[
-              { label: "Distance", value: stats.distance, unit: "km" },
-              { label: "Duration", value: stats.duration, unit: "m" },
-              {
-                label: "Shelter",
-                value: stats.shelter,
-                unit: "%",
-                color: "text-on-secondary-container",
-              },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="flex flex-col items-center justify-center rounded-2xl bg-surface-container-lowest p-6 text-center shadow-sm"
-              >
-                <span className="mb-1 text-[10px] font-bold uppercase tracking-widest text-outline-variant">
-                  {stat.label}
-                </span>
-                <span
-                  className={`font-headline text-3xl font-extrabold tracking-tight ${
-                    stat.color || "text-primary"
-                  }`}
+      <AnimatePresence initial={false}>
+        {hasRoute && (
+          <motion.div
+            key="route-stats"
+            initial={{ opacity: 0, y: -24, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -16, height: 0 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="space-y-6 overflow-hidden"
+          >
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { label: "Distance", value: stats.distance, unit: "km" },
+                { label: "Duration", value: stats.duration, unit: "m" },
+                {
+                  label: "Shelter",
+                  value: stats.shelter,
+                  unit: "%",
+                  color: "text-on-secondary-container",
+                },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex flex-col items-center justify-center rounded-2xl bg-surface-container-lowest p-6 text-center shadow-sm"
                 >
-                  {stat.value}
-                  <span className="text-sm font-medium">{stat.unit}</span>
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex items-start gap-4 rounded-2xl border border-secondary-container bg-secondary-container/30 p-6">
-            <CloudRain size={32} className="text-on-secondary-container" />
-            <div>
-              <h4 className="font-headline font-bold text-on-secondary-container">
-                Weather Advisory
-              </h4>
-              <p className="text-sm leading-relaxed text-on-secondary-container/80">
-                Your generated route passes by {stats.sheltersAlongRoute} shelter
-                points and keeps approximately {stats.shelter}% of the route under
-                shelter coverage.
-              </p>
+                  <span className="mb-1 text-[10px] font-bold uppercase tracking-widest text-outline-variant">
+                    {stat.label}
+                  </span>
+                  <span
+                    className={`font-headline text-3xl font-extrabold tracking-tight ${
+                      stat.color || "text-primary"
+                    }`}
+                  >
+                    {stat.value}
+                    <span className="text-sm font-medium">{stat.unit}</span>
+                  </span>
+                </div>
+              ))}
             </div>
-          </div>
-        </>
-      )}
+
+            <div className="flex items-start gap-4 rounded-2xl border border-secondary-container bg-secondary-container/30 p-6">
+              <CloudRain size={32} className="text-on-secondary-container" />
+              <div>
+                <h4 className="font-headline font-bold text-on-secondary-container">
+                  Weather Advisory
+                </h4>
+                <p className="text-sm leading-relaxed text-on-secondary-container/80">
+                  Your generated route passes by {stats.sheltersAlongRoute} shelter
+                  points and keeps approximately {stats.shelter}% of the route under
+                  shelter coverage.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="rounded-3xl border border-outline-variant/10 bg-surface-container-lowest p-8 shadow-sm">
         <div className="space-y-8">
@@ -138,7 +148,10 @@ export function RoutePlanningPanel({
             >
               {loading ? (
                 <>
-                  <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
+                  <Loader2
+                    size={20}
+                    className="animate-spin [animation-duration:0.7s]"
+                  />
                   Generating...
                 </>
               ) : !isLocationReady ? (

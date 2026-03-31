@@ -4,17 +4,17 @@ import { AlertCircle, X } from "lucide-react";
 import polyline from "@mapbox/polyline";
 import ShelterControls from "../components/ShelterControls";
 import ShelterBottomSheet from "../components/ShelterBottomSheet";
-import { findShelter, getCurrentPosition } from "../services/api";
+import { findShelter } from "../services/api";
 import useLeafletMap from "../map/useLeafletMap";
+import { useLocation } from "../components/LocationProvider";
 
 export const ShelterView = () => {
   const [loading, setLoading] = useState(false);
-  const [currentUserPos, setCurrentUserPos] = useState(null);
 
-  const [shelters, setShelters] = useState([]);
-  const [selectedShelter, setSelectedShelter] = useState(null);
+  const [shelters, setShelters] = useState<any[]>([]);
+  const [selectedShelter, setSelectedShelter] = useState<any | null>(null);
 
-  const [routeGeoJson, setRouteGeoJson] = useState(null);
+  const [routeGeoJson, setRouteGeoJson] = useState<any>(null);
   const [navigationMode, setNavigationMode] = useState(false);
 
   const [showRecenter, setShowRecenter] = useState(false);
@@ -26,7 +26,9 @@ export const ShelterView = () => {
     message: "",
   });
 
-  const mapContainerRef = useRef(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const { currentUserPos, locationReady, permissionState } = useLocation();
 
   const {
     recenterOnUser,
@@ -47,58 +49,37 @@ export const ShelterView = () => {
   });
 
   useEffect(() => {
+    if (!currentUserPos) return;
+
     let cancelled = false;
 
-    const init = async () => {
+    const loadShelters = async () => {
       try {
         setLoading(true);
 
-        const pos = await getCurrentPosition();
-        if (cancelled) return;
-
-        const nextPos = {
-          lat: pos.lat,
-          lng: pos.lng,
-          heading: 0,
-        };
-
-        setCurrentUserPos(nextPos);
-
-        const data = await findShelter(nextPos.lat, nextPos.lng, 3);
+        const data = await findShelter(currentUserPos.lat, currentUserPos.lng, 3);
         if (cancelled) return;
 
         const nextShelters = data?.shelters ?? [];
         setShelters(nextShelters);
-        setSelectedShelter(nextShelters[0] ?? null);
 
-        if (nextShelters.length > 0) {
+        setSelectedShelter((prev) => {
+          if (!prev) return nextShelters[0] ?? null;
+
+          const matched = nextShelters.find((s: any) => s.name === prev.name);
+          return matched ?? nextShelters[0] ?? null;
+        });
+
+        if (nextShelters.length > 0 && !navigationMode) {
           setAutoFollowUser(false);
         }
       } catch (err) {
-        console.error("Failed to init shelter view:", err);
+        console.error("Failed to load shelters:", err);
 
-        const fallbackPos = {
-          lat: 1.35,
-          lng: 103.82,
-          heading: 0,
-        };
+        if (cancelled) return;
 
-        setCurrentUserPos(fallbackPos);
-
-        try {
-          const data = await findShelter(fallbackPos.lat, fallbackPos.lng, 3);
-          if (cancelled) return;
-
-          const nextShelters = data?.shelters ?? [];
-          setShelters(nextShelters);
-          setSelectedShelter(nextShelters[0] ?? null);
-
-          if (nextShelters.length > 0) {
-            setAutoFollowUser(false);
-          }
-        } catch (shelterErr) {
-          console.error("Failed to find shelters from fallback location:", shelterErr);
-        }
+        setShelters([]);
+        setSelectedShelter(null);
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -106,14 +87,14 @@ export const ShelterView = () => {
       }
     };
 
-    init();
+    loadShelters();
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [currentUserPos]);
 
-  const openPopup = (title, message) => {
+  const openPopup = (title: string, message: string) => {
     setPopup({
       open: true,
       title,
@@ -136,7 +117,11 @@ export const ShelterView = () => {
 
     const encodedPolyline = selectedShelter?.route_polyline;
 
-    if (!encodedPolyline || typeof encodedPolyline !== "string" || !encodedPolyline.trim()) {
+    if (
+      !encodedPolyline ||
+      typeof encodedPolyline !== "string" ||
+      !encodedPolyline.trim()
+    ) {
       openPopup(
         "Route not available yet",
         "This shelter does not have route data yet. Please choose another shelter or try again later."
@@ -182,6 +167,7 @@ export const ShelterView = () => {
       setAutoFollowUser(true);
       setShowRecenter(false);
       markNavigationStarted();
+      recenterOnUser();
     } catch (err) {
       console.error("Failed to decode shelter route:", err);
       openPopup(
@@ -220,14 +206,22 @@ export const ShelterView = () => {
         <ShelterBottomSheet
           navigationMode={navigationMode}
           shelterName={
-            selectedShelter?.name ??
-            (loading ? "Finding nearby shelters..." : "No shelter selected")
+            !locationReady
+              ? "Getting your location..."
+              : loading
+              ? "Finding nearby shelters..."
+              : selectedShelter?.name ?? "No shelter selected"
           }
           distanceM={selectedShelter?.distance_m ?? 0}
           durationMin={selectedShelter?.walk_time_min ?? 0}
           onNavigate={onNavigate}
           onExitNavigation={onExitNavigation}
-          isShelterReady={shelters.length > 0 && selectedShelter != null}
+          isShelterReady={
+            locationReady &&
+            permissionState !== "denied" &&
+            shelters.length > 0 &&
+            selectedShelter != null
+          }
         />
       )}
 
@@ -240,6 +234,16 @@ export const ShelterView = () => {
             <X size={20} />
             Exit Navigation
           </button>
+        </div>
+      )}
+
+      {permissionState === "denied" && !popup.open && (
+        <div className="absolute left-1/2 top-6 z-40 w-[calc(100%-3rem)] max-w-md -translate-x-1/2 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest p-4 shadow-lg">
+          <p className="text-sm leading-relaxed text-outline">
+            Location permission is denied. Nearby shelter search and live tracking
+            are unavailable until location access is enabled in your browser
+            settings.
+          </p>
         </div>
       )}
 

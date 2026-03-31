@@ -78,44 +78,51 @@ export default function WeatherBentoGrid({ result }) {
 
   return (
     <section className="grid grid-cols-2 gap-4">
-      <div
-        className={`col-span-2 flex items-center justify-between rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] ${
-          isHeat ? "bg-orange-100" : "bg-surface-container-lowest"
-        }`}
-      >
-        <div className="space-y-1">
-          <span
-            className={`flex items-center gap-1 text-sm font-medium uppercase tracking-wider ${
-              isHeat ? "text-on-error-container" : "text-on-surface-variant"
+    <div
+    className={`col-span-2 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.02)] ${
+        isHeat ? "bg-orange-100" : "bg-surface-container-lowest"
+    }`}
+    >
+    <div className="flex items-center justify-between">
+        {/* LEFT */}
+        <div className="space-y-0.5">
+        <span
+            className={`flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide ${
+            isHeat ? "text-on-error-container" : "text-on-surface-variant"
             }`}
-          >
-            <Thermometer size={16} /> Heat Stress
-          </span>
+        >
+            <Thermometer size={14} /> Heat Stress
+        </span>
 
-          <h3
-            className={`text-4xl font-bold ${
-              isHeat ? "text-on-error-container" : "text-on-surface"
+        <h3
+            className={`text-2xl font-bold ${
+            isHeat ? "text-on-error-container" : "text-on-surface"
             }`}
-          >
+        >
             {data?.wbgt?.replace("°C", "") || "--"}
-            <span className="text-xl font-medium">°C</span>
-          </h3>
+            <span className="ml-0.5 text-sm font-medium">°C</span>
+        </h3>
         </div>
 
+        {/* SEPARATOR */}
         <div
-          className={`h-12 w-1.5 rounded-full ${
-            isHeat ? "bg-on-error-container/15" : "bg-secondary-container"
-          }`}
-        ></div>
+        className={`h-12 w-1.5 rounded-full flex-shrink-0 ${
+            isHeat
+            ? "bg-orange-600/50"
+            : "bg-secondary-container"
+        }`}
+        />
 
+        {/* RIGHT */}
         <p
-          className={`max-w-[220px] text-left text-sm font-medium leading-snug ${
+        className={`max-w-[140px] text-right text-xs font-medium leading-snug ${
             isHeat ? "text-on-error-container" : "text-on-surface-variant"
-          }`}
+        }`}
         >
-          {heatStressText}
+        {heatStressText}
         </p>
-      </div>
+    </div>
+    </div>
 
       <div className="space-y-2 rounded-2xl bg-surface-container-low p-6">
         <Thermometer size={24} className="text-primary" />

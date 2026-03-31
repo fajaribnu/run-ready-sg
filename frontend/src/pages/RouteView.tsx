@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import { AlertCircle, X } from "lucide-react";
 import polyline from "@mapbox/polyline";
 import { RouteMapPanel } from "../components/RouteMapPanel";
 import { RoutePlanningPanel } from "../components/RoutePlanningPanel";
 import useLeafletMap from "../map/useLeafletMap";
-import { getCurrentPosition, planRoute } from "../services/api";
+import { planRoute } from "../services/api";
+import { useLocation } from "../components/LocationProvider";
 
 type RouteStats = {
   distance: number;
@@ -20,12 +21,6 @@ export const RouteView = () => {
 
   const [loading, setLoading] = useState(false);
   const [navigationMode, setNavigationMode] = useState(false);
-
-  const [currentUserPos, setCurrentUserPos] = useState<{
-    lat: number;
-    lng: number;
-    heading: number;
-  } | null>(null);
 
   const [routeGeoJson, setRouteGeoJson] = useState<any>(null);
   const [hasGeneratedRoute, setHasGeneratedRoute] = useState(false);
@@ -48,6 +43,8 @@ export const RouteView = () => {
 
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
+  const { currentUserPos, locationReady, permissionState } = useLocation();
+
   const { recenterOnUser, showWholeRoute, markNavigationStarted } = useLeafletMap({
     mapContainerRef,
     currentUserPos,
@@ -57,37 +54,6 @@ export const RouteView = () => {
     setAutoFollowUser,
     setShowRecenter,
   });
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const init = async () => {
-      try {
-        const pos = await getCurrentPosition();
-        if (cancelled) return;
-
-        setCurrentUserPos({
-          lat: pos.lat,
-          lng: pos.lng,
-          heading: 0,
-        });
-      } catch {
-        if (cancelled) return;
-
-        setCurrentUserPos({
-          lat: 1.35,
-          lng: 103.82,
-          heading: 0,
-        });
-      }
-    };
-
-    init();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const openPopup = (title: string, message: string) => {
     setPopup({
@@ -247,8 +213,14 @@ export const RouteView = () => {
           hasRoute={hasGeneratedRoute}
           onGenerateRoute={onGenerateRoute}
           stats={stats}
-          isLocationReady={currentUserPos != null}
+          isLocationReady={locationReady && currentUserPos != null}
         />
+      )}
+
+      {permissionState === "denied" && !popup.open && (
+        <div className="rounded-2xl border border-outline-variant/20 bg-surface-container-lowest p-4 text-sm text-outline">
+          Location permission is denied. Live tracking is unavailable until location access is enabled in browser settings.
+        </div>
       )}
 
       {popup.open && (
