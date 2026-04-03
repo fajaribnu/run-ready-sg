@@ -6,10 +6,11 @@ load_dotenv()
 
 class Settings:
     DB_HOST: str = os.getenv("DB_HOST", "localhost")
+    # DB_HOST: str = os.getenv("DB_HOST", "runready-db.c3q46oykql8z.ap-southeast-1.rds.amazonaws.com")
     DB_PORT: int = int(os.getenv("DB_PORT", "5432"))
     DB_NAME: str = os.getenv("DB_NAME", "runready")
     DB_USER: str = os.getenv("DB_USER", "runready_user")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "changeme")
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "RunReady2026Sg")
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
         f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
