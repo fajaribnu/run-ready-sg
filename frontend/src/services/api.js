@@ -16,11 +16,11 @@
  * FEATURE FLAGS — flip each to false when the real endpoint is ready:
  */
 const MOCK = {
-  checkRun: true, // F1: flip to false when /api/check-run is on EC2
-  findShelter: true, // F2: flip to false when /api/find-shelter works
-  bestTimes: true, // F5: flip to false when /api/best-times works
-  planRoute: true, // F4: flip to false when /api/plan-route works
-  alerts: true, // F3: flip to false when /api/alerts/subscribe works
+  checkRun: false, // F1: ✅ live on EC2
+  findShelter: false, // F2: ✅ live on EC2
+  bestTimes: false, // F5: ✅ live on EC2
+  planRoute: true, // F4: keep mocked (cut)
+  alerts: true, // F3: keep mocked until SES ready
 };
 
 import axios from "axios";
