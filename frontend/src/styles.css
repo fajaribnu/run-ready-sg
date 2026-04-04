@@ -1,0 +1,563 @@
+:root {
+  --bg: #eef2ff;
+  --card: #ffffff;
+  --primary: #4f46e5;
+  --accent: #0ea5e9;
+  --text-main: #1e293b;
+  --text-sub: #e1e3e5;
+  --border: #e2e8f0;
+}
+
+/* =========================
+   Base / reset
+   ========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root,
+.app-shell {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100vh;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+/* =========================
+   App shell
+   ========================= */
+.app-shell {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* =========================
+   Map layer
+   ========================= */
+.map-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.map-layer .map-wrapper {
+  width: 100%;
+  height: 100%;
+  margin-top: 0;
+  border-radius: 0;
+}
+
+.map-layer .map-host {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+/* Generic map wrapper usage */
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  margin-top: 16px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.map-host {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
+
+.glow-line {
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.8));
+}
+
+/* =========================
+   Bottom sheet
+   ========================= */
+.bottom-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 85vh;
+  max-height: 85vh;
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+
+  will-change: transform;
+  transition: transform 0.22s ease;
+  transform: translateY(0);
+}
+
+.bottom-sheet.expanded {
+  box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.14);
+}
+
+.sheet-handle-wrap {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 10px;
+
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.sheet-handle-wrap:active {
+  cursor: grabbing;
+  flex-shrink: 0;
+}
+
+.sheet-handle {
+  width: 42px;
+  height: 5px;
+  border-radius: 999px;
+  background: #b7bfce;
+}
+
+.sheet-header {
+  flex-shrink: 0;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.sheet-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bottom-sheet.expanded .sheet-content {
+  overflow-y: auto;
+  touch-action: pan-y;
+}
+
+.sheet-content > * + * {
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 12px;
+}
+
+/* =========================
+   Sheet text
+   ========================= */
+.planner-title {
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 2.3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #5b6cff, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.planner-subtitle {
+  margin: 0 auto;
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* =========================
+   Buttons
+   ========================= */
+.btn-primary {
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 50px;
+
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #5b6cff, #3b82f6);
+  transition: transform 0.08s ease, filter 0.15s ease;
+}
+
+.btn-primary:disabled {
+  cursor: not-allowed;
+  background: #ccc;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+  filter: brightness(0.92);
+}
+
+/* =========================
+   Hints
+   ========================= */
+.hint {
+  margin-top: 8px;
+  color: #36536d;
+  font-size: 14px;
+}
+
+.map-hint-wrap {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  z-index: 1000;
+  width: calc(100% - 90px);
+  max-width: 420px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.map-hint-wrap .hint,
+.map-hint-wrap .hint-bar {
+  padding: 10px 14px;
+  color: #36536d;
+  text-align: center;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.hint-bar {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+/* default */
+.hint-bar.normal {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* success */
+.hint-bar.success {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+/* error */
+.hint-bar.error {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* =========================
+   Map controls
+   ========================= */
+.map-controls {
+  position: absolute;
+  left: 50%;
+  bottom: 170px;
+  z-index: 1000;
+
+  display: flex;
+  gap: 10px;
+
+  transform: translateX(-50%);
+}
+
+.map-controls button {
+  width: auto;
+  margin-top: 0;
+  padding: 10px 16px;
+  border: none;
+  outline: none;
+  border-radius: 999px;
+
+  font-size: 14px;
+  background: linear-gradient(135deg, #5b6cff, #3b82f6);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  color: var(--text-sub);
+}
+
+.map-controls button:focus-visible {
+  box-shadow:
+    0 0 0 2px rgba(91, 108, 255, 0.45),
+    0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+#recenterBtn {
+  position: absolute;
+  right: 12px;
+  bottom: 16px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  transform: translateY(calc(-1 * var(--bottom-sheet-visible-height, 120px)));
+  will-change: transform;
+}
+
+/* =========================
+   Distance input
+   ========================= */
+.distance-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.distance-input-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  background: white;
+}
+
+.distance-number {
+  width: 48px;
+  padding: 0;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-main);
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+.distance-number::-webkit-outer-spin-button,
+.distance-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.distance-unit {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.distance-input-wrap:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.distance-number:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* =========================
+   Road slider
+   ========================= */
+.road-slider-wrap {
+  position: relative;
+  width: 100%;
+  margin-top: 8px;
+  overflow: visible;
+}
+
+.road-slider {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  background:
+    /* dashed line ONLY on filled part */
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.9) 0 8px,
+      transparent 8px 16px
+    ) 0 50% / var(--fill-percent) 2px no-repeat,
+
+    /* filled + unfilled road */
+    linear-gradient(
+      to right,
+      #4f46e5 0%,
+      #4f46e5 var(--fill-percent),
+      #d1d5db var(--fill-percent),
+      #d1d5db 100%
+    );
+
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.road-slider::-webkit-slider-runnable-track {
+  height: 16px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  -webkit-appearance: none;
+}
+
+.road-slider::-webkit-slider-thumb {
+  width: 34px;
+  height: 34px;
+  margin-top: -9px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.road-slider::-moz-range-track {
+  height: 16px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.road-slider::-moz-range-thumb {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.runner {
+  position: absolute;
+  top: 50%;
+  left: clamp(16px, var(--fill-percent), calc(100% - 16px));
+  z-index: 3;
+
+  width: 32px;
+  height: 32px;
+
+  transform: translate(-50%, -68%);
+  pointer-events: none;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+}
+
+/* =========================
+   Responsive
+   ========================= */
+@media (max-width: 640px) {
+  .bottom-sheet {
+    padding: 8px 14px 16px;
+    border-radius: 22px 22px 0 0;
+  }
+
+  .planner-title {
+    font-size: 1.8rem;
+  }
+
+  .planner-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .map-controls {
+    bottom: 160px;
+  }
+}
+
+/* =========================
+   Congratz popup
+   ========================= */
+
+.congrats-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0,0,0,0.3);
+}
+
+.congrats-card {
+  background: white;
+  padding: 20px 24px;
+  border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.congrats-text {
+  font-weight: 600;
+  text-align: center;
+}
+
+.congrats-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}

@@ -21,6 +21,7 @@
   --color-error: #ba1a1a;
   --color-error-container: #ffdad6;
   --color-tertiary: #7b4700;
+  --color-on-primary: #f6faf8;
 }
 
 @layer base {
