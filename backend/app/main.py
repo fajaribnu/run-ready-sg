@@ -22,19 +22,23 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+if isinstance(settings.CORS_ORIGINS, str):
+    origins = [o.strip() for o in settings.CORS_ORIGINS.split(",")]
+else:
+    origins = settings.CORS_ORIGINS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=origins,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Register feature routers
 app.include_router(decision.router, prefix="/api", tags=["Decision Engine"])
-app.include_router(shelter.router, prefix="/api", tags=["Shelter Finder"])
-app.include_router(routes.router, prefix="/api", tags=["Route Planner"])
-app.include_router(alerts.router, prefix="/api", tags=["Weather Alerts"])
-app.include_router(timeslots.router, prefix="/api", tags=["Time Slot Finder"])
+app.include_router(shelter.router, prefix="/api", tags=["Shelter"])
+app.include_router(routes.router, prefix="/api", tags=["Routes"])
+app.include_router(alerts.router, prefix="/api", tags=["Alerts"])
+app.include_router(timeslots.router, prefix="/api", tags=["Timeslots"])
 
 
 @app.get("/health")
