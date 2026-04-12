@@ -6,9 +6,12 @@ Email notifications when safety thresholds are breached for saved locations.
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
+from http.client import HTTPException
+
 import json
 from app.database import get_db
-from app.services.weather import get_nearest, _handle_wbgt_value, WBGT_DANGER_THRESHOLD, RAIN_KEYWORDS
+from app.services.weather import get_nearest
+from app.routers.decision import _handle_wbgt_value, RAIN_KEYWORDS, WBGT_DANGER_THRESHOLD, SG_LAT_MIN, SG_LAT_MAX, SG_LNG_MIN, SG_LNG_MAX
 
 router = APIRouter()
 
@@ -20,7 +23,7 @@ class AlertSubscription(BaseModel):
     label: str = ""  # e.g. "Bishan Park", "NUS Field"
 
 
-def get_localized_weather(lat: float, lng: float) -> dict:
+def get_localized_weather(lat: float, lng: float, temp_data: json, forecast_data: json, wbgt_data: json) -> dict:
     """
     Fetch all weather data and resolve to the nearest station for a given location.
     Returns a unified dict regardless of V1/V2 API differences.
@@ -60,11 +63,11 @@ def get_localized_weather(lat: float, lng: float) -> dict:
 
 
 def check_run(
-    lat: float = Query(..., description="User latitude"),
-    lng: float = Query(..., description="User longitude"),
+    lat,
+    lng,
+    temp_data, forecast_data, wbgt_data
 ):
-
-    weather = get_localized_weather(lat, lng)
+    weather = get_localized_weather(lat, lng, temp_data, forecast_data, wbgt_data)
 
     is_safe = True
     projection = "Conditions holding steady."
@@ -105,20 +108,75 @@ def check_run(
     }
 
 
+def send_email_alert(email: str, subject: str, body: str):
+    print(f"Sending email to {email} with subject '{subject}':\n{body}")
+
+
+def email_loop(alert_list: dict):
+    for sub_id, alert in alert_list.items():
+        email = alert.get("email")
+        subject = f"RunReady Alert: {alert['status']} conditions at your location"
+        body = f"""
+        Hello,
+
+        This is a weather alert for your subscribed location ({alert['data']['location']}).
+
+        Current conditions:
+        - Temperature: {alert['data']['temperature']}
+        - Forecast: {alert['data']['forecast']}
+        - WBGT: {alert['data']['wbgt']}
+
+        Projection: {alert['data']['projection']}
+        Reasons:
+        {"; ".join(alert['data']['reasons']) if alert['data']['reasons'] else "No specific reasons identified."}
+
+        Please take necessary precautions.
+
+        Best regards,
+        RunReady Team
+        """
+        send_email_alert(email, subject, body)
+
+
 @router.post("/alerts/subscribe")
 def subscribe_alert(sub: AlertSubscription):
     """
     Register an email to receive weather alerts for a specific location.
     """
     # TODO Sprint 3: Save subscription to DB, integrate with SES
+    if sub.email is None or sub.lat is None or sub.lng is None:
+        raise HTTPException(
+            status_code=400,
+            detail="email, lat, and lng are required fields."
+        )
+    if not (SG_LAT_MIN <= sub.lat <= SG_LAT_MAX and SG_LNG_MIN <= sub.lng <= SG_LNG_MAX):
+        raise HTTPException(
+            status_code=400,
+            detail="lat/lng must be within Singapore bounds (1.15-1.47, 103.6-104.1)"
+        )
+    
+    if sub.label is None:
+        sub.label = ""
+
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            insert_query = """
+            INSERT INTO alert_subscriptions (email, lat, lng, label, is_active)
+            VALUES (%s, %s, %s, %s, TRUE)
+            RETURNING id
+            """
+            cur.execute(insert_query, (sub.email, sub.lat, sub.lng, sub.label))
+            new_id = cur.fetchone()[0]
+            conn.commit()
+
     return {
-        "status": "not_implemented",
-        "message": "Alert subscriptions require DB + SES integration. Target: Sprint 3.",
+        "status": "successful",
+        "new_subscription_id": new_id,
         "subscription": sub.model_dump(),
     }
 
 
-@router.get("/alerts/check")
+# @router.get("/alerts/check")
 def check_alerts():
     """
     Called by cron/EventBridge to evaluate all active subscriptions
@@ -131,36 +189,41 @@ def check_alerts():
 
     get_user_query = """
     SELECT id, email, lat, lng, label FROM alert_subscriptions
-    WHERE active = TRUE
+    WHERE is_active = TRUE
     """
     
     get_weather_snapshot_query = """
     SELECT raw_temperature, raw_forecast, raw_wbgt FROM weather_snapshots
     WHERE fetched_at  = (SELECT MAX(fetched_at) FROM weather_snapshots)
     """
-
+    subscriptions = None
+    latest_weather = None
     alert_list = dict()
     with get_db() as conn:
+    # import psycopg2
+    # from app.config import settings
+    # with psycopg2.connect(settings.DATABASE_URL) as conn:
         with conn.cursor() as cur:
             cur.execute(get_user_query)
             subscriptions = cur.fetchall()
             cur.execute(get_weather_snapshot_query)
             latest_weather = cur.fetchone()
-            temp_data, forecast_data, wbgt_data = latest_weather
+            conn.commit()
 
-            for sub in subscriptions:
-                sub_id, email, lat, lng, label = sub
-                result = check_run(lat, lng)
-                result["email"] = email
+    temp_data, forecast_data, wbgt_data = latest_weather
 
-                if result["status"] == "WARNING":
-                    alert_list[sub_id] = result
+    for sub in subscriptions:
+        sub_id, email, lat, lng, label = sub
+        result = check_run(lat, lng, temp_data, forecast_data, wbgt_data)
+        result["email"] = email
+
+        # print(result)
+        if result["status"] == "WARNING":
+            alert_list[sub_id] = result
     
-    with open("alerts_to_send.json", "a") as f:
-        json.dump(alert_list, f, indent=2)
-
-
+    email_loop(alert_list)
+    
     # return {
-    #     "status": "not_implemented",
-    #     "message": "Alert checking requires DB subscriptions + SES. Target: Sprint 3.",
+    #     "status": "successful",
+    #     "alert_list": alert_list
     # }

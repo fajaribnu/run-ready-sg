@@ -6,6 +6,7 @@ load_dotenv()
 class Settings:
     # --- DATABASE SETTINGS ---
     DB_HOST: str = os.getenv("DB_HOST", "runready-db.c3q46oykql8z.ap-southeast-1.rds.amazonaws.com")
+    # DB_HOST: str = os.getenv("DB_HOST", "localhost")
     DB_PORT: int = int(os.getenv("DB_PORT", "5432"))
     DB_NAME: str = os.getenv("DB_NAME", "runready")
     DB_USER: str = os.getenv("DB_USER", "runready_user")
