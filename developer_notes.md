@@ -35,18 +35,17 @@ Features were decided and voted on by the team. The priority is final:
 
 | ID | Feature | Priority | Sprint | Status |
 |----|---------|----------|--------|--------|
-| **F1** | **PE Decision Engine** — Go/No-Go safety check using live temp + forecast + WBGT | MVP — MUST | Sprint 1 | Prototype exists, needs refactoring |
-| **F2** | **Find Shelter Now** — Nearest shelter (HDB/CD/NParks) with OneMap walking route | MVP — MUST | Sprint 2 | Depends on Track A shelter data |
-| **F3** | **Weather Alerts (SES)** — Email notifications when thresholds breached for saved locations | MVP — MUST | Sprint 2–3 | Needs SES config + cron |
-| **F5** | **Smart Time-Slot Finder** — Suggests safest time windows based on forecast trends | SHOULD | Sprint 2–3 | Low risk, reuses weather service |
-| **F4** | **Route Coverage Scorer** — OneMap route overlaid on covered linkway data, returns coverage % | SHOULD (Last Priority) | Sprint 2–3 | High risk, depends on PostGIS linkway data |
-| F6 | Personalized WBGT Coach — Profile-based threshold adjustments | NICE-TO-HAVE | Sprint 3 if ahead | |
+| **F1** | **PE Decision Engine** — Go/No-Go safety check using live temp + forecast + WBGT | MVP — MUST | Sprint 1 | **Live** |
+| **F2** | **Find Shelter Now** — Nearest shelter (HDB/CD/NParks) with shelter list + OneMap walking route | MVP — MUST | Sprint 2 | **Live** |
+| **F3** | **Weather Alerts (SES)** — Email notifications when thresholds breached for saved locations | MVP — MUST | Sprint 2–3 | **Backend Live** (frontend page not built) |
+| **F5** | **Smart Time-Slot Finder** — Suggests safest time windows based on forecast trends | SHOULD | Sprint 2–3 | **Live** |
+| **F4** | **Route Planner** — OneMap route with coverage %, shelter count, loop + destination modes | SHOULD (Last Priority) | Sprint 2–3 | **Live** (frontend shows 1 of 3 routes) |
+| — | **Linkways Overlay** | — | Sprint 3 | **Backend Live** (frontend not integrated) |
+| F6 | Personalized WBGT Coach — Profile-based threshold adjustments | NICE-TO-HAVE | Sprint 3 if ahead | Cut |
 | F7 | Park Leaderboard | CUT — do not build | — | Mention in report as future work |
 | F8 | Dynamic Shelter Rerouting | CUT — do not build | — | Mention in report as future work |
 
-**Descope rule:** If F4 (Route Coverage) is at risk by April 2, cut it immediately. Redirect effort to polishing F1+F2+F3+F5.
-
-**F4 was simplified at the team meeting:** Generate 1 route (not 2–3) to reduce complexity.
+**Note on F4:** Initially scoped as 1 route. Keefe implemented 3 route alternatives — backend returns all 3 but frontend currently renders only `routes[0]`. Route selector UI is a pending task.
 
 ---
 
@@ -197,11 +196,12 @@ Full details in `docs/api-contract.md`. Quick reference:
 |--------|----------|---------|--------|
 | GET | `/health` | Health check | ✅ Working |
 | GET | `/api/check-run?lat=&lng=` | F1: Decision Engine | ✅ Working |
-| GET | `/api/find-shelter?lat=&lng=&limit=` | F2: Shelter Finder | ⚠️ Stub |
-| GET | `/api/best-times?lat=&lng=&duration_min=` | F5: Time Slot Finder | ✅ Working |
-| GET | `/api/plan-route?lat=&lng=&distance_km=&loop=` | F4: Route Coverage | ⚠️ Stub |
-| POST | `/api/alerts/subscribe` | F3: Alert Subscribe | ⚠️ Stub |
-| GET | `/api/alerts/check` | F3: Alert Check (cron) | ⚠️ Stub |
+| GET | `/api/shelters/nearest?lat=&lng=&limit=` | F2: Shelter Finder | ✅ Working |
+| GET | `/api/best-times?lat=&lng=` | F5: Time Slot Finder | ✅ Working |
+| GET | `/api/plan-route?lat=&lng=&distance_km=&loop=&dest_lat=&dest_lng=` | F4: Route Planner | ✅ Working |
+| GET | `/api/linkways?bbox=minLng,minLat,maxLng,maxLat` | Linkways overlay | ✅ Working |
+| POST | `/api/alerts/subscribe` | F3: Alert Subscribe | ✅ Working |
+| GET | `/api/alerts/check` | F3: Alert Check | ✅ Working |
 
 ---
 
@@ -291,7 +291,7 @@ Full details in `docs/api-contract.md`. Quick reference:
 
 4. **Mock-first frontend development:** Frontend never waits for backend. The mock system in `api.js` lets Track C build and test UI independently.
 
-5. **F4 generates 1 route, not 2–3:** Team decision to reduce complexity. OneMap returns one optimal route; generating variations required waypoint tricks that added risk.
+5. **F4 generates 3 routes:** Keefe implemented 3 route alternatives using waypoint offsets. Backend returns `{routes: [{id, distance_km, coverage_pct, polyline, shelters_along_route}]}`. Frontend currently shows only `routes[0]` — route selector UI is pending.
 
 ---
 
@@ -319,4 +319,15 @@ Our preliminary report received this feedback. The final report must address all
 
 ---
 
-*This document should be kept up to date as decisions change. Last updated: 19 March 2026.*
+---
+
+## 15. Test Suite
+
+- **Total tests:** 88 across 5 files in `backend/tests/`
+- **Coverage:** 52% (207/395 statements)
+- **Run (Docker):** `docker exec -it runready-backend python -m pytest tests/ --ignore=tests/test_browser.py -v`
+- See `notes/testing_guide.md` for full documentation
+
+---
+
+*This document should be kept up to date as decisions change. Last updated: 2026-04-17.*
