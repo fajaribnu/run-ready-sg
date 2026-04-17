@@ -332,11 +332,8 @@ export default function useLeafletMap({
   const guideLineRef = useRef<Polyline | null>(null);
   const routeLayerGroupRef = useRef<LayerGroup | null>(null);
   const shelterLayerGroupRef = useRef<LayerGroup | null>(null);
-<<<<<<< HEAD
   const destMarkerRef = useRef<L.CircleMarker | null>(null);
 
-=======
->>>>>>> d6393bc (Add landing page for non-logged in users)
   const programmaticMoveRef = useRef(false);
   const hasInitCenteredRef = useRef(false);
   const hasFittedSheltersRef = useRef(false);
