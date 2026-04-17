@@ -57,6 +57,20 @@ class TestGetPointAtDistance:
         assert lng > 103.82
         assert abs(lat - 1.35) < 0.001  # latitude barely changes
 
+    def test_point_at_distance_south(self):
+        """Moving 1km south should decrease latitude."""
+        from app.routers.routes import get_point_at_distance
+        lat, lng = get_point_at_distance(1.35, 103.82, 1.0, 180)  # 180° = South
+        assert lat < 1.35
+        assert abs(lng - 103.82) < 0.001
+
+    def test_point_at_distance_zero(self):
+        """0km distance should return the same point."""
+        from app.routers.routes import get_point_at_distance
+        lat, lng = get_point_at_distance(1.35, 103.82, 0.0, 45)
+        assert abs(lat - 1.35) < 0.0001
+        assert abs(lng - 103.82) < 0.0001
+
 
 @pytest.mark.unit
 class TestCORSConfig:
