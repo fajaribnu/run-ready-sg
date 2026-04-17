@@ -1,4 +1,4 @@
-import { Sparkles, Loader2, CloudRain, MapPin } from "lucide-react";
+import { Sparkles, Loader2, CloudRain, MapPin, Navigation } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 type RoutePlanningPanelProps = {
@@ -16,6 +16,9 @@ type RoutePlanningPanelProps = {
     shelter: number;
     sheltersAlongRoute: number;
   };
+  mode: "distance" | "destination";
+  onModeChange: (mode: "distance" | "destination") => void;
+  destSet: boolean;
 };
 
 export function RoutePlanningPanel({
@@ -28,8 +31,14 @@ export function RoutePlanningPanel({
   onGenerateRoute,
   isLocationReady,
   stats,
+  mode,
+  onModeChange,
+  destSet,
 }: RoutePlanningPanelProps) {
-  const isButtonDisabled = loading || !isLocationReady;
+  const isButtonDisabled =
+    loading ||
+    !isLocationReady ||
+    (mode === "destination" && !destSet);
 
   return (
     <section className="space-y-6">
@@ -92,81 +101,112 @@ export function RoutePlanningPanel({
 
       <div className="rounded-3xl border border-outline-variant/10 bg-surface-container-lowest p-8 shadow-sm">
         <div className="space-y-8">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <label className="font-headline text-lg font-bold">
-                Target Distance
-              </label>
-              <span className="rounded-full bg-primary-container px-3 py-1 text-sm font-bold text-white">
-                {distance.toFixed(1)} km
-              </span>
-            </div>
 
-            <input
-              className="h-2 w-full cursor-pointer appearance-none rounded-full bg-surface-container-high accent-primary"
-              max="20"
-              min="1"
-              step="0.5"
-              type="range"
-              value={distance}
-              onChange={(e) => setDistance(parseFloat(e.target.value))}
-            />
-
-            <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter text-outline-variant">
-              <span>1km</span>
-              <span>5km</span>
-              <span>10km</span>
-              <span>15km</span>
-              <span>20km+</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-            <div className="flex w-full items-center gap-4 md:w-auto">
-              <span className="font-headline text-lg font-bold">Loop Route</span>
+          {/* Mode switcher */}
+          <div className="flex rounded-2xl bg-surface-container-high p-1">
+            {(["distance", "destination"] as const).map((m) => (
               <button
-                onClick={() => setIsLoop(!isLoop)}
-                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors duration-300 ${
-                  isLoop ? "bg-primary" : "bg-surface-container-high"
+                key={m}
+                onClick={() => onModeChange(m)}
+                className={`flex-1 rounded-xl py-2 text-sm font-bold transition-all ${
+                  mode === m
+                    ? "bg-primary text-on-primary shadow"
+                    : "text-outline"
                 }`}
               >
-                <span
-                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ${
-                    isLoop ? "translate-x-7" : "translate-x-1"
-                  }`}
-                />
+                {m === "distance" ? "By Distance" : "By Destination"}
               </button>
-              <span className="font-bold text-on-surface">
-                {isLoop ? "ON" : "OFF"}
-              </span>
-            </div>
-
-            <button
-              onClick={onGenerateRoute}
-              disabled={isButtonDisabled}
-              className="flex w-full items-center justify-center gap-3 rounded-full bg-primary px-10 py-5 font-headline text-lg font-extrabold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 md:w-auto"
-            >
-              {loading ? (
-                <>
-                  <Loader2
-                    size={20}
-                    className="animate-spin [animation-duration:0.7s]"
-                  />
-                  Generating...
-                </>
-              ) : !isLocationReady ? (
-                <>
-                  <MapPin size={20} />
-                  Getting your location...
-                </>
-              ) : (
-                <>
-                  <Sparkles size={20} />
-                  Generate route
-                </>
-              )}
-            </button>
+            ))}
           </div>
+
+          {mode === "distance" ? (
+            <>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="font-headline text-lg font-bold">
+                    Target Distance
+                  </label>
+                  <span className="rounded-full bg-primary-container px-3 py-1 text-sm font-bold text-white">
+                    {distance.toFixed(1)} km
+                  </span>
+                </div>
+
+                <input
+                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-surface-container-high accent-primary"
+                  max="20"
+                  min="1"
+                  step="0.5"
+                  type="range"
+                  value={distance}
+                  onChange={(e) => setDistance(parseFloat(e.target.value))}
+                />
+
+                <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter text-outline-variant">
+                  <span>1km</span>
+                  <span>5km</span>
+                  <span>10km</span>
+                  <span>15km</span>
+                  <span>20km+</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <span className="font-headline text-lg font-bold">Loop Route</span>
+                <button
+                  onClick={() => setIsLoop(!isLoop)}
+                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors duration-300 ${
+                    isLoop ? "bg-primary" : "bg-surface-container-high"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ${
+                      isLoop ? "translate-x-7" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+                <span className="font-bold text-on-surface">
+                  {isLoop ? "ON" : "OFF"}
+                </span>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-4 rounded-2xl border border-outline-variant/10 bg-surface-container-low p-5">
+              <Navigation size={24} className={destSet ? "text-primary" : "text-outline"} />
+              <p className="text-sm leading-relaxed text-outline">
+                {destSet
+                  ? "Destination set — tap the map to change it."
+                  : "Tap anywhere on the map to set your destination."}
+              </p>
+            </div>
+          )}
+
+          <button
+            onClick={onGenerateRoute}
+            disabled={isButtonDisabled}
+            className="flex w-full items-center justify-center gap-3 rounded-full bg-primary px-10 py-5 font-headline text-lg font-extrabold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {loading ? (
+              <>
+                <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
+                Generating...
+              </>
+            ) : !isLocationReady ? (
+              <>
+                <MapPin size={20} />
+                Getting your location...
+              </>
+            ) : mode === "destination" && !destSet ? (
+              <>
+                <Navigation size={20} />
+                Set destination on map
+              </>
+            ) : (
+              <>
+                <Sparkles size={20} />
+                Generate route
+              </>
+            )}
+          </button>
         </div>
       </div>
     </section>
