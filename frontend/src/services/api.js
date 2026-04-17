@@ -19,7 +19,7 @@ const MOCK = {
   checkRun: false, // F1: ✅ live on EC2
   findShelter: false, // F2: ✅ live on EC2
   bestTimes: false, // F5: ✅ live on EC2
-  planRoute: true, // F4: keep mocked (cut)
+  planRoute: false, // F4: keep mocked (cut)
   alerts: true, // F3: keep mocked until SES ready
 };
 
