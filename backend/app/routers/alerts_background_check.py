@@ -3,12 +3,12 @@ F3: Weather Alerts (SES)
 Email notifications when safety thresholds are breached for saved locations.
 """
 
-from http.client import HTTPException
 
 import os
 import boto3
 from botocore.exceptions import ClientError
 import json
+import time
 from app.database import init_db, get_db
 from app.services.weather import get_nearest
 
@@ -154,6 +154,7 @@ mailer = EmailService()
 
 
 def email_loop(alert_list: dict):
+    log = []
     for sub_id, alert in alert_list.items():
         email = alert.get("email")
         subject = f"RunReady Alert: {alert['status']} conditions at your location"
@@ -178,9 +179,13 @@ def email_loop(alert_list: dict):
         """
         success = mailer.send_lightning_alert(email, subject, body)
         if success:
-            return {"status": "success", "info": f"Alert sent to {email}"}
+            log.append(f"Alert sent to {email}")
         else:
-            raise HTTPException(status_code=500, detail="SES failed. Check AWS Region/Identity.")
+            log.append(f"Failed to send alert to {email}")
+ 
+        time.sleep(1)  # Simple cooldown to avoid SES rate limits; in production, use a more robust solution
+
+    return log
 
 
 # @router.get("/alerts/check")
