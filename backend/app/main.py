@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.config import settings
 from app.database import init_db, close_db
-from app.routers import decision, shelter, routes, alerts, timeslots
+from app.routers import decision, shelter, routes, alerts, timeslots, linkways
 
 
 @asynccontextmanager
@@ -38,6 +38,7 @@ app.include_router(shelter.router, prefix="/api", tags=["Shelter"])
 app.include_router(routes.router, prefix="/api", tags=["Routes"])
 app.include_router(alerts.router, prefix="/api", tags=["Alerts"])
 app.include_router(timeslots.router, prefix="/api", tags=["Timeslots"])
+app.include_router(linkways.router, prefix="/api", tags=["Spatial"])
 
 
 @app.get("/health")
