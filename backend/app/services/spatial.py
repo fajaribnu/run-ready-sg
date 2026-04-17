@@ -68,3 +68,30 @@ def calculate_route_coverage(route_geojson: dict) -> float:
             if row and row[1] > 0:
                 return round((row[0] / row[1]) * 100, 1)
             return 0.0
+
+
+def get_linkways_in_view(min_lat: float, min_lng: float, max_lat: float, max_lng: float) -> dict:
+    """
+    Fetch all covered linkways within a bounding box.
+    Returns a GeoJSON FeatureCollection for map rendering.
+    """
+    query = """
+        SELECT jsonb_build_object(
+            'type',     'FeatureCollection',
+            'features', COALESCE(jsonb_agg(features.feature), '[]'::jsonb)
+        )
+        FROM (
+            SELECT jsonb_build_object(
+                'type',       'Feature',
+                'geometry',   ST_AsGeoJSON(geom)::jsonb,
+                'properties', jsonb_build_object('id', id, 'name', name)
+            ) AS feature
+            FROM covered_linkways
+            WHERE geom && ST_MakeEnvelope(%s, %s, %s, %s, 4326)
+        ) features;
+    """
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (min_lng, min_lat, max_lng, max_lat))
+            row = cur.fetchone()
+            return row[0] if row and row[0] else {"type": "FeatureCollection", "features": []}
