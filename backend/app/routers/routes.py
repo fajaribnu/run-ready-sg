@@ -75,30 +75,24 @@ async def plan_route(
 
     s_lat, s_lng = snap_to_nearest_road(lat, lng, token)
 
-    features = []
-    styles = [
-        {"color": "#ff0000", "width": 10, "opacity": 0.4},
-        {"color": "#0000ff", "width": 6,  "opacity": 0.6},
-        {"color": "#00ff00", "width": 2,  "opacity": 1.0},
-    ]
+    routes = []
+
+    def build_route(route_id, coords, dist):
+        """Convert raw coords to the frontend contract format."""
+        geojson = {"type": "LineString", "coordinates": [[p[1], p[0]] for p in coords]}
+        return {
+            "id": route_id,
+            "distance_km": round(dist, 2),
+            "coverage_pct": calculate_route_coverage(geojson),
+            "polyline": polyline.encode(coords),
+            "shelters_along_route": 0,
+        }
 
     # --- Point-to-point: user picked a specific destination ---
     if dest_lat is not None and dest_lng is not None:
         coords, dist = fetch_onemap_raw(s_lat, s_lng, dest_lat, dest_lng, token)
         if coords:
-            geojson = {"type": "LineString", "coordinates": [[p[1], p[0]] for p in coords]}
-            features.append({
-                "type": "Feature",
-                "properties": {
-                    "route_id": 1,
-                    "stroke": "#2563eb",
-                    "stroke-width": 8,
-                    "stroke-opacity": 0.8,
-                    "distance_km": round(dist, 2),
-                    "coverage_pct": calculate_route_coverage(geojson),
-                },
-                "geometry": geojson,
-            })
+            routes.append(build_route(1, coords, dist))
     else:
         # --- Distance-based: generate 3 random routes ---
         for i in range(3):
@@ -115,39 +109,15 @@ async def plan_route(
                 if res1[0] and res2[0] and res3[0]:
                     full_coords = res1[0] + res2[0][1:] + res3[0][1:]
                     total_dist = res1[1] + res2[1] + res3[1]
-                    geojson = {"type": "LineString", "coordinates": [[p[1], p[0]] for p in full_coords]}
-                    features.append({
-                        "type": "Feature",
-                        "properties": {
-                            "route_id": i + 1,
-                            "stroke": styles[i]["color"],
-                            "stroke-width": styles[i]["width"],
-                            "stroke-opacity": styles[i]["opacity"],
-                            "distance_km": round(total_dist, 2),
-                            "coverage_pct": calculate_route_coverage(geojson),
-                        },
-                        "geometry": geojson,
-                    })
+                    routes.append(build_route(i + 1, full_coords, total_dist))
             else:
                 target_dist = distance_km * 0.75
                 d_lat, d_lng = get_point_at_distance(s_lat, s_lng, target_dist, random.uniform(0, 360))
                 coords, dist = fetch_onemap_raw(s_lat, s_lng, d_lat, d_lng, token)
                 if coords:
-                    geojson = {"type": "LineString", "coordinates": [[p[1], p[0]] for p in coords]}
-                    features.append({
-                        "type": "Feature",
-                        "properties": {
-                            "route_id": i + 1,
-                            "stroke": styles[i]["color"],
-                            "stroke-width": styles[i]["width"],
-                            "stroke-opacity": styles[i]["opacity"],
-                            "distance_km": round(dist, 2),
-                            "coverage_pct": calculate_route_coverage(geojson),
-                        },
-                        "geometry": geojson,
-                    })
+                    routes.append(build_route(i + 1, coords, dist))
 
-    if not features:
+    if not routes:
         raise HTTPException(status_code=500, detail="OneMap failed to return route geometry.")
 
-    return {"type": "FeatureCollection", "features": features}
+    return {"routes": routes}
