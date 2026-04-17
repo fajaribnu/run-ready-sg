@@ -84,7 +84,7 @@ export function QuotaModal({
                 Daily limit reached
               </h2>
 
-              {/* Description — changes based on tier */}
+              {/* Description - changes based on tier */}
               <p className="mb-6 text-sm leading-relaxed text-white/55">
                 You've used your{" "}
                 <span className="text-white/80">3 free checks</span> for today.{" "}
@@ -93,7 +93,7 @@ export function QuotaModal({
                   : <>Sign up to get <span className="text-white/80">10 checks/day</span> for free.</>}
               </p>
 
-              {/* Tier cards — only shown when SHOW_PRO_TIER is true */}
+              {/* Tier cards - only shown when SHOW_PRO_TIER is true */}
               {SHOW_PRO_TIER && (
                 <div className="mb-6 grid grid-cols-2 gap-3">
                   {/* Free tier */}
@@ -127,7 +127,7 @@ export function QuotaModal({
                 </div>
               )}
 
-              {/* Single tier — divider shown only when SHOW_PRO_TIER is false */}
+              {/* Single tier - divider shown only when SHOW_PRO_TIER is false */}
               {!SHOW_PRO_TIER && (
                 <div className="mb-6 h-px w-full bg-white/8" />
               )}
@@ -137,10 +137,10 @@ export function QuotaModal({
                   onClick={onSignUp}
                   className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-[#0f1117] transition hover:bg-white/90 active:scale-[0.98]"
                 >
-                  Sign up — it's free
+                  Sign up - it's free
                 </button>
 
-                {/* Upgrade button — only shown when SHOW_PRO_TIER is true */}
+                {/* Upgrade button - only shown when SHOW_PRO_TIER is true */}
                 {SHOW_PRO_TIER && (
                   <button
                     onClick={onUpgrade}
