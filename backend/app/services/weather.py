@@ -87,9 +87,15 @@ def get_localized_weather(lat: float, lng: float) -> dict:
     if my_wbgt == "NA":
         my_wbgt = "29.0"
 
+    # --- ADDED ALERT LOGIC ---
+    # Detects lightning risk keywords in the forecast string
+    danger_keywords = ["thundery showers", "heavy thundery showers"]
+    is_danger = any(k in my_forecast.lower() for k in danger_keywords)
+
     return {
         "area_name": nearest_area["name"],
         "temperature": float(my_temp),
         "forecast": my_forecast,
         "wbgt": float(my_wbgt),
+        "warning_active": is_danger  # True if thundery showers detected
     }

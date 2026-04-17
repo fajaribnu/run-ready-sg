@@ -33,3 +33,6 @@ database/data/*.csv
 
 # Docker
 *.log
+
+# Notes (project management docs)
+notes/

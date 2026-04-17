@@ -33,7 +33,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 app.include_router(decision.router, prefix="/api", tags=["Decision Engine"])
 app.include_router(shelter.router, prefix="/api", tags=["Shelter"])
 app.include_router(routes.router, prefix="/api", tags=["Routes"])
