@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 class Settings:
-    DB_HOST: str = os.getenv("DB_HOST", "localhost")
+    # --- DATABASE SETTINGS ---
+    DB_HOST: str = os.getenv("DB_HOST", "runready-db.c3q46oykql8z.ap-southeast-1.rds.amazonaws.com")
     DB_PORT: int = int(os.getenv("DB_PORT", "5432"))
     DB_NAME: str = os.getenv("DB_NAME", "runready")
     DB_USER: str = os.getenv("DB_USER", "runready_user")
@@ -15,20 +15,27 @@ class Settings:
         f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
     )
 
+    # --- API KEYS ---
     DATA_GOV_API_KEY: str = os.getenv("DATA_GOV_API_KEY", "")
+    
+    # This is the line that was missing!
+    ONEMAP_TOKEN: str = os.getenv("ONEMAP_TOKEN", "")
 
+    # --- AWS SETTINGS ---
     AWS_REGION: str = os.getenv("AWS_REGION", "ap-southeast-1")
     SES_SENDER_EMAIL: str = os.getenv("SES_SENDER_EMAIL", "")
 
+    # --- ONEMAP AUTH (CREDENTIALS) ---
     ONEMAP_EMAIL: str = os.getenv("ONEMAP_EMAIL", "")
     ONEMAP_PASSWORD: str = os.getenv("ONEMAP_PASSWORD", "")
 
+    # --- CORS SETTINGS ---
     CORS_ORIGINS: list = os.getenv(
         "CORS_ORIGINS",
         "http://localhost:5173,http://localhost:3000,https://dfiucv08q17cd.cloudfront.net",
     ).split(",")
 
-    # NEA API endpoints
+    # --- NEA API ENDPOINTS ---
     NEA_V1_BASE = "https://api.data.gov.sg/v1/environment"
     NEA_V2_BASE = "https://api-open.data.gov.sg/v2/real-time/api"
 
@@ -38,6 +45,5 @@ class Settings:
             "User-Agent": "RunReady-SG/1.0",
             "x-api-key": self.DATA_GOV_API_KEY,
         }
-
 
 settings = Settings()

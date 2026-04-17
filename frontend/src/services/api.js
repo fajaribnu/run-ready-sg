@@ -16,11 +16,11 @@
  * FEATURE FLAGS — flip each to false when the real endpoint is ready:
  */
 const MOCK = {
-  checkRun: true, // F1: flip to false when /api/check-run is on EC2
-  findShelter: true, // F2: flip to false when /api/find-shelter works
-  bestTimes: true, // F5: flip to false when /api/best-times works
-  planRoute: true, // F4: flip to false when /api/plan-route works
-  alerts: true, // F3: flip to false when /api/alerts/subscribe works
+  checkRun: false, // F1: ✅ live on EC2
+  findShelter: false, // F2: ✅ live on EC2
+  bestTimes: false, // F5: ✅ live on EC2
+  planRoute: false, // F4: ✅ live on EC2
+  alerts: true, // F3: keep mocked until SES ready
 };
 
 import axios from "axios";
@@ -77,10 +77,21 @@ export async function bestTimes(lat, lng, durationMin = 45) {
 // GET /api/plan-route?lat=1.35&lng=103.83&distance_km=5&loop=true
 // Contract: docs/api-contract.md#f4
 // =============================================
-export async function planRoute(lat, lng, distanceKm = 5, loop = true) {
+export async function planRoute(lat, lng, distanceKm = 5, loop = true, destLat = null, destLng = null) {
   if (MOCK.planRoute) return mockPlanRoute(lat, lng, distanceKm, loop);
   const res = await api.get("/plan-route", {
-    params: { lat, lng, distance_km: distanceKm, loop },
+    params: { lat, lng, distance_km: distanceKm, loop, dest_lat: destLat, dest_lng: destLng },
+  });
+  return res.data;
+}
+
+// =============================================
+// Spatial: Linkway overlay
+// GET /api/linkways?min_lat=&min_lng=&max_lat=&max_lng=
+// =============================================
+export async function getLinkways(minLat, minLng, maxLat, maxLng) {
+  const res = await api.get("/linkways", {
+    params: { min_lat: minLat, min_lng: minLng, max_lat: maxLat, max_lng: maxLng },
   });
   return res.data;
 }
