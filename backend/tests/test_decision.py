@@ -96,3 +96,64 @@ class TestDecisionEngine:
         """lng=0 (outside Singapore) should return 400."""
         resp = client.get("/api/check-run?lat=1.35&lng=0")
         assert resp.status_code == 400
+
+    def test_lat_exactly_at_min_boundary_is_valid(self, client):
+        """lat=1.15 is exactly on the boundary — should be accepted (200, not 400)."""
+        with patch("app.routers.decision.get_localized_weather") as mock_weather:
+            mock_weather.return_value = _mock_weather()
+            resp = client.get("/api/check-run?lat=1.15&lng=103.82")
+            assert resp.status_code == 200
+
+    def test_lat_just_below_min_boundary_is_rejected(self, client):
+        """lat=1.149 is just outside the boundary — should return 400."""
+        resp = client.get("/api/check-run?lat=1.149&lng=103.82")
+        assert resp.status_code == 400
+
+    @patch("app.routers.decision.get_localized_weather")
+    def test_wbgt_exactly_at_threshold_is_safe(self, mock_weather, client):
+        """WBGT exactly 32.0 should be SAFE — threshold is strictly > 32.0."""
+        mock_weather.return_value = _mock_weather(forecast="Fair", wbgt=32.0)
+        resp = client.get("/api/check-run?lat=1.35&lng=103.82")
+        data = resp.json()
+        assert data["status"] == "SAFE"
+        assert not any("WBGT" in r for r in data["data"]["reasons"])
+
+    @patch("app.routers.decision.get_localized_weather")
+    def test_warning_showers_forecast(self, mock_weather, client):
+        """'Showers' keyword alone triggers WARNING."""
+        mock_weather.return_value = _mock_weather(forecast="Showers")
+        resp = client.get("/api/check-run?lat=1.35&lng=103.82")
+        assert resp.json()["status"] == "WARNING"
+
+    @patch("app.routers.decision.get_localized_weather")
+    def test_warning_lightning_forecast(self, mock_weather, client):
+        """'Lightning' keyword triggers WARNING."""
+        mock_weather.return_value = _mock_weather(forecast="Lightning")
+        resp = client.get("/api/check-run?lat=1.35&lng=103.82")
+        assert resp.json()["status"] == "WARNING"
+
+    @patch("app.routers.decision.get_localized_weather")
+    def test_safe_non_rain_forecast(self, mock_weather, client):
+        """'Windy' forecast does not contain any rain keyword — should be SAFE."""
+        mock_weather.return_value = _mock_weather(forecast="Windy")
+        resp = client.get("/api/check-run?lat=1.35&lng=103.82")
+        assert resp.json()["status"] == "SAFE"
+
+    @patch("app.routers.decision.get_localized_weather")
+    def test_response_has_all_required_fields(self, mock_weather, client):
+        """Response must include all contract fields."""
+        mock_weather.return_value = _mock_weather()
+        resp = client.get("/api/check-run?lat=1.35&lng=103.82")
+        data = resp.json()
+        assert "status" in data
+        assert "warnings" in data
+        for field in ["location", "temperature", "forecast", "wbgt", "projection", "reasons"]:
+            assert field in data["data"], f"Missing field: {field}"
+
+    @patch("app.routers.decision.get_localized_weather")
+    def test_weather_exception_returns_error_status(self, mock_weather, client):
+        """If weather service raises, response status should be ERROR (not 500)."""
+        mock_weather.side_effect = Exception("NEA API timeout")
+        resp = client.get("/api/check-run?lat=1.35&lng=103.82")
+        assert resp.status_code == 200
+        assert resp.json()["status"] == "ERROR"

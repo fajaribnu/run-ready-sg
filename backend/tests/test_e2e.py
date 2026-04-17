@@ -86,7 +86,8 @@ class TestBestTimesE2E:
 class TestRouteE2E:
     """F4: Route planner end-to-end with OneMap."""
 
-    def test_plan_route_returns_geojson(self):
+    def test_plan_route_returns_routes(self):
+        """Response is {routes: [...]} — not GeoJSON FeatureCollection."""
         resp = requests.get(
             f"{LIVE_API_BASE}/api/plan-route",
             params={"lat": 1.35, "lng": 103.82, "distance_km": 3},
@@ -94,11 +95,118 @@ class TestRouteE2E:
         )
         data = resp.json()
         assert resp.status_code == 200
+        assert "routes" in data
+        assert len(data["routes"]) > 0
+
+    def test_plan_route_response_schema(self):
+        """Each route has all required fields with correct types."""
+        resp = requests.get(
+            f"{LIVE_API_BASE}/api/plan-route",
+            params={"lat": 1.35, "lng": 103.82, "distance_km": 3},
+            timeout=30,
+        )
+        route = resp.json()["routes"][0]
+        assert isinstance(route["id"], int)
+        assert isinstance(route["distance_km"], float)
+        assert isinstance(route["coverage_pct"], float)
+        assert isinstance(route["polyline"], str) and len(route["polyline"]) > 0
+        assert isinstance(route["shelters_along_route"], int)
+
+    def test_plan_route_coverage_pct_in_range(self):
+        """coverage_pct must be between 0 and 100."""
+        resp = requests.get(
+            f"{LIVE_API_BASE}/api/plan-route",
+            params={"lat": 1.35, "lng": 103.82, "distance_km": 3},
+            timeout=30,
+        )
+        for route in resp.json()["routes"]:
+            assert 0.0 <= route["coverage_pct"] <= 100.0
+
+    def test_plan_route_loop(self):
+        """Loop=true returns routes with realistic distance."""
+        resp = requests.get(
+            f"{LIVE_API_BASE}/api/plan-route",
+            params={"lat": 1.35, "lng": 103.82, "distance_km": 5, "loop": True},
+            timeout=30,
+        )
+        data = resp.json()
+        assert resp.status_code == 200
+        assert len(data["routes"]) > 0
+        # Loop route distance should be > 0
+        assert data["routes"][0]["distance_km"] > 0
+
+    def test_plan_route_destination(self):
+        """Destination mode returns exactly 1 point-to-point route."""
+        resp = requests.get(
+            f"{LIVE_API_BASE}/api/plan-route",
+            params={
+                "lat": 1.3138, "lng": 103.8420,
+                "dest_lat": 1.3200, "dest_lng": 103.8500,
+            },
+            timeout=30,
+        )
+        data = resp.json()
+        assert resp.status_code == 200
+        assert len(data["routes"]) == 1
+        assert data["routes"][0]["id"] == 1
+
+    def test_plan_route_destination_schema(self):
+        """Destination route also has coverage_pct and shelters_along_route."""
+        resp = requests.get(
+            f"{LIVE_API_BASE}/api/plan-route",
+            params={
+                "lat": 1.3138, "lng": 103.8420,
+                "dest_lat": 1.3200, "dest_lng": 103.8500,
+            },
+            timeout=30,
+        )
+        route = resp.json()["routes"][0]
+        assert "coverage_pct" in route
+        assert "shelters_along_route" in route
+        assert isinstance(route["shelters_along_route"], int)
+
+
+@pytest.mark.e2e
+class TestLinkwaysE2E:
+    """Spatial: /api/linkways bounding box endpoint."""
+
+    def test_linkways_returns_feature_collection(self):
+        """Response is a valid GeoJSON FeatureCollection."""
+        resp = requests.get(
+            f"{LIVE_API_BASE}/api/linkways",
+            params={"min_lat": 1.30, "min_lng": 103.80, "max_lat": 1.40, "max_lng": 103.90},
+            timeout=15,
+        )
+        data = resp.json()
+        assert resp.status_code == 200
         assert data["type"] == "FeatureCollection"
-        assert len(data["features"]) > 0
-        feature = data["features"][0]
-        assert feature["geometry"]["type"] == "LineString"
-        assert "distance_km" in feature["properties"]
+        assert "features" in data
+
+    def test_linkways_features_have_geometry(self):
+        """Each feature has a geometry and properties."""
+        resp = requests.get(
+            f"{LIVE_API_BASE}/api/linkways",
+            params={"min_lat": 1.30, "min_lng": 103.80, "max_lat": 1.40, "max_lng": 103.90},
+            timeout=15,
+        )
+        features = resp.json()["features"]
+        assert len(features) > 0
+        for f in features[:5]:  # check first 5
+            assert f["type"] == "Feature"
+            assert "geometry" in f
+            assert "properties" in f
+            assert "id" in f["properties"]
+
+    def test_linkways_empty_bbox_returns_empty(self):
+        """Bounding box with no linkways returns empty features list."""
+        resp = requests.get(
+            f"{LIVE_API_BASE}/api/linkways",
+            params={"min_lat": 1.0, "min_lng": 103.0, "max_lat": 1.01, "max_lng": 103.01},
+            timeout=15,
+        )
+        data = resp.json()
+        assert resp.status_code == 200
+        assert data["features"] == []
 
 
 @pytest.mark.e2e

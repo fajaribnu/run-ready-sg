@@ -78,3 +78,92 @@ class TestDBConnection:
         resp = live_client.get("/health")
         assert resp.status_code == 200
         assert resp.json()["status"] == "ok"
+
+
+@pytest.mark.integration
+class TestLinkwaysEndpoint:
+    """Spatial: /api/linkways against real covered_linkways table."""
+
+    def test_linkways_returns_feature_collection(self, live_client):
+        """Wide bounding box returns a GeoJSON FeatureCollection."""
+        resp = live_client.get("/api/linkways", params={
+            "min_lat": 1.29, "min_lng": 103.79,
+            "max_lat": 1.46, "max_lng": 103.99,
+        })
+        data = resp.json()
+        assert resp.status_code == 200
+        assert data["type"] == "FeatureCollection"
+        assert "features" in data
+        assert len(data["features"]) > 0
+
+    def test_linkways_features_schema(self, live_client):
+        """Each feature has id, name in properties and a valid geometry."""
+        resp = live_client.get("/api/linkways", params={
+            "min_lat": 1.29, "min_lng": 103.79,
+            "max_lat": 1.46, "max_lng": 103.99,
+        })
+        feature = resp.json()["features"][0]
+        assert feature["type"] == "Feature"
+        assert "id" in feature["properties"]
+        assert "name" in feature["properties"]
+        assert feature["geometry"]["type"] in ("LineString", "MultiLineString")
+
+    def test_linkways_empty_bbox_returns_empty(self, live_client):
+        """Tiny bounding box outside Singapore returns empty features."""
+        resp = live_client.get("/api/linkways", params={
+            "min_lat": 1.0, "min_lng": 103.0,
+            "max_lat": 1.01, "max_lng": 103.01,
+        })
+        data = resp.json()
+        assert resp.status_code == 200
+        assert data["features"] == []
+
+
+@pytest.mark.integration
+class TestRouteCoverage:
+    """PostGIS coverage_pct and shelters_along_route calculations."""
+
+    def test_calculate_route_coverage_returns_float(self, live_client):
+        """coverage_pct is a float between 0 and 100."""
+        from app.services.spatial import calculate_route_coverage
+        geojson = {
+            "type": "LineString",
+            "coordinates": [
+                [103.8420, 1.3138],
+                [103.8450, 1.3160],
+                [103.8500, 1.3200],
+            ],
+        }
+        result = calculate_route_coverage(geojson)
+        assert isinstance(result, float)
+        assert 0.0 <= result <= 100.0
+
+    def test_count_shelters_along_route_returns_int(self, live_client):
+        """shelters_along_route is a non-negative integer."""
+        from app.services.spatial import count_shelters_along_route
+        geojson = {
+            "type": "LineString",
+            "coordinates": [
+                [103.8420, 1.3138],
+                [103.8450, 1.3160],
+                [103.8500, 1.3200],
+            ],
+        }
+        result = count_shelters_along_route(geojson)
+        assert isinstance(result, int)
+        assert result >= 0
+
+    def test_shelters_along_dense_area_nonzero(self, live_client):
+        """A route through central Singapore should pass by at least 1 shelter."""
+        from app.services.spatial import count_shelters_along_route
+        # Bishan area — dense HDB blocks
+        geojson = {
+            "type": "LineString",
+            "coordinates": [
+                [103.8352, 1.3500],
+                [103.8380, 1.3520],
+                [103.8410, 1.3540],
+            ],
+        }
+        result = count_shelters_along_route(geojson)
+        assert result > 0
