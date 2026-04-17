@@ -18,7 +18,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
 
   // Replace `true` with a real session check when you add auth.
-  const [isGuest, setIsGuest] = useState(false);
+  const [isGuest, setIsGuest] = useState(true);
 
   const quota = useGuestQuota();
 

@@ -18,7 +18,7 @@ export function LoginRequiredModal({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop — full screen, BottomNav floats above via its own z-index */}
+          {/* Backdrop - full screen, BottomNav floats above via its own z-index */}
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -83,7 +83,7 @@ export function LoginRequiredModal({
                   onClick={onSignUp}
                   className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-[#0f1117] transition hover:bg-white/90 active:scale-[0.98]"
                 >
-                  Sign up — it's free
+                  Sign up - it's free
                 </button>
                 <button
                   onClick={onLogin}

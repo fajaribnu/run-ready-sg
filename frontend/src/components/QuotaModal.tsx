@@ -7,6 +7,9 @@ type QuotaModalProps = {
   onUpgrade: () => void;
 };
 
+// Toggle this to switch between 1 and 2 tier layouts
+const SHOW_PRO_TIER = true;
+
 export function QuotaModal({
   isOpen,
   onClose,
@@ -17,7 +20,6 @@ export function QuotaModal({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop - full screen, BottomNav floats above via its own z-index */}
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -28,7 +30,6 @@ export function QuotaModal({
             onClick={onClose}
           />
 
-          {/* Modal */}
           <motion.div
             key="modal"
             initial={{ opacity: 0, scale: 0.92, y: 24 }}
@@ -82,55 +83,73 @@ export function QuotaModal({
               <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">
                 Daily limit reached
               </h2>
+
+              {/* Description — changes based on tier */}
               <p className="mb-6 text-sm leading-relaxed text-white/55">
                 You've used your{" "}
-                <span className="text-white/80">3 free checks</span> for today.
-                Sign up for a free account to get more, or go Pro for unlimited
-                checks every day.
+                <span className="text-white/80">3 free checks</span> for today.{" "}
+                {SHOW_PRO_TIER
+                  ? "Sign up for a free account to get more, or go Pro for unlimited checks every day."
+                  : <>Sign up to get <span className="text-white/80">10 checks/day</span> for free.</>}
               </p>
 
-              {/* Tier cards */}
-              <div className="mb-6 grid grid-cols-2 gap-3">
-                <div className="rounded-xl border border-white/8 bg-white/4 p-4">
-                  <p className="mb-1 text-xs font-medium uppercase tracking-widest text-white/40">
-                    Free
-                  </p>
-                  <p className="text-2xl font-bold text-white">
-                    10
-                    <span className="ml-1 text-sm font-normal text-white/50">
-                      / day
-                    </span>
-                  </p>
-                  <p className="mt-1 text-xs text-white/40">After sign up</p>
+              {/* Tier cards — only shown when SHOW_PRO_TIER is true */}
+              {SHOW_PRO_TIER && (
+                <div className="mb-6 grid grid-cols-2 gap-3">
+                  {/* Free tier */}
+                  <div className="rounded-xl border border-white/8 bg-white/4 p-4">
+                    <p className="mb-1 text-xs font-medium uppercase tracking-widest text-white/40">
+                      Free
+                    </p>
+                    <p className="text-2xl font-bold text-white">
+                      10
+                      <span className="ml-1 text-sm font-normal text-white/50">
+                        / day
+                      </span>
+                    </p>
+                    <p className="mt-1 text-xs text-white/40">After sign up</p>
+                  </div>
+
+                  {/* Pro tier */}
+                  <div className="relative overflow-hidden rounded-xl border border-blue-500/30 bg-blue-500/8 p-4">
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent" />
+                    <p className="mb-1 text-xs font-medium uppercase tracking-widest text-blue-400">
+                      Pro
+                    </p>
+                    <p className="text-2xl font-bold text-white">
+                      ∞
+                      <span className="ml-1 text-sm font-normal text-white/50">
+                        / day
+                      </span>
+                    </p>
+                    <p className="mt-1 text-xs text-blue-400/70">Unlimited</p>
+                  </div>
                 </div>
-                <div className="relative overflow-hidden rounded-xl border border-blue-500/30 bg-blue-500/8 p-4">
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent" />
-                  <p className="mb-1 text-xs font-medium uppercase tracking-widest text-blue-400">
-                    Pro
-                  </p>
-                  <p className="text-2xl font-bold text-white">
-                    ∞
-                    <span className="ml-1 text-sm font-normal text-white/50">
-                      / day
-                    </span>
-                  </p>
-                  <p className="mt-1 text-xs text-blue-400/70">Unlimited</p>
-                </div>
-              </div>
+              )}
+
+              {/* Single tier — divider shown only when SHOW_PRO_TIER is false */}
+              {!SHOW_PRO_TIER && (
+                <div className="mb-6 h-px w-full bg-white/8" />
+              )}
 
               <div className="flex flex-col gap-2.5">
                 <button
                   onClick={onSignUp}
                   className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-[#0f1117] transition hover:bg-white/90 active:scale-[0.98]"
                 >
-                  Sign up - it's free
+                  Sign up — it's free
                 </button>
-                <button
-                  onClick={onUpgrade}
-                  className="w-full rounded-xl border border-blue-500/40 bg-blue-500/10 py-3 text-sm font-semibold text-blue-300 transition hover:bg-blue-500/20 active:scale-[0.98]"
-                >
-                  Upgrade to Pro
-                </button>
+
+                {/* Upgrade button — only shown when SHOW_PRO_TIER is true */}
+                {SHOW_PRO_TIER && (
+                  <button
+                    onClick={onUpgrade}
+                    className="w-full rounded-xl border border-blue-500/40 bg-blue-500/10 py-3 text-sm font-semibold text-blue-300 transition hover:bg-blue-500/20 active:scale-[0.98]"
+                  >
+                    Upgrade to Pro
+                  </button>
+                )}
+
                 <button
                   onClick={onClose}
                   className="w-full py-2 text-xs text-white/30 transition hover:text-white/50"
