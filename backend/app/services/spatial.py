@@ -70,6 +70,30 @@ def calculate_route_coverage(route_geojson: dict) -> float:
             return 0.0
 
 
+def count_shelters_along_route(route_geojson: dict) -> int:
+    """
+    Count shelters within 150m of a route.
+    Takes a GeoJSON LineString, returns shelter count as int.
+    """
+    query = """
+        SELECT COUNT(*)
+        FROM shelters
+        WHERE ST_DWithin(
+            geom::geography,
+            ST_GeomFromGeoJSON(%s)::geography,
+            150
+        );
+    """
+    import json
+
+    geojson_str = json.dumps(route_geojson)
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (geojson_str,))
+            row = cur.fetchone()
+            return int(row[0]) if row else 0
+
+
 def get_linkways_in_view(min_lat: float, min_lng: float, max_lat: float, max_lng: float) -> dict:
     """
     Fetch all covered linkways within a bounding box.

@@ -68,7 +68,7 @@ async def plan_route(
     dest_lat: float = None,
     dest_lng: float = None,
 ):
-    from app.services.spatial import calculate_route_coverage
+    from app.services.spatial import calculate_route_coverage, count_shelters_along_route
 
     token = settings.ONEMAP_TOKEN.strip().replace("'", "").replace('"', "").replace("\n", "").replace("\r", "")
     token = token.replace("Bearer ", "").replace("bearer ", "")
@@ -85,7 +85,7 @@ async def plan_route(
             "distance_km": round(dist, 2),
             "coverage_pct": calculate_route_coverage(geojson),
             "polyline": polyline.encode(coords),
-            "shelters_along_route": 0,
+            "shelters_along_route": count_shelters_along_route(geojson),
         }
 
     # --- Point-to-point: user picked a specific destination ---
