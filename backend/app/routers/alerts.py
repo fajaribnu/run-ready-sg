@@ -8,10 +8,16 @@ from pydantic import BaseModel
 
 from http.client import HTTPException
 
+import os
+import boto3
+from botocore.exceptions import ClientError
 import json
 from app.database import get_db
 from app.services.weather import get_nearest
 from app.routers.decision import _handle_wbgt_value, RAIN_KEYWORDS, WBGT_DANGER_THRESHOLD, SG_LAT_MIN, SG_LAT_MAX, SG_LNG_MIN, SG_LNG_MAX
+
+AWS_REGION = "ap-southeast-1" 
+SES_SENDER = os.getenv("SES_SENDER_EMAIL", "alerts@runready.xyz")
 
 router = APIRouter()
 
@@ -108,8 +114,34 @@ def check_run(
     }
 
 
-def send_email_alert(email: str, subject: str, body: str):
-    print(f"Sending email to {email} with subject '{subject}':\n{body}")
+class EmailService:
+    def __init__(self):
+        self.ses = boto3.client(
+            'ses',
+            region_name=AWS_REGION,
+            # AWS_ACCESS_KEY_ID and SECRET are pulled automatically from .env
+        )
+
+    def send_lightning_alert(self, to_email: str, subject: str, body: str) -> bool:
+        try:
+            self.ses.send_email(
+                Source=SES_SENDER,
+                Destination={'ToAddresses': [to_email]},
+                Message={
+                    'Subject': {'Data': subject},
+                    'Body': {
+                        'Text': {
+                            'Data': body
+                        }
+                    }
+                }
+            )
+            return True
+        except ClientError as e:
+            print(f"SES Error: {e.response['Error']['Message']}")
+            return False
+
+mailer = EmailService()
 
 
 def email_loop(alert_list: dict):
@@ -135,8 +167,11 @@ def email_loop(alert_list: dict):
         Best regards,
         RunReady Team
         """
-        send_email_alert(email, subject, body)
-
+        success = mailer.send_lightning_alert(email, subject, body)
+        if success:
+            return {"status": "success", "info": f"Alert sent to {email}"}
+        else:
+            raise HTTPException(status_code=500, detail="SES failed. Check AWS Region/Identity.")
 
 @router.post("/alerts/subscribe")
 def subscribe_alert(sub: AlertSubscription):
@@ -218,7 +253,8 @@ def check_alerts():
         result["email"] = email
 
         # print(result)
-        if result["status"] == "WARNING":
+        # if result["status"] == "WARNING":
+        if True:
             alert_list[sub_id] = result
     
     email_loop(alert_list)
