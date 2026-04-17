@@ -3,7 +3,6 @@ F3: Weather Alerts (SES)
 Email notifications when safety thresholds are breached for saved locations.
 """
 
-
 from http.client import HTTPException
 
 import os
@@ -12,7 +11,10 @@ from botocore.exceptions import ClientError
 import json
 from app.database import get_db
 from app.services.weather import get_nearest
-from app.routers.decision import _handle_wbgt_value, RAIN_KEYWORDS, WBGT_DANGER_THRESHOLD, SG_LAT_MIN, SG_LAT_MAX, SG_LNG_MIN, SG_LNG_MAX
+
+
+WBGT_DANGER_THRESHOLD = 32.0
+RAIN_KEYWORDS = ["Rain", "Showers", "Thundery", "Lightning"]
 
 AWS_REGION = "ap-southeast-1" 
 SES_SENDER = os.getenv("SES_SENDER_EMAIL", "alerts@runready.xyz")
@@ -24,6 +26,17 @@ class AlertSubscription():
     lng: float
     label: str = ""  # e.g. "Bishan Park", "NUS Field"
 
+
+def _handle_wbgt_value(wbgt_raw):
+    if wbgt_raw in (None, "NA", "N/A", ""):
+        return None, "Unavailable"
+
+    try:
+        wbgt_numeric = float(wbgt_raw)
+        return wbgt_numeric, f"{wbgt_numeric:.1f}°C"
+    except (ValueError, TypeError):
+        return None, "Unavailable"
+    
 
 def get_localized_weather(lat: float, lng: float, temp_data: json, forecast_data: json, wbgt_data: json) -> dict:
     """
