@@ -45,10 +45,13 @@ def calculate_route_coverage(route_geojson: dict) -> float:
         ),
         covered AS (
             SELECT ST_Length(
-                ST_Intersection(r.geom::geography, l.geom::geography)
+                ST_Intersection(
+                    r.geom::geography,
+                    ST_Buffer(l.geom::geography, 5)
+                )
             ) AS covered_length
             FROM route r, covered_linkways l
-            WHERE ST_Intersects(r.geom, l.geom)
+            WHERE ST_DWithin(r.geom::geography, l.geom::geography, 10)
         )
         SELECT
             COALESCE(SUM(covered_length), 0) AS total_covered,
