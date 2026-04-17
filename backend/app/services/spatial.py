@@ -14,7 +14,7 @@ def find_nearest_shelters(lat: float, lng: float, limit: int = 5) -> list:
     """
     query = """
         SELECT
-            name,
+            COALESCE(NULLIF(address, ''), name) AS name,
             shelter_type,
             ST_Y(geom) AS lat,
             ST_X(geom) AS lng,
