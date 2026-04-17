@@ -14,7 +14,7 @@ def find_nearest_shelters(lat: float, lng: float, limit: int = 5) -> list:
     """
     query = """
         SELECT
-            name,
+            COALESCE(NULLIF(address, ''), name) AS name,
             shelter_type,
             ST_Y(geom) AS lat,
             ST_X(geom) AS lng,
@@ -45,10 +45,13 @@ def calculate_route_coverage(route_geojson: dict) -> float:
         ),
         covered AS (
             SELECT ST_Length(
-                ST_Intersection(r.geom::geography, l.geom::geography)
+                ST_Intersection(
+                    r.geom::geography,
+                    ST_Buffer(l.geom::geography, 5)
+                )
             ) AS covered_length
             FROM route r, covered_linkways l
-            WHERE ST_Intersects(r.geom, l.geom)
+            WHERE ST_DWithin(r.geom::geography, l.geom::geography, 10)
         )
         SELECT
             COALESCE(SUM(covered_length), 0) AS total_covered,
@@ -65,3 +68,54 @@ def calculate_route_coverage(route_geojson: dict) -> float:
             if row and row[1] > 0:
                 return round((row[0] / row[1]) * 100, 1)
             return 0.0
+
+
+def count_shelters_along_route(route_geojson: dict) -> int:
+    """
+    Count shelters within 150m of a route.
+    Takes a GeoJSON LineString, returns shelter count as int.
+    """
+    query = """
+        SELECT COUNT(*)
+        FROM shelters
+        WHERE ST_DWithin(
+            geom::geography,
+            ST_GeomFromGeoJSON(%s)::geography,
+            150
+        );
+    """
+    import json
+
+    geojson_str = json.dumps(route_geojson)
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (geojson_str,))
+            row = cur.fetchone()
+            return int(row[0]) if row else 0
+
+
+def get_linkways_in_view(min_lat: float, min_lng: float, max_lat: float, max_lng: float) -> dict:
+    """
+    Fetch all covered linkways within a bounding box.
+    Returns a GeoJSON FeatureCollection for map rendering.
+    """
+    query = """
+        SELECT jsonb_build_object(
+            'type',     'FeatureCollection',
+            'features', COALESCE(jsonb_agg(features.feature), '[]'::jsonb)
+        )
+        FROM (
+            SELECT jsonb_build_object(
+                'type',       'Feature',
+                'geometry',   ST_AsGeoJSON(geom)::jsonb,
+                'properties', jsonb_build_object('id', id, 'name', name)
+            ) AS feature
+            FROM covered_linkways
+            WHERE geom && ST_MakeEnvelope(%s, %s, %s, %s, 4326)
+        ) features;
+    """
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (min_lng, min_lat, max_lng, max_lat))
+            row = cur.fetchone()
+            return row[0] if row and row[0] else {"type": "FeatureCollection", "features": []}

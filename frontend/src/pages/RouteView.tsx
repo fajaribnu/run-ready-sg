@@ -17,6 +17,8 @@ type RouteStats = {
 export const RouteView = () => {
   const [distance, setDistance] = useState(5);
   const [isLoop, setIsLoop] = useState(true);
+  const [mode, setMode] = useState<"distance" | "destination">("distance");
+  const [destPos, setDestPos] = useState<{ lat: number; lng: number } | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [navigationMode, setNavigationMode] = useState(false);
@@ -56,6 +58,10 @@ export const RouteView = () => {
     autoFollowUser,
     setAutoFollowUser,
     setShowRecenter,
+    onMapClick: mode === "destination" && !navigationMode
+      ? (lat, lng) => setDestPos({ lat, lng })
+      : undefined,
+    destPos,
   });
 
   const openPopup = (title: string, message: string) => {
@@ -83,7 +89,9 @@ export const RouteView = () => {
         currentUserPos.lat,
         currentUserPos.lng,
         distance,
-        isLoop
+        mode === "distance" ? isLoop : false,
+        mode === "destination" ? destPos?.lat ?? null : null,
+        mode === "destination" ? destPos?.lng ?? null : null,
       );
       console.log(res);
 
@@ -234,6 +242,12 @@ export const RouteView = () => {
           onGenerateRoute={onGenerateRoute}
           stats={stats}
           isLocationReady={locationReady && currentUserPos != null}
+          mode={mode}
+          onModeChange={(m) => {
+            setMode(m);
+            setDestPos(null);
+          }}
+          destSet={destPos !== null}
         />
       )}
 

@@ -10,18 +10,27 @@ A location-aware decision support system for outdoor activity safety in Singapor
 run-ready-sg/
 ├── backend/          # Track B (Keefe + Ibnu) — FastAPI + ingestion pipeline
 │   ├── app/
-│   │   ├── main.py           # FastAPI entry point
-│   │   ├── config.py         # Environment config
-│   │   ├── database.py       # DB connection pool
+│   │   ├── main.py           # FastAPI entry point ✅
+│   │   ├── config.py         # Environment config ✅
+│   │   ├── database.py       # DB connection pool ✅
 │   │   ├── routers/          # One file per feature endpoint
-│   │   │   ├── decision.py   # F1: PE Decision Engine ✅
-│   │   │   ├── timeslots.py  # F5: Smart Time-Slot Finder ✅
-│   │   │   ├── shelter.py    # F2: Find Shelter Now ⚠️ stub
-│   │   │   ├── alerts.py     # F3: Weather Alerts (SES) ⚠️ stub
-│   │   │   └── routes.py     # F4: Route Coverage Scorer ⚠️ stub
+│   │   │   ├── decision.py              # F1: PE Decision Engine ✅
+│   │   │   ├── timeslots.py             # F5: Smart Time-Slot Finder ✅
+│   │   │   ├── shelter.py               # F2: Find Shelter Now ✅
+│   │   │   ├── alerts.py                # F3: Weather Alerts (SES) ✅
+│   │   │   ├── alerts_background_check.py  # F3: background alert logic ✅
+│   │   │   ├── linkways.py              # Linkways GeoJSON endpoint ✅
+│   │   │   └── routes.py                # F4: Route Planner ✅
 │   │   └── services/         # Shared business logic
 │   │       ├── weather.py    # NEA API client (V1 + V2) ✅
-│   │       └── spatial.py    # PostGIS query helpers ⚠️ untested
+│   │       └── spatial.py    # PostGIS query helpers ✅
+│   ├── tests/                # 88 tests — unit, integration, E2E
+│   │   ├── conftest.py
+│   │   ├── test_weather.py
+│   │   ├── test_timeslots.py
+│   │   ├── test_decision.py
+│   │   ├── test_e2e.py
+│   │   └── test_integration.py
 │   ├── ingestion/
 │   │   └── ingest_weather.py # Cron / Lambda-compatible ✅
 │   ├── requirements.txt
@@ -29,8 +38,10 @@ run-ready-sg/
 │   └── .env.example
 ├── frontend/         # Track C (San + Justin) — React PWA (Vite)
 │   ├── src/
-│   │   ├── pages/            # One file per screen — redesign freely
-│   │   ├── components/       # Reusable UI pieces (empty — create as needed)
+│   │   ├── pages/            # One file per screen
+│   │   ├── components/       # Reusable UI components
+│   │   ├── map/
+│   │   │   └── useLeafletMap.ts  # Leaflet hook (click handler, markers) ✅
 │   │   └── services/
 │   │       ├── api.js        # API client with MOCK flags ✅
 │   │       └── mock.js       # Fake data for dev ✅
@@ -40,63 +51,65 @@ run-ready-sg/
 │   ├── migrations/
 │   │   └── 001_init_schema.sql  # Full schema ✅
 │   ├── seeds/
-│   │   ├── load_shelters.py     # ⚠️ needs real dataset URLs
-│   │   └── load_linkways.py     # ⚠️ needs .shp file in data/
+│   │   ├── load_shelters.py     # ✅ 13,481 shelters loaded
+│   │   └── load_linkways.py     # ✅ 7,012 linkway segments loaded
 │   └── data/                    # Raw shapefiles, CSVs (gitignored if large)
 ├── infra/            # Deployment config
-│   ├── docker-compose.yml
+│   ├── docker-compose.yml    # Local dev stack (db + backend)
+│   ├── docker-compose.prod.yml
 │   ├── nginx.conf
 │   └── crontab
+├── notes/            # Project management docs (read these to re-orient)
+│   ├── tracker.md        # Day-by-day progress log — start here
+│   ├── project_context.md  # Full feature/infra/frontend status
+│   └── testing_guide.md    # Full test suite documentation
 ├── docs/
 │   └── api-contract.md   # THE contract between frontend and backend
 ├── developer_notes.md    # ⭐ Full project context — read this first
+├── execute_guide.md      # Local Docker setup guide
 ├── .env.example
 ├── .gitignore
 └── ai-usage-log.md       # Required by project spec — log AI usage as you go
 ```
 
-**Legend:** ✅ = working code, ⚠️ = stub that needs implementation
+**Legend:** ✅ = working, ⚠️ = pending/partial
 
-## Quick Start
+## Quick Start (Docker)
+
+> Full details in `execute_guide.md`.
 
 ### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- Docker & Docker Compose
-- PostgreSQL 15+ with PostGIS extension
+- Docker Desktop
+- Node.js 18+ (for frontend only)
 
 ### 1. Clone and configure
 ```bash
-git clone <repo-url>
+git clone https://github.com/fajaribnu/run-ready-sg.git
 cd run-ready-sg
-cp .env.example .env
-# Edit .env with your API keys and DB credentials
+cp backend/.env.example backend/.env
+# Edit backend/.env — set DB_HOST=db, add API keys
 ```
 
-### 2. Start the database (Docker)
+### 2. Start backend + database
 ```bash
-docker compose up db -d
+cd infra
+docker compose up --build -d
 ```
 
-### 3. Run database migrations and seed data
-```bash
-cd database
-psql $DATABASE_URL -f migrations/001_init_schema.sql
-python seeds/load_shelters.py
-```
+Backend runs at http://localhost:8000/docs
 
-### 4. Start the backend
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-```
-
-### 5. Start the frontend
+### 3. Start the frontend
 ```bash
 cd frontend
 npm install
 npm run dev
+```
+
+Frontend runs at http://localhost:5173
+
+### 4. Run tests
+```bash
+docker exec -it runready-backend python -m pytest tests/ --ignore=tests/test_browser.py -v
 ```
 
 ## Team Conventions
