@@ -235,3 +235,7 @@ def check_alerts():
     #     "status": "successful",
     #     "alert_list": alert_list
     # }
+
+
+if __name__ == "__main__":
+    check_alerts()
