@@ -9,7 +9,7 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 import json
-from app.database import get_db
+from app.database import init_db, get_db
 from app.services.weather import get_nearest
 
 
@@ -206,6 +206,8 @@ def check_alerts():
     subscriptions = None
     latest_weather = None
     alert_list = dict()
+
+    init_db()
     with get_db() as conn:
     # import psycopg2
     # from app.config import settings
