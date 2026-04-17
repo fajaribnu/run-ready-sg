@@ -3,7 +3,6 @@ F3: Weather Alerts (SES)
 Email notifications when safety thresholds are breached for saved locations.
 """
 
-from pydantic import BaseModel
 
 from http.client import HTTPException
 
@@ -19,7 +18,7 @@ AWS_REGION = "ap-southeast-1"
 SES_SENDER = os.getenv("SES_SENDER_EMAIL", "alerts@runready.xyz")
 
 
-class AlertSubscription(BaseModel):
+class AlertSubscription():
     email: str
     lat: float
     lng: float
