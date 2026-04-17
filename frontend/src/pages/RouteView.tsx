@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import { AlertCircle, X } from "lucide-react";
+import polyline from "@mapbox/polyline";
 import { RouteMapPanel } from "../components/RouteMapPanel";
 import { RoutePlanningPanel } from "../components/RoutePlanningPanel";
 import useLeafletMap from "../map/useLeafletMap";
@@ -26,9 +27,6 @@ export const RouteView = () => {
   const [routeGeoJson, setRouteGeoJson] = useState<any>(null);
   const [hasGeneratedRoute, setHasGeneratedRoute] = useState(false);
 
-  // Which of the 3 routes the user has selected (0 = first/red by default)
-  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
-
   const [showRecenter, setShowRecenter] = useState(false);
   const [autoFollowUser, setAutoFollowUser] = useState(true);
 
@@ -53,7 +51,6 @@ export const RouteView = () => {
     mapContainerRef,
     currentUserPos,
     routeGeoJson,
-    selectedRouteIndex,
     navigationMode,
     autoFollowUser,
     setAutoFollowUser,
@@ -65,11 +62,18 @@ export const RouteView = () => {
   });
 
   const openPopup = (title: string, message: string) => {
-    setPopup({ open: true, title, message });
+    setPopup({
+      open: true,
+      title,
+      message,
+    });
   };
 
   const closePopup = () => {
-    setPopup((prev) => ({ ...prev, open: false }));
+    setPopup((prev) => ({
+      ...prev,
+      open: false,
+    }));
   };
 
   const onGenerateRoute = async () => {
@@ -79,12 +83,8 @@ export const RouteView = () => {
     setNavigationMode(false);
     setAutoFollowUser(false);
     setShowRecenter(false);
-    setSelectedRouteIndex(0);
 
     try {
-      console.log(currentUserPos.lat);
-      console.log(currentUserPos.lng);
-
       const res = await planRoute(
         currentUserPos.lat,
         currentUserPos.lng,
@@ -93,56 +93,65 @@ export const RouteView = () => {
         mode === "destination" ? destPos?.lat ?? null : null,
         mode === "destination" ? destPos?.lng ?? null : null,
       );
-      console.log(res);
 
-      // Backend returns a GeoJSON FeatureCollection with up to 3 colored features
-      const features = res?.features;
-      if (!features || features.length === 0) {
+      const route = res?.routes?.[0];
+      if (!route) {
         openPopup("No route found", "We could not generate a route right now.");
-        return;
-      }
-
-      // Validate at least the first feature
-      const firstCoords = features[0]?.geometry?.coordinates;
-      if (!Array.isArray(firstCoords) || firstCoords.length < 2) {
-        openPopup("No route found", "The route generated is invalid.");
-        setRouteGeoJson(null);
         return;
       }
 
       setHasGeneratedRoute(true);
 
-      // Use first route for stats display
-      const firstProps = features[0]?.properties ?? {};
       setStats({
-        distance: firstProps.distance_km ?? distance,
-        duration: Math.round((firstProps.distance_km ?? distance) * 6),
-        shelter: Math.round(firstProps.shelter_pct ?? 0),
-        sheltersAlongRoute: firstProps.shelters_along_route ?? 0,
+        distance: route.distance_km ?? distance,
+        duration: Math.round((route.distance_km ?? distance) * 6),
+        shelter: Math.round(route.coverage_pct ?? 0),
+        sheltersAlongRoute: route.shelters_along_route ?? 0,
       });
 
-      // Pass full FeatureCollection to map — coordinates already [lng, lat] from backend
-      setRouteGeoJson(res);
+      const encoded = route.polyline;
+
+      if (!encoded || typeof encoded !== "string" || !encoded.trim()) {
+        openPopup("No route found", "There's no route can be generated at this moment.");
+        setRouteGeoJson(null);
+        return;
+      }
+
+      const decoded = polyline.decode(encoded);
+      if (!Array.isArray(decoded) || decoded.length < 2) {
+        openPopup("No route found", "The route generated is invalid.");
+        setRouteGeoJson(null);
+        return;
+      }
+
+      const coordinates = decoded.map(([lat, lng]) => [lng, lat]);
+
+      const nextRouteGeoJson = {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {
+              id: route.id,
+              distance_km: route.distance_km,
+              shelter_pct: route.coverage_pct,
+              shelters_along_route: route.shelters_along_route,
+              source: "route_view",
+            },
+            geometry: {
+              type: "LineString",
+              coordinates,
+            },
+          },
+        ],
+      };
+
+      setRouteGeoJson(nextRouteGeoJson);
     } catch (err) {
       console.error("Failed to generate route:", err);
       openPopup("Route generation failed", "Please try again in a moment.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const onSelectRoute = (index: number) => {
-    setSelectedRouteIndex(index);
-    // Update stats for selected route
-    const feature = routeGeoJson?.features?.[index];
-    if (feature) {
-      const props = feature.properties ?? {};
-      setStats({
-        distance: props.distance_km ?? distance,
-        duration: Math.round((props.distance_km ?? distance) * 6),
-        shelter: Math.round(props.shelter_pct ?? 0),
-        sheltersAlongRoute: props.shelters_along_route ?? 0,
-      });
     }
   };
 
@@ -152,7 +161,7 @@ export const RouteView = () => {
     if (!routeGeoJson) {
       openPopup(
         "Navigation not available yet",
-        "This mock route does not include map path data yet."
+        "This mock route does not include map path data yet. Stats are shown, but turn-by-turn route drawing is unavailable for now."
       );
       return;
     }
@@ -170,7 +179,6 @@ export const RouteView = () => {
     setHasGeneratedRoute(false);
     setAutoFollowUser(false);
     setShowRecenter(false);
-    setSelectedRouteIndex(0);
     showWholeRoute();
     setStats({
       distance: 0,
@@ -203,34 +211,6 @@ export const RouteView = () => {
         onExitNavigation={onExitNavigation}
       />
 
-      {/* Route selector — shown when multiple routes are available */}
-      {!navigationMode && hasGeneratedRoute && routeGeoJson?.features?.length > 1 && (
-        <div className="flex gap-2">
-          {routeGeoJson.features.map((f: any, i: number) => {
-            const color = f.properties?.stroke ?? "#888";
-            const dist = f.properties?.distance_km ?? "?";
-            const isActive = i === selectedRouteIndex;
-            return (
-              <button
-                key={i}
-                onClick={() => onSelectRoute(i)}
-                className={`flex-1 rounded-2xl border px-3 py-2 text-xs font-semibold transition-all ${
-                  isActive
-                    ? "border-transparent bg-primary text-on-primary"
-                    : "border-outline-variant/30 bg-surface-container-lowest text-on-surface-variant"
-                }`}
-              >
-                <span
-                  className="mr-1.5 inline-block h-2 w-2 rounded-full"
-                  style={{ background: color }}
-                />
-                Route {i + 1} · {dist}km
-              </button>
-            );
-          })}
-        </div>
-      )}
-
       {!navigationMode && (
         <RoutePlanningPanel
           distance={distance}
@@ -253,8 +233,7 @@ export const RouteView = () => {
 
       {permissionState === "denied" && !popup.open && (
         <div className="rounded-2xl border border-outline-variant/20 bg-surface-container-lowest p-4 text-sm text-outline">
-          Location permission is denied. Live tracking is unavailable until
-          location access is enabled in browser settings.
+          Location permission is denied. Live tracking is unavailable until location access is enabled in browser settings.
         </div>
       )}
 
@@ -266,6 +245,7 @@ export const RouteView = () => {
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-secondary-container text-on-secondary-container">
                   <AlertCircle size={20} />
                 </div>
+
                 <div>
                   <h3 className="text-base font-bold tracking-tight text-on-surface">
                     {popup.title}
@@ -275,6 +255,7 @@ export const RouteView = () => {
                   </p>
                 </div>
               </div>
+
               <button
                 onClick={closePopup}
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-container-low text-outline transition-transform active:scale-95"
@@ -282,6 +263,7 @@ export const RouteView = () => {
                 <X size={18} />
               </button>
             </div>
+
             <button
               onClick={closePopup}
               className="w-full rounded-full bg-primary py-3 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
