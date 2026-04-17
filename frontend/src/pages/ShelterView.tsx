@@ -46,6 +46,7 @@ export const ShelterView = () => {
     selectedShelter,
     onSelectShelter: setSelectedShelter,
     fitSheltersOnLoad: !routeGeoJson,
+    showLinkways: true,
   });
 
   useEffect(() => {

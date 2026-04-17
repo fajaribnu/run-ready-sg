@@ -796,7 +796,8 @@ export default function useLeafletMap({
       lastProgressDistanceRef.current = 0;
       hasFittedSheltersRef.current = false;
     };
-  }, [mapContainerRef, currentUserPos, setAutoFollowUser, setShowRecenter]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapContainerRef, setAutoFollowUser, setShowRecenter]);
 
   /* =====================================================
    * SHARED MAP STATE
@@ -997,8 +998,10 @@ export default function useLeafletMap({
     }
 
     let cancelled = false;
+    let fetchId = 0;
 
     async function fetchAndRender() {
+      const myId = ++fetchId;
       const bounds = map!.getBounds();
       try {
         const data = await getLinkways(
@@ -1007,7 +1010,12 @@ export default function useLeafletMap({
           bounds.getNorth(),
           bounds.getEast()
         );
-        if (cancelled) return;
+
+        // Discard stale fetches — only the last-started fetch renders
+        if (cancelled || myId !== fetchId) return;
+
+        // Keep existing layer if new data has no features (e.g. empty area during zoom)
+        if (!data?.features?.length) return;
 
         if (linkwayLayerRef.current) {
           map!.removeLayer(linkwayLayerRef.current);

@@ -1,4 +1,61 @@
-# RunReady SG — Sprint Day Tracker (Apr 4, 2026)
+# RunReady SG — Sprint Day Tracker
+
+> **FINAL DEADLINE: Apr 19 23:59** — submit PDF report + video URL + peer assessment.
+> Code freeze was Apr 8 but we've been making fixes. Today (Apr 18) is the last day.
+
+---
+
+## Apr 18, 2026 — Ibnu's session
+
+### Done today
+- [x] **Linkways overlay implemented** — teal dashed GeoJSON layer (`#0ea5e9`, weight 3, dashed) on Route + Shelter pages
+  - `useLeafletMap.ts` — new `showLinkways` prop, fetches `/api/linkways` with map bounds on load + every `moveend`
+  - `RouteView.tsx` + `ShelterView.tsx` — both pass `showLinkways: true`
+- [x] **Bug: linkways vanishing on route generation / window switch / API failure**
+  - Root cause: `currentUserPos` was in map setup effect deps → GPS updates destroyed+recreated the entire Leaflet map → linkways effect closure held dead map reference
+  - Fix: removed `currentUserPos` from map setup deps (`useLeafletMap.ts` line ~799)
+- [x] **Bug: race condition in linkways fetch**
+  - `flyToBounds` then `flyTo(start, 17)` fired two concurrent `moveend` events → stale fetch (small area, no features) was overwriting the good one
+  - Fix: `fetchId` counter — only last-started fetch renders
+- [x] **Bug: empty API response clearing layer**
+  - Fix: `if (!data?.features?.length) return` — keeps existing layer when new fetch returns no features
+
+### TODO — Code (morning Apr 19)
+- [ ] **Push `ibnu` branch to remote** — fixes from today not yet pushed
+- [ ] **Linkways + route visual blending** — when a route is generated, the teal linkway lines and the red route polyline should both be readable together. Currently linkways go fully to back. Consider reducing route underlay opacity or adjusting z-order. Quick tweak only.
+- [ ] **Move `ai-usage-log.md` back to repo root** — currently in `notes/` (gitignored). Project spec requires it in the repo for submission.
+
+### TODO — Report (Ibnu owns / supports)
+- [ ] **S3-16: Architecture & Implementation section** — Ibnu owns this (overdue since Apr 14)
+- [ ] **S3-15: Business Model section** — Ibnu supports Shihao (overdue since Apr 12)
+- [ ] **S3-17: Evaluation section** — Ibnu supports Keefe (overdue since Apr 14)
+
+### TODO — Video + Submission
+- [ ] **Record video segment** — ~2.5 min (was due Apr 18, do ASAP)
+- [ ] **Final submission** — Apr 19 23:59: submit PDF report + video URL + peer assessment
+
+---
+
+## Teammates — what's left
+
+### San / Justin (Track C — Frontend)
+- [ ] **Alerts settings page** (F3 frontend) — not built
+- [ ] **Route selector UI** — backend returns 3 routes, frontend only shows `routes[0]`
+- [ ] **Video recording**
+
+### Keefe (Track B — Backend)
+- [ ] **Confirm F3 SES alerts** is fully working end-to-end
+- [ ] **Video recording**
+- [ ] **Report: Evaluation section** (Ibnu is support)
+
+### Mustafa / Shihao (Track A — Database)
+- [ ] **Cost analysis** (S3-10) — monthly estimates for EC2, RDS, S3, CloudFront, SES
+- [ ] **Report: Architecture section** (S3-11, Mustafa)
+- [ ] **Video recording**
+
+---
+
+## Apr 4, 2026 — Original sprint plan (kept for reference)
 
 > **Code freeze: Apr 8.** 4 days left. This is the plan for the final push.
 
