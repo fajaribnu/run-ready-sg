@@ -61,6 +61,9 @@ type UseLeafletMapParams = {
   selectedShelter?: Shelter | null;
   onSelectShelter?: (shelter: Shelter) => void;
   fitSheltersOnLoad?: boolean;
+
+  onMapClick?: (lat: number, lng: number) => void;
+  destPos?: { lat: number; lng: number } | null;
 };
 
 type AnimatePolylineOptions = {
@@ -688,6 +691,9 @@ export default function useLeafletMap({
   selectedShelter = null,
   onSelectShelter,
   fitSheltersOnLoad = false,
+
+  onMapClick,
+  destPos = null,
 }: UseLeafletMapParams) {
   /* =====================================================
    * SHARED REFS
@@ -699,6 +705,7 @@ export default function useLeafletMap({
 
   const routeLayerGroupRef = useRef<LayerGroup | null>(null);
   const shelterLayerGroupRef = useRef<LayerGroup | null>(null);
+  const destMarkerRef = useRef<L.CircleMarker | null>(null);
 
   const programmaticMoveRef = useRef(false);
   const hasInitCenteredRef = useRef(false);
@@ -914,6 +921,56 @@ export default function useLeafletMap({
     setAutoFollowUser,
     setShowRecenter,
   ]);
+
+  /* =====================================================
+   * DESTINATION MODE: MAP CLICK HANDLER
+   * =================================================== */
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (!onMapClick) {
+      map.getContainer().style.cursor = "";
+      return;
+    }
+
+    map.getContainer().style.cursor = "crosshair";
+
+    const handler = (e: L.LeafletMouseEvent) => {
+      onMapClick(e.latlng.lat, e.latlng.lng);
+    };
+
+    map.on("click", handler);
+    return () => {
+      map.off("click", handler);
+      map.getContainer().style.cursor = "";
+    };
+  }, [onMapClick]);
+
+  /* =====================================================
+   * DESTINATION MODE: DESTINATION PIN MARKER
+   * =================================================== */
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (destMarkerRef.current) {
+      map.removeLayer(destMarkerRef.current);
+      destMarkerRef.current = null;
+    }
+
+    if (!destPos) return;
+
+    destMarkerRef.current = L.circleMarker([destPos.lat, destPos.lng], {
+      radius: 10,
+      color: "#ffffff",
+      weight: 3,
+      fillColor: "#ef4444",
+      fillOpacity: 1,
+    }).addTo(map);
+  }, [destPos]);
 
   /* =====================================================
    * ROUTE MODE: INITIAL DRAW + ANIMATION
