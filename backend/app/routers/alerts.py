@@ -1,89 +1,64 @@
-import os
-import boto3
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, EmailStr
+"""
+F3: Weather Alerts (SES)
+Email notifications when safety thresholds are breached for saved locations.
+"""
+
 from typing import Optional
-from botocore.exceptions import ClientError
 
-# --- CONFIG & SETUP ---
-# Pulling from your .env file
-AWS_REGION = "ap-southeast-1" 
-SES_SENDER = os.getenv("SES_SENDER_EMAIL", "alerts@runready.xyz")
+from fastapi import APIRouter, Query
+from pydantic import BaseModel
 
-router = APIRouter(prefix="/alerts", tags=["F3: Weather Alerts"])
+from http.client import HTTPException
 
-# --- INTERNAL EMAIL HELPER ---
-class EmailService:
-    def __init__(self):
-        self.ses = boto3.client(
-            'ses',
-            region_name=AWS_REGION,
-            # AWS_ACCESS_KEY_ID and SECRET are pulled automatically from .env
-        )
+from app.database import init_db, get_db
+from app.routers.decision import SG_LAT_MIN, SG_LAT_MAX, SG_LNG_MIN, SG_LNG_MAX
 
-    def send_lightning_alert(self, to_email: str, location: str):
-        try:
-            self.ses.send_email(
-                Source=SES_SENDER,
-                Destination={'ToAddresses': [to_email]},
-                Message={
-                    'Subject': {'Data': f"⚠️ RunReady: Lightning Alert ({location})"},
-                    'Body': {
-                        'Text': {
-                            'Data': f"Safety Warning: Lightning detected near {location}. Please seek cover in the nearest shelter."
-                        }
-                    }
-                }
-            )
-            return True
-        except ClientError as e:
-            print(f"SES Error: {e.response['Error']['Message']}")
-            return False
 
-mailer = EmailService()
+router = APIRouter()
 
-# --- MODELS ---
+init_db()
+
 class AlertSubscription(BaseModel):
     email: str
     lat: float
     lng: float
     label: Optional[str] = "Saved Location"
+    
 
-# --- ENDPOINTS ---
+@router.post("/alerts/subscribe")
+def subscribe_alert(sub: AlertSubscription):
+    """
+    Register an email to receive weather alerts for a specific location.
+    """
+    # TODO Sprint 3: Save subscription to DB, integrate with SES
+    if sub.email is None or sub.lat is None or sub.lng is None:
+        raise HTTPException(
+            status_code=400,
+            detail="email, lat, and lng are required fields."
+        )
+    if not (SG_LAT_MIN <= sub.lat <= SG_LAT_MAX and SG_LNG_MIN <= sub.lng <= SG_LNG_MAX):
+        raise HTTPException(
+            status_code=400,
+            detail="lat/lng must be within Singapore bounds (1.15-1.47, 103.6-104.1)"
+        )
+    
+    if sub.label is None:
+        sub.label = ""
 
-@router.post("/subscribe")
-async def subscribe_alert(sub: AlertSubscription):
-    """
-    F3: Save user subscription to DB.
-    Matches Track A schema: alert_subscriptions (email, lat, lng, label)
-    """
-    # TODO: db.execute("INSERT INTO alert_subscriptions...")
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            insert_query = """
+            INSERT INTO alert_subscriptions (email, lat, lng, label, is_active)
+            VALUES (%s, %s, %s, %s, TRUE)
+            RETURNING id
+            """
+            cur.execute(insert_query, (sub.email, sub.lat, sub.lng, sub.label))
+            new_id = cur.fetchone()[0]
+            conn.commit()
+
     return {
-        "status": "success",
-        "message": f"Alerts activated for {sub.email}",
-        "data": sub.model_dump()
+        "status": "successful",
+        "new_subscription_id": new_id,
+        "subscription": sub.model_dump(),
     }
 
-@router.get("/check")
-async def check_alerts():
-    """
-    The Brain: Called by ingestion pipeline to evaluate thresholds.
-    """
-    # 1. Fetch active subscriptions from DB
-    # 2. Get latest lightning data from weather_snapshots table
-    
-    # --- TEST LOGIC ---
-    # Replace with your own email for the Sandbox test
-    test_email = "your-verified-email@gmail.com" 
-    
-    # Simulating a breach (e.g., NEA returns 'Thundery Showers')
-    is_dangerous = True 
-
-    if is_dangerous:
-        success = mailer.send_lightning_alert(test_email, "Bishan Park")
-        if success:
-            return {"status": "success", "info": f"Alert sent to {test_email}"}
-        else:
-            raise HTTPException(status_code=500, detail="SES failed. Check AWS Region/Identity.")
-
-    return {"status": "clear", "message": "No lightning detected."}
