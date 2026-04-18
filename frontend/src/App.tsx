@@ -15,12 +15,6 @@ import { useLocation } from "./components/LocationProvider";
 import { useGuestQuota } from "./map/useGuestQuota";
 import { type Tab } from "./types";
 
-const POST_LOGIN_TAB_KEY = "runready_post_login_tab";
-
-function isTab(value: string | null): value is Tab {
-  return value === "home" || value === "shelter" || value === "route" || value === "time";
-}
-
 export default function App() {
   const auth = useAppAuth();
   const [activeTab, setActiveTab] = useState<Tab>("home");
@@ -31,9 +25,8 @@ export default function App() {
   const [runCheckLoading, setRunCheckLoading] = useState(false);
   const [runCheckResult, setRunCheckResult] = useState<any>(null);
 
-  const { currentUserPos, locationReady, permissionState } = useLocation();
+  const { currentUserPos } = useLocation();
 
-  // Helper: open one modal and always close the other
   const openQuotaModal = useCallback(() => {
     setShowLoginModal(false);
     setShowQuotaModal(true);
@@ -43,18 +36,6 @@ export default function App() {
     setShowQuotaModal(false);
     setShowLoginModal(true);
   }, []);
-
-  // Restore tab after login redirect
-  useEffect(() => {
-    if (!auth.enabled || !auth.isAuthenticated) {
-      return;
-    }
-    const nextTab = window.sessionStorage.getItem(POST_LOGIN_TAB_KEY);
-    if (isTab(nextTab)) {
-      setActiveTab(nextTab);
-    }
-    window.sessionStorage.removeItem(POST_LOGIN_TAB_KEY);
-  }, [auth.enabled, auth.isAuthenticated]);
 
   const handleCheckRunNow = useCallback(async () => {
     setRunCheckLoading(true);
@@ -78,10 +59,6 @@ export default function App() {
     }
   }, [currentUserPos]);
 
-  /**
-   * Returns true if the check was allowed (quota available),
-   * false if quota was exhausted (QuotaModal opened instead).
-   */
   const handleGuestCheckRunNow = useCallback((): boolean => {
     if (quota.isExhausted) {
       openQuotaModal();
@@ -96,45 +73,29 @@ export default function App() {
     return true;
   }, [quota, handleCheckRunNow, openQuotaModal]);
 
-  const handleTabChange = useCallback(
-    (tab: Tab) => {
-      if (auth.enabled && !auth.isAuthenticated && tab !== "home") {
-        window.sessionStorage.setItem(POST_LOGIN_TAB_KEY, tab);
-        setActiveTab(tab);
-        setShowLoginModal(true);
-        return;
-      }
-      setActiveTab(tab);
-    },
-    [auth.enabled, auth.isAuthenticated],
-  );
+  const handleTabChange = useCallback((tab: Tab) => {
+    setActiveTab(tab);
+  }, []);
 
   const handleLogin = useCallback(() => {
     setShowLoginModal(false);
-    if (!auth.enabled) {
-      return;
-    }
+    if (!auth.enabled) return;
     void auth.signIn();
   }, [auth.enabled, auth.signIn]);
 
   const handleSignUp = useCallback(() => {
     setShowLoginModal(false);
     setShowQuotaModal(false);
-    if (!auth.enabled) {
-      return;
-    }
+    if (!auth.enabled) return;
     void auth.signUp();
   }, [auth.enabled, auth.signUp]);
 
   const handleModalClose = useCallback(() => {
     setShowLoginModal(false);
-    setActiveTab("home");
-    window.sessionStorage.removeItem(POST_LOGIN_TAB_KEY);
   }, []);
 
   const handleUpgrade = useCallback(() => {
     setShowQuotaModal(false);
-    // TODO: wire to your payments flow
   }, []);
 
   const renderTabContent = () => {
@@ -144,6 +105,7 @@ export default function App() {
           <LandingView
             loading={runCheckLoading}
             quota={quota}
+            runResult={runCheckResult}
             onCheckRunNow={handleGuestCheckRunNow}
             onShowQuotaModal={openQuotaModal}
           />
@@ -166,6 +128,7 @@ export default function App() {
           <LandingView
             loading={runCheckLoading}
             quota={quota}
+            runResult={runCheckResult}
             onCheckRunNow={handleGuestCheckRunNow}
             onShowQuotaModal={openQuotaModal}
           />
@@ -214,7 +177,6 @@ export default function App() {
 
       <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
 
-      {/* Quota exhausted modal */}
       <QuotaModal
         isOpen={showQuotaModal}
         onClose={() => {
@@ -225,7 +187,6 @@ export default function App() {
         onUpgrade={handleUpgrade}
       />
 
-      {/* Login required modal */}
       <LoginRequiredModal
         isOpen={showLoginModal}
         onClose={handleModalClose}

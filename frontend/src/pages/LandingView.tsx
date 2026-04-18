@@ -3,11 +3,14 @@ import { motion } from "motion/react";
 import { Thermometer, Wind, ShieldCheck } from "lucide-react";
 import HomeHero from "../components/CheckRun";
 import { type UseGuestQuotaReturn } from "../map/useGuestQuota";
+import RunStatusCard from "../components/RunStatusCard";
+import WeatherBentoGrid from "../components/WeatherBentoGrid";
 
 type LandingViewProps = {
   loading: boolean;
   quota: UseGuestQuotaReturn;
-  onCheckRunNow: () => boolean; // returns true = allowed, false = quota exhausted
+  onCheckRunNow: () => boolean;
+  runResult: any;
   onShowQuotaModal: () => void;
 };
 
@@ -32,6 +35,7 @@ const HOW_IT_WORKS = [
 export function LandingView({
   loading,
   quota,
+  runResult,
   onCheckRunNow,
   onShowQuotaModal,
 }: LandingViewProps) {
@@ -59,6 +63,12 @@ export function LandingView({
         hasChecked={hasChecked}
         onCheckRunNow={handleCheckRunNow}
       />
+      {runResult && (
+        <>
+          <RunStatusCard result={runResult} />
+          <WeatherBentoGrid result={runResult} />
+        </>
+      )}
 
       {/* Quota pip bar */}
       <motion.div

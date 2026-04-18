@@ -9,6 +9,8 @@ type RoutePlanningPanelProps = {
   loading: boolean;
   hasRoute: boolean;
   onGenerateRoute: () => void;
+  isGuest: boolean;
+  onRequireLogin?: () => void;
   isLocationReady: boolean;
   stats: {
     distance: number;
@@ -29,6 +31,8 @@ export function RoutePlanningPanel({
   loading,
   hasRoute,
   onGenerateRoute,
+  isGuest,
+  onRequireLogin,
   isLocationReady,
   stats,
   mode,
@@ -39,6 +43,14 @@ export function RoutePlanningPanel({
     loading ||
     !isLocationReady ||
     (mode === "destination" && !destSet);
+
+  const handleGenerate = () => {
+    if (isGuest) {
+      onRequireLogin?.();
+      return;
+    }
+    onGenerateRoute();
+  };
 
   return (
     <section className="space-y-6">
@@ -181,7 +193,7 @@ export function RoutePlanningPanel({
           )}
 
           <button
-            onClick={onGenerateRoute}
+            onClick={handleGenerate}
             disabled={isButtonDisabled}
             className="flex w-full items-center justify-center gap-3 rounded-full bg-primary px-10 py-5 font-headline text-lg font-extrabold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
           >

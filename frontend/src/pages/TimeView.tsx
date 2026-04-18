@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, Sparkles, Sunrise, Sun, AlertTriangle, Info, Thermometer, Lock } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { cn } from '../types';
 import { bestTimes } from '../services/api';
 import { useLocation } from '../components/LocationProvider';
@@ -22,7 +22,6 @@ type TimeViewProps = {
 
 export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
   const [duration, setDuration] = useState(45);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [windows, setWindows] = useState<BestTimeWindow[]>([]);
@@ -31,9 +30,8 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
   const { currentUserPos } = useLocation();
 
   const onFindBestTime = async () => {
-    // Gate: guests must log in first
     if (isGuest) {
-      setShowLoginModal(true);
+      onRequireLogin?.();
       return;
     }
 
@@ -105,35 +103,33 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
           </div>
         </div>
 
-        {/* Find Best Time button — guest shows lock, authenticated shows search */}
-        {isGuest ? (
-          <button
-            type="button"
-            onClick={() => setShowLoginModal(true)}
-            className="bg-surface-container-lowest p-8 rounded-3xl flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:opacity-90 active:scale-95 shadow-sm group"
-          >
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform ring-1 ring-primary/20">
-              <Lock size={28} className="text-primary" />
-            </div>
-            <span className="font-headline font-bold text-lg text-on-surface">
-              Find best time
-            </span>
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={onFindBestTime}
-            disabled={loading}
-            className="bg-primary text-on-primary rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:opacity-90 active:scale-95 shadow-lg shadow-primary/20 group disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            <div className="w-16 h-16 bg-primary-container rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Search size={32} />
-            </div>
-            <span className="font-headline font-bold text-lg">
-              {loading ? 'Finding...' : 'Find best time'}
-            </span>
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={onFindBestTime}
+          disabled={loading}
+          className={cn(
+            "rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:opacity-90 active:scale-95 shadow-lg group disabled:opacity-70 disabled:cursor-not-allowed",
+            isGuest
+              ? "bg-surface-container-lowest shadow-sm"
+              : "bg-primary text-on-primary shadow-primary/20"
+          )}
+        >
+          <div className={cn(
+            "w-16 h-16 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform",
+            isGuest ? "bg-primary/10 ring-1 ring-primary/20" : "bg-primary-container"
+          )}>
+            {isGuest
+              ? <Lock size={28} className="text-primary" />
+              : <Search size={32} />
+            }
+          </div>
+          <span className={cn(
+            "font-headline font-bold text-lg",
+            isGuest ? "text-on-surface" : ""
+          )}>
+            {loading ? 'Finding...' : 'Find best time'}
+          </span>
+        </button>
       </section>
 
       {/* Results List */}
@@ -233,88 +229,6 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
           </div>
         </div>
       </section>
-        
-      <AnimatePresence>
-        {isGuest && showLoginModal && (
-          <>
-            <motion.div
-              key="backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-              onClick={() => setShowLoginModal(false)}
-            />
-            <motion.div
-              key="modal"
-              initial={{ opacity: 0, scale: 0.92, y: 24 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: 24 }}
-              transition={{ type: "spring", stiffness: 320, damping: 28 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            >
-              <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1117] p-8 shadow-2xl">
-
-                {/* Close */}
-                <button
-                  onClick={() => setShowLoginModal(false)}
-                  className="absolute right-4 top-4 rounded-full p-1 text-white/40 transition hover:text-white/80"
-                  aria-label="Close"
-                >
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path
-                      d="M4 4l10 10M14 4L4 14"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </button>
-
-                {/* Icon */}
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                  <Lock size={20} className="text-primary" />
-                </div>
-
-                <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">
-                  Login required
-                </h2>
-                <p className="mb-6 text-sm leading-relaxed text-white/55">
-                  Sign in or create an account to find optimal running time windows.
-                </p>
-
-                <div className="flex flex-col gap-2.5">
-                  <button
-                    onClick={() => {
-                      setShowLoginModal(false);
-                      onRequireLogin?.();
-                    }}
-                    className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-[#0f1117] transition hover:bg-white/90 active:scale-[0.98]"
-                  >
-                    Sign up
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowLoginModal(false);
-                      onRequireLogin?.();
-                    }}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 active:scale-[0.98]"
-                  >
-                    Log in
-                  </button>
-                  <button
-                    onClick={() => setShowLoginModal(false)}
-                    className="w-full py-2 text-xs text-white/30 transition hover:text-white/50"
-                  >
-                    Maybe later
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 };

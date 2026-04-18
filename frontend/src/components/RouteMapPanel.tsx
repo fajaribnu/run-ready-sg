@@ -28,7 +28,7 @@ export function RouteMapPanel({
     >
       <div ref={mapContainerRef} className="absolute inset-0 z-0" />
 
-      <div className="absolute left-6 top-6 z-30 flex flex-col gap-2">
+      {/* <div className="absolute left-6 top-6 z-30 flex flex-col gap-2">
         <div className="flex items-center gap-2 rounded-full bg-surface-container-lowest/80 px-4 py-2 shadow-sm backdrop-blur-md">
           <div className="h-3 w-3 rounded-full bg-primary"></div>
           <span className="text-[10px] font-bold uppercase tracking-wider">
@@ -42,7 +42,7 @@ export function RouteMapPanel({
             Exposed Route
           </span>
         </div>
-      </div>
+      </div> */}
 
       {showRecenter && (
         <button
