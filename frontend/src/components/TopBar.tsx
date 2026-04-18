@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserButton } from '@clerk/react';
-import { MapPin, Bell, Search, CloudRain } from 'lucide-react';
-import { cn, type Tab } from '../types';
+import { MapPin, Settings } from 'lucide-react';
+import { type Tab } from '../types';
+import { SettingsSheet } from './SettingsSheet';
+// import { useLocation } from "./LocationProvider";
 
 interface TopBarProps {
   activeTab: Tab;
@@ -15,13 +17,15 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({
   activeTab,
-  location = "Marina Bay",
   rainWarning,
   authEnabled = false,
   isAuthenticated = false,
   userLabel,
   onLogin,
 }) => {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [emailAlertOptIn, setEmailAlertOptIn] = useState(false);
+
   const authButtonLabel = isAuthenticated ? "Account" : "Log in";
 
   return (
@@ -29,26 +33,31 @@ export const TopBar: React.FC<TopBarProps> = ({
       <div className="flex items-center gap-2">
         <MapPin size={20} className="text-primary" />
         <span className="font-headline font-bold tracking-tight text-lg text-primary">
-          {activeTab === 'home' ? location : "Run Ready SG"}
+          {activeTab === 'home' ? "Run Ready SG" : "Run Ready SG"}
         </span>
       </div>
-
+{/* 
       {activeTab === 'home' && (
         <div className="font-headline font-extrabold text-primary tracking-tighter text-xl">
           Run Ready SG
         </div>
-      )}
+      )} */}
 
       <div className="flex items-center gap-3">
-        {activeTab === 'shelter' && (
+        {/* {activeTab === 'shelter' && (
           <div className="flex items-center gap-1 bg-secondary-container px-3 py-1 rounded-full text-on-secondary-container text-xs font-bold">
             <CloudRain size={14} />
             <span>Rain in 12m</span>
           </div>
-        )}
+        )} */}
         
-        <button className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95">
-          {activeTab === 'shelter' ? <Search size={20} /> : <Bell size={20} className="text-primary" />}
+        <button
+          className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95"
+          type="button"
+          onClick={() => setIsSettingsOpen(true)}
+          aria-label="Open settings"
+        >
+           <Settings size={20} className="text-primary" />
         </button>
 
         {authEnabled && isAuthenticated ? (
@@ -73,6 +82,13 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
         )}
       </div>
+
+      <SettingsSheet
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        emailAlertOptIn={emailAlertOptIn}
+        onEmailAlertOptInChange={setEmailAlertOptIn}
+      />
     </header>
   );
 };
