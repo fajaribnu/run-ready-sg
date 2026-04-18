@@ -10,8 +10,8 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api": {
-        // target: "http://api.runready.xyz:8000",
-        target: "http://localhost:8000",
+        target: "http://api.runready.xyz:8000",
+        // target: "http://localhost:8000",
         changeOrigin: true,
       },
     },

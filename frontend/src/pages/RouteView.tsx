@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { motion } from "motion/react";
-import { AlertCircle, X } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { AlertCircle, Lock, X } from "lucide-react";
 import { RouteMapPanel } from "../components/RouteMapPanel";
 import { RoutePlanningPanel } from "../components/RoutePlanningPanel";
 import useLeafletMap from "../map/useLeafletMap";
@@ -14,7 +14,12 @@ type RouteStats = {
   sheltersAlongRoute: number;
 };
 
-export const RouteView = () => {
+type RouteViewProps = {
+  isGuest?: boolean;
+  onRequireLogin?: () => void;
+};
+
+export const RouteView = ({ isGuest = false, onRequireLogin }: RouteViewProps) => {
   const [distance, setDistance] = useState(5);
   const [isLoop, setIsLoop] = useState(true);
   const [mode, setMode] = useState<"distance" | "destination">("distance");
@@ -26,7 +31,6 @@ export const RouteView = () => {
   const [routeGeoJson, setRouteGeoJson] = useState<any>(null);
   const [hasGeneratedRoute, setHasGeneratedRoute] = useState(false);
 
-  // Which of the 3 routes the user has selected (0 = first/red by default)
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
 
   const [showRecenter, setShowRecenter] = useState(false);
@@ -45,6 +49,9 @@ export const RouteView = () => {
     message: "",
   });
 
+  // Login gate modal (local, shown on generate click if guest)
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   const { currentUserPos, locationReady, permissionState } = useLocation();
@@ -58,9 +65,10 @@ export const RouteView = () => {
     autoFollowUser,
     setAutoFollowUser,
     setShowRecenter,
-    onMapClick: mode === "destination" && !navigationMode
-      ? (lat, lng) => setDestPos({ lat, lng })
-      : undefined,
+    onMapClick:
+      mode === "destination" && !navigationMode
+        ? (lat, lng) => setDestPos({ lat, lng })
+        : undefined,
     destPos,
     showLinkways: true,
   });
@@ -74,6 +82,12 @@ export const RouteView = () => {
   };
 
   const onGenerateRoute = async () => {
+    // Gate: guests must log in first
+    if (isGuest) {
+      setShowLoginModal(true);
+      return;
+    }
+
     if (!currentUserPos) return;
 
     setLoading(true);
@@ -83,9 +97,6 @@ export const RouteView = () => {
     setSelectedRouteIndex(0);
 
     try {
-      console.log(currentUserPos.lat);
-      console.log(currentUserPos.lng);
-
       const res = await planRoute(
         currentUserPos.lat,
         currentUserPos.lng,
@@ -94,16 +105,13 @@ export const RouteView = () => {
         mode === "destination" ? destPos?.lat ?? null : null,
         mode === "destination" ? destPos?.lng ?? null : null,
       );
-      console.log(res);
 
-      // Backend returns a GeoJSON FeatureCollection with up to 3 colored features
       const features = res?.features;
       if (!features || features.length === 0) {
         openPopup("No route found", "We could not generate a route right now.");
         return;
       }
 
-      // Validate at least the first feature
       const firstCoords = features[0]?.geometry?.coordinates;
       if (!Array.isArray(firstCoords) || firstCoords.length < 2) {
         openPopup("No route found", "The route generated is invalid.");
@@ -113,7 +121,6 @@ export const RouteView = () => {
 
       setHasGeneratedRoute(true);
 
-      // Use first route for stats display
       const firstProps = features[0]?.properties ?? {};
       setStats({
         distance: firstProps.distance_km ?? distance,
@@ -122,7 +129,6 @@ export const RouteView = () => {
         sheltersAlongRoute: firstProps.shelters_along_route ?? 0,
       });
 
-      // Pass full FeatureCollection to map — coordinates already [lng, lat] from backend
       setRouteGeoJson(res);
     } catch (err) {
       console.error("Failed to generate route:", err);
@@ -134,7 +140,6 @@ export const RouteView = () => {
 
   const onSelectRoute = (index: number) => {
     setSelectedRouteIndex(index);
-    // Update stats for selected route
     const feature = routeGeoJson?.features?.[index];
     if (feature) {
       const props = feature.properties ?? {};
@@ -149,15 +154,10 @@ export const RouteView = () => {
 
   const onStartNavigation = () => {
     if (!hasGeneratedRoute) return;
-
     if (!routeGeoJson) {
-      openPopup(
-        "Navigation not available yet",
-        "This mock route does not include map path data yet."
-      );
+      openPopup("Navigation not available yet", "This mock route does not include map path data yet.");
       return;
     }
-
     setNavigationMode(true);
     setAutoFollowUser(true);
     setShowRecenter(false);
@@ -173,12 +173,7 @@ export const RouteView = () => {
     setShowRecenter(false);
     setSelectedRouteIndex(0);
     showWholeRoute();
-    setStats({
-      distance: 0,
-      duration: 0,
-      shelter: 0,
-      sheltersAlongRoute: 0,
-    });
+    setStats({ distance: 0, duration: 0, shelter: 0, sheltersAlongRoute: 0 });
   };
 
   return (
@@ -259,6 +254,7 @@ export const RouteView = () => {
         </div>
       )}
 
+      {/* Route error popup */}
       {popup.open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-6">
           <div className="w-full max-w-sm rounded-3xl border border-outline-variant/10 bg-surface-container-lowest p-6 shadow-[0_20px_50px_rgba(0,94,83,0.12)]">
@@ -292,6 +288,89 @@ export const RouteView = () => {
           </div>
         </div>
       )}
+
+      {/* Login gate modal — shown when guest clicks Generate */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+              onClick={() => setShowLoginModal(false)}
+            />
+            <motion.div
+              key="modal"
+              initial={{ opacity: 0, scale: 0.92, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 24 }}
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1117] p-8 shadow-2xl">
+
+                {/* Close */}
+                <button
+                  onClick={() => setShowLoginModal(false)}
+                  className="absolute right-4 top-4 rounded-full p-1 text-white/40 transition hover:text-white/80"
+                  aria-label="Close"
+                >
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path
+                      d="M4 4l10 10M14 4L4 14"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+
+                {/* Icon */}
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                  <Lock size={20} className="text-primary" />
+                </div>
+
+                <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">
+                  Login required
+                </h2>
+                <p className="mb-6 text-sm leading-relaxed text-white/55">
+                  Sign in or create an account to generate and save running routes.
+                </p>
+
+                <div className="flex flex-col gap-2.5">
+                  <button
+                    onClick={() => {
+                      setShowLoginModal(false);
+                      onRequireLogin?.();
+                    }}
+                    className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-[#0f1117] transition hover:bg-white/90 active:scale-[0.98]"
+                  >
+                    Sign up
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowLoginModal(false);
+                      onRequireLogin?.();
+                    }}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 active:scale-[0.98]"
+                  >
+                    Log in
+                  </button>
+                  <button
+                    onClick={() => setShowLoginModal(false)}
+                    className="w-full py-2 text-xs text-white/30 transition hover:text-white/50"
+                  >
+                    Maybe later
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

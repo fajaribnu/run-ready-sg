@@ -29,7 +29,7 @@ export function LoginRequiredModal({
             onClick={onClose}
           />
 
-
+          {/* Modal */}
           <motion.div
             key="modal"
             initial={{ opacity: 0, scale: 0.92, y: 24 }}
@@ -37,16 +37,14 @@ export function LoginRequiredModal({
             exit={{ opacity: 0, scale: 0.92, y: 24 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ pointerEvents: "none" }}
           >
-            <div
-              className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1117] p-8 shadow-2xl"
-              style={{ pointerEvents: "auto" }}
-            >
-                   {/* Modal */}
+            <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1117] p-8 shadow-2xl">
+
               {/* Glow accent */}
-<!--               <div className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
- -->
+              {/*
+                <div className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+              */}
+
               {/* Close */}
               <button
                 onClick={onClose}

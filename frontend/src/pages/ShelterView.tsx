@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
-import { AlertCircle, X } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { AlertCircle, Lock, X } from "lucide-react";
 import polyline from "@mapbox/polyline";
 import ShelterControls from "../components/ShelterControls";
 import ShelterBottomSheet from "../components/ShelterBottomSheet";
@@ -8,8 +8,14 @@ import { findShelter } from "../services/api";
 import useLeafletMap from "../map/useLeafletMap";
 import { useLocation } from "../components/LocationProvider";
 
-export const ShelterView = () => {
+type ShelterViewProps = {
+  isGuest?: boolean;
+  onRequireLogin?: () => void;
+};
+
+export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProps) => {
   const [loading, setLoading] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const [shelters, setShelters] = useState<any[]>([]);
   const [selectedShelter, setSelectedShelter] = useState<any | null>(null);
@@ -30,11 +36,7 @@ export const ShelterView = () => {
 
   const { currentUserPos, locationReady, permissionState } = useLocation();
 
-  const {
-    recenterOnUser,
-    showWholeRoute,
-    markNavigationStarted,
-  } = useLeafletMap({
+  const { recenterOnUser, showWholeRoute, markNavigationStarted } = useLeafletMap({
     mapContainerRef,
     currentUserPos,
     routeGeoJson,
@@ -57,7 +59,6 @@ export const ShelterView = () => {
     const loadShelters = async () => {
       try {
         setLoading(true);
-
         const data = await findShelter(currentUserPos.lat, currentUserPos.lng, 3);
         if (cancelled) return;
 
@@ -66,7 +67,6 @@ export const ShelterView = () => {
 
         setSelectedShelter((prev) => {
           if (!prev) return nextShelters[0] ?? null;
-
           const matched = nextShelters.find((s: any) => s.name === prev.name);
           return matched ?? nextShelters[0] ?? null;
         });
@@ -76,41 +76,31 @@ export const ShelterView = () => {
         }
       } catch (err) {
         console.error("Failed to load shelters:", err);
-
         if (cancelled) return;
-
         setShelters([]);
         setSelectedShelter(null);
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (!cancelled) setLoading(false);
       }
     };
 
     loadShelters();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [currentUserPos]);
 
   const openPopup = (title: string, message: string) => {
-    setPopup({
-      open: true,
-      title,
-      message,
-    });
+    setPopup({ open: true, title, message });
   };
 
   const closePopup = () => {
-    setPopup((prev) => ({
-      ...prev,
-      open: false,
-    }));
+    setPopup((prev) => ({ ...prev, open: false }));
   };
 
   const onNavigate = () => {
+    if (isGuest) {
+      setShowLoginModal(true);
+      return;
+    }
     if (!selectedShelter) {
       openPopup("No shelter selected", "Please choose a shelter marker first.");
       return;
@@ -118,11 +108,7 @@ export const ShelterView = () => {
 
     const encodedPolyline = selectedShelter?.route_polyline;
 
-    if (
-      !encodedPolyline ||
-      typeof encodedPolyline !== "string" ||
-      !encodedPolyline.trim()
-    ) {
+    if (!encodedPolyline || typeof encodedPolyline !== "string" || !encodedPolyline.trim()) {
       openPopup(
         "Route not available yet",
         "This shelter does not have route data yet. Please choose another shelter or try again later."
@@ -134,10 +120,7 @@ export const ShelterView = () => {
       const decoded = polyline.decode(encodedPolyline);
 
       if (!Array.isArray(decoded) || decoded.length < 2) {
-        openPopup(
-          "Invalid route data",
-          "The route returned for this shelter could not be drawn."
-        );
+        openPopup("Invalid route data", "The route returned for this shelter could not be drawn.");
         return;
       }
 
@@ -171,10 +154,7 @@ export const ShelterView = () => {
       recenterOnUser();
     } catch (err) {
       console.error("Failed to decode shelter route:", err);
-      openPopup(
-        "Route unavailable",
-        "We could not render the route for this shelter."
-      );
+      openPopup("Route unavailable", "We could not render the route for this shelter.");
     }
   };
 
@@ -184,7 +164,6 @@ export const ShelterView = () => {
     setAutoFollowUser(false);
     setShowRecenter(false);
     setRouteGeoJson(null);
-
     if (shelters.length > 0) {
       setSelectedShelter((prev) => prev ?? shelters[0]);
     }
@@ -198,10 +177,7 @@ export const ShelterView = () => {
     >
       <div ref={mapContainerRef} className="absolute inset-0 z-0" />
 
-      <ShelterControls
-        onRecenter={recenterOnUser}
-        showRecenter={showRecenter}
-      />
+      <ShelterControls onRecenter={recenterOnUser} showRecenter={showRecenter} />
 
       {!navigationMode && (
         <ShelterBottomSheet
@@ -242,12 +218,12 @@ export const ShelterView = () => {
         <div className="absolute left-1/2 top-6 z-40 w-[calc(100%-3rem)] max-w-md -translate-x-1/2 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest p-4 shadow-lg">
           <p className="text-sm leading-relaxed text-outline">
             Location permission is denied. Nearby shelter search and live tracking
-            are unavailable until location access is enabled in your browser
-            settings.
+            are unavailable until location access is enabled in your browser settings.
           </p>
         </div>
       )}
 
+      {/* Route error popup */}
       {popup.open && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/30 px-6">
           <div className="w-full max-w-sm rounded-3xl border border-outline-variant/10 bg-surface-container-lowest p-6 shadow-[0_20px_50px_rgba(0,94,83,0.12)]">
@@ -256,7 +232,6 @@ export const ShelterView = () => {
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-secondary-container text-on-secondary-container">
                   <AlertCircle size={20} />
                 </div>
-
                 <div>
                   <h3 className="text-base font-bold text-on-surface tracking-tight">
                     {popup.title}
@@ -266,7 +241,6 @@ export const ShelterView = () => {
                   </p>
                 </div>
               </div>
-
               <button
                 onClick={closePopup}
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-container-low text-outline transition-transform active:scale-95"
@@ -274,7 +248,6 @@ export const ShelterView = () => {
                 <X size={18} />
               </button>
             </div>
-
             <button
               onClick={closePopup}
               className="w-full rounded-full bg-primary py-3 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
@@ -284,6 +257,89 @@ export const ShelterView = () => {
           </div>
         </div>
       )}
+
+      {/* Login gate modal — shown when guest clicks Navigate */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+              onClick={() => setShowLoginModal(false)}
+            />
+            <motion.div
+              key="modal"
+              initial={{ opacity: 0, scale: 0.92, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 24 }}
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1117] p-8 shadow-2xl">
+
+                {/* Close */}
+                <button
+                  onClick={() => setShowLoginModal(false)}
+                  className="absolute right-4 top-4 rounded-full p-1 text-white/40 transition hover:text-white/80"
+                  aria-label="Close"
+                >
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path
+                      d="M4 4l10 10M14 4L4 14"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+
+                {/* Icon */}
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                  <Lock size={20} className="text-primary" />
+                </div>
+
+                <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">
+                  Login required
+                </h2>
+                <p className="mb-6 text-sm leading-relaxed text-white/55">
+                  Sign in or create an account to navigate to nearby shelters.
+                </p>
+
+                <div className="flex flex-col gap-2.5">
+                  <button
+                    onClick={() => {
+                      setShowLoginModal(false);
+                      onRequireLogin?.();
+                    }}
+                    className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-[#0f1117] transition hover:bg-white/90 active:scale-[0.98]"
+                  >
+                    Sign up
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowLoginModal(false);
+                      onRequireLogin?.();
+                    }}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 active:scale-[0.98]"
+                  >
+                    Log in
+                  </button>
+                  <button
+                    onClick={() => setShowLoginModal(false)}
+                    className="w-full py-2 text-xs text-white/30 transition hover:text-white/50"
+                  >
+                    Maybe later
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
