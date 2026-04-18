@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserButton } from '@clerk/react';
 import { MapPin, Bell, Search, CloudRain } from 'lucide-react';
 import { cn, type Tab } from '../types';
+import { AlertSubscribeModal } from './AlertSubscribeModal';
 
 interface TopBarProps {
   activeTab: Tab;
@@ -23,6 +24,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onLogin,
 }) => {
   const authButtonLabel = isAuthenticated ? "Account" : "Log in";
+  const [alertModalOpen, setAlertModalOpen] = useState(false);
 
   return (
     <header className="bg-background/70 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full sticky top-0 z-50">
@@ -47,7 +49,10 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
         )}
         
-        <button className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95">
+        <button
+          onClick={() => setAlertModalOpen(true)}
+          className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95"
+        >
           {activeTab === 'shelter' ? <Search size={20} /> : <Bell size={20} className="text-primary" />}
         </button>
 
@@ -73,6 +78,11 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
         )}
       </div>
+
+      <AlertSubscribeModal
+        isOpen={alertModalOpen}
+        onClose={() => setAlertModalOpen(false)}
+      />
     </header>
   );
 };
