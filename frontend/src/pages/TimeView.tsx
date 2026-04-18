@@ -2,15 +2,55 @@ import React, { useState } from 'react';
 import { Search, Sparkles, Sunrise, Sun, AlertTriangle, Info, Thermometer } from 'lucide-react';
 import { motion } from 'motion/react';
 import { cn } from '../types';
+import { bestTimes } from '../services/api';
+import { useLocation } from '../components/LocationProvider';
+
+type BestTimeWindow = {
+  rank: number;
+  start_time: string;
+  end_time: string;
+  forecast: string;
+  wbgt: number;
+  score: number;
+  label: string;
+};
 
 export const TimeView: React.FC = () => {
   const [duration, setDuration] = useState(45);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [windows, setWindows] = useState<BestTimeWindow[]>([]);
+  const [lastLocationLabel, setLastLocationLabel] = useState('');
 
-  const windows = [
-    { time: '6:00-7:00 AM', temp: 25, condition: 'Optimal Condition', score: 9, type: 'optimal', icon: Sunrise },
-    { time: '7:00-8:00 AM', temp: 26, condition: 'Great for Endurance', score: 8, type: 'endurance', icon: Sun },
-    { time: '11:00 AM-12:00 PM', temp: 31, condition: 'High UV Index', score: 4, type: 'warning', icon: AlertTriangle },
-  ];
+  const { currentUserPos } = useLocation();
+
+  const onFindBestTime = async () => {
+    setLoading(true);
+    setError('');
+
+    const lat = currentUserPos?.lat ?? 1.35;
+    const lng = currentUserPos?.lng ?? 103.82;
+
+    try {
+      const res = await bestTimes(lat, lng, duration);
+      setWindows(Array.isArray(res?.windows) ? res.windows : []);
+      setLastLocationLabel(typeof res?.location === 'string' ? res.location : '');
+    } catch (err) {
+      console.error('Failed to find best run time:', err);
+      setWindows([]);
+      setError('Unable to fetch best time windows. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const styleByLabel = (label: string) => {
+    const normalized = (label || '').toLowerCase();
+
+    if (normalized.includes('best')) return { type: 'optimal', icon: Sunrise };
+    if (normalized.includes('good')) return { type: 'endurance', icon: Sun };
+    return { type: 'warning', icon: AlertTriangle };
+  };
 
   return (
     <motion.div 
@@ -48,11 +88,18 @@ export const TimeView: React.FC = () => {
           </div>
         </div>
         
-        <button className="bg-primary text-on-primary rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:opacity-90 active:scale-95 shadow-lg shadow-primary/20 group">
+        <button
+          type="button"
+          onClick={onFindBestTime}
+          disabled={loading}
+          className="bg-primary text-on-primary rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:opacity-90 active:scale-95 shadow-lg shadow-primary/20 group disabled:opacity-70 disabled:cursor-not-allowed"
+        >
           <div className="w-16 h-16 bg-primary-container rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
             <Search size={32} />
           </div>
-          <span className="font-headline font-bold text-lg">Find best time</span>
+          <span className="font-headline font-bold text-lg">
+            {loading ? 'Finding...' : 'Find best time'}
+          </span>
         </button>
       </section>
 
@@ -60,17 +107,29 @@ export const TimeView: React.FC = () => {
       <section className="space-y-4">
         <h2 className="font-headline font-bold text-xl flex items-center gap-2">
           <Sparkles size={20} className="text-primary" />
-          Suggested Windows
+          Suggested Windows{lastLocationLabel ? ` • ${lastLocationLabel}` : ''}
         </h2>
+
+        {error && (
+          <div className="bg-error-container text-error p-4 rounded-2xl text-sm font-semibold">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && windows.length === 0 && (
+          <div className="bg-surface-container-low p-4 rounded-2xl text-sm text-on-surface-variant">
+            Tap "Find best time" to fetch personalized time windows.
+          </div>
+        )}
         
         <div className="space-y-3">
-          {windows.map((window, idx) => {
-            const Icon = window.icon;
-            const isWarning = window.type === 'warning';
+          {windows.map((window) => {
+            const { type, icon: Icon } = styleByLabel(window.label);
+            const isWarning = type === 'warning';
             
             return (
               <div 
-                key={idx} 
+                key={`${window.rank}-${window.start_time}-${window.end_time}`} 
                 className={cn(
                   "bg-surface-container-lowest p-5 rounded-2xl flex items-center justify-between group hover:bg-surface-container-low transition-colors duration-300 shadow-sm",
                   isWarning && "border-l-4 border-error"
@@ -84,20 +143,22 @@ export const TimeView: React.FC = () => {
                     <Icon size={24} className={isWarning ? "text-error" : "text-on-secondary-container"} />
                   </div>
                   <div>
-                    <h3 className="font-headline font-bold text-lg leading-tight">{window.time}</h3>
+                    <h3 className="font-headline font-bold text-lg leading-tight">
+                      {window.start_time}-{window.end_time}
+                    </h3>
                     <div className="flex items-center gap-3 mt-1">
                       <span className={cn(
                         "flex items-center text-sm font-bold",
                         isWarning ? "text-error" : "text-on-surface-variant"
                       )}>
-                        <Thermometer size={14} className="mr-1" /> {window.temp}°C
+                        <Thermometer size={14} className="mr-1" /> {window.wbgt} WBGT
                       </span>
                       <span className="w-1 h-1 bg-outline-variant rounded-full"></span>
                       <span className={cn(
                         "text-sm font-bold",
                         isWarning ? "text-on-surface-variant" : "text-on-secondary-container"
                       )}>
-                        {window.condition}
+                        {window.forecast}
                       </span>
                     </div>
                   </div>
@@ -107,13 +168,13 @@ export const TimeView: React.FC = () => {
                     "font-headline font-extrabold text-2xl flex items-center justify-end gap-1",
                     isWarning ? "text-error" : "text-secondary"
                   )}>
-                    {window.score}<span className="text-sm font-bold text-outline-variant">/10</span>
+                    {window.score}<span className="text-sm font-bold text-outline-variant">/100</span>
                   </div>
                   <span className={cn(
                     "text-[10px] uppercase tracking-widest font-black",
                     isWarning ? "text-error" : "text-secondary"
                   )}>
-                    Safety Score
+                    {window.label}
                   </span>
                 </div>
               </div>
