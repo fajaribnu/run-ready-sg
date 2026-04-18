@@ -44,7 +44,6 @@ def fetch_onemap_raw(s_lat, s_lng, e_lat, e_lng, token):
     url = "https://www.onemap.gov.sg/api/public/routingsvc/route"
     headers = {"Authorization": token, "Accept": "application/json"}
     params = {"start": f"{s_lat},{s_lng}", "end": f"{e_lat},{e_lng}", "routeType": "walk"}
-    
     try:
         resp = requests.get(url, headers=headers, params=params, timeout=10)
         if resp.status_code == 200:
@@ -75,12 +74,11 @@ async def plan_route(
     token = settings.ONEMAP_TOKEN.strip().replace("'", "").replace('"', "").replace("\n", "").replace("\r", "")
     token = token.replace("Bearer ", "").replace("bearer ", "")
 
+    # Snap starting point
     s_lat, s_lng = snap_to_nearest_road(lat, lng, token)
-
     routes = []
 
     def build_route(route_id, coords, dist):
-        """Convert raw coords to the frontend contract format."""
         geojson = {"type": "LineString", "coordinates": [[p[1], p[0]] for p in coords]}
         return {
             "id": route_id,
@@ -90,36 +88,65 @@ async def plan_route(
             "shelters_along_route": count_shelters_along_route(geojson),
         }
 
-    # --- Point-to-point: user picked a specific destination ---
-    if dest_lat is not None and dest_lng is not None:
-        coords, dist = fetch_onemap_raw(s_lat, s_lng, dest_lat, dest_lng, token)
-        if coords:
-            routes.append(build_route(1, coords, dist))
-    else:
-        # --- Distance-based: generate 3 random routes ---
-        for i in range(3):
-            if loop:
-                base_bearing = random.uniform(0, 360)
-                leg_dist = (distance_km / 3) * 0.7
-                b_lat, b_lng = get_point_at_distance(s_lat, s_lng, leg_dist, base_bearing)
-                c_lat, c_lng = get_point_at_distance(b_lat, b_lng, leg_dist, (base_bearing + 100) % 360)
+    for i in range(3):
+        coords_to_use = None
+        final_dist = 0
 
-                res1 = fetch_onemap_raw(s_lat, s_lng, b_lat, b_lng, token)
-                res2 = fetch_onemap_raw(b_lat, b_lng, c_lat, c_lng, token)
-                res3 = fetch_onemap_raw(c_lat, c_lng, s_lat, s_lng, token)
+        # --- SCENARIO C: POINT-TO-POINT ---
+        if dest_lat is not None and dest_lng is not None:
+            d_lat, d_lng = snap_to_nearest_road(dest_lat, dest_lng, token)
+            
+            # Using 0.6 factor to allow for detour without overshooting
+            detour_angle = (i * 60) + random.uniform(0, 30)
+            mid_lat, mid_lng = get_point_at_distance(s_lat, s_lng, (distance_km * 0.6) / 2, detour_angle)
+            
+            res1 = fetch_onemap_raw(s_lat, s_lng, mid_lat, mid_lng, token)
+            res2 = fetch_onemap_raw(mid_lat, mid_lng, d_lat, d_lng, token)
+            
+            if res1[0] and res2[0]:
+                coords_to_use = res1[0] + res2[0][1:]
+                coords_to_use[-1] = (d_lat, d_lng) # Force destination closure
+                final_dist = res1[1] + res2[1]
 
-                if res1[0] and res2[0] and res3[0]:
-                    full_coords = res1[0] + res2[0][1:] + res3[0][1:]
-                    total_dist = res1[1] + res2[1] + res3[1]
-                    routes.append(build_route(i + 1, full_coords, total_dist))
-            else:
-                target_dist = distance_km * 0.75
-                d_lat, d_lng = get_point_at_distance(s_lat, s_lng, target_dist, random.uniform(0, 360))
-                coords, dist = fetch_onemap_raw(s_lat, s_lng, d_lat, d_lng, token)
-                if coords:
-                    routes.append(build_route(i + 1, coords, dist))
+        # --- SCENARIO B: LOOP ---
+        elif loop:
+            # Using 0.55 factor because 3 segments accumulate significantly more road-winding
+            leg_dist = (distance_km * 0.55) / 3
+            base_bearing = (i * 120) + random.uniform(0, 20)
+            
+            b_lat, b_lng = get_point_at_distance(s_lat, s_lng, leg_dist, base_bearing)
+            c_lat, c_lng = get_point_at_distance(b_lat, b_lng, leg_dist, (base_bearing + 120) % 360)
+
+            res1 = fetch_onemap_raw(s_lat, s_lng, b_lat, b_lng, token)
+            res2 = fetch_onemap_raw(b_lat, b_lng, c_lat, c_lng, token)
+            res3 = fetch_onemap_raw(c_lat, c_lng, s_lat, s_lng, token)
+
+            all_segments = []
+            accumulated_dist = 0
+            for res in [res1, res2, res3]:
+                if res[0]:
+                    if not all_segments:
+                        all_segments.extend(res[0])
+                    else:
+                        all_segments.extend(res[0][1:])
+                    accumulated_dist += res[1]
+
+            if all_segments:
+                all_segments[-1] = (s_lat, s_lng) # Force loop closure
+                coords_to_use = all_segments
+                final_dist = accumulated_dist
+        
+        # --- SCENARIO A: RANDOM DIRECTION ---
+        else:
+            # Using 0.9 factor because simple one-way paths are more direct
+            target_pt_dist = distance_km * 0.9
+            e_lat, e_lng = get_point_at_distance(s_lat, s_lng, target_pt_dist, random.uniform(0, 360))
+            coords_to_use, final_dist = fetch_onemap_raw(s_lat, s_lng, e_lat, e_lng, token)
+
+        if coords_to_use:
+            routes.append(build_route(i + 1, coords_to_use, final_dist))
 
     if not routes:
-        raise HTTPException(status_code=500, detail="OneMap failed to return route geometry.")
+        raise HTTPException(status_code=500, detail="Route generation failed. Check coordinates or API token.")
 
     return {"routes": routes}
