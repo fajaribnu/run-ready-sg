@@ -8,7 +8,7 @@ import { ShelterView } from "./pages/ShelterView";
 import { RouteView } from "./pages/RouteView";
 import { TimeView } from "./pages/TimeView";
 import { QuotaModal } from "./components/QuotaModal";
-import { LoginRequiredModal } from "./components/LoginRequiredModal";
+// import { LoginRequiredModal } from "./components/LoginRequiredModal";
 import { checkRun } from "./services/api";
 import { useLocation } from "./components/LocationProvider";
 import { useGuestQuota } from "./map/useGuestQuota";
@@ -23,7 +23,7 @@ export default function App() {
   const quota = useGuestQuota();
 
   const [showQuotaModal, setShowQuotaModal] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  // const [showLoginModal, setShowLoginModal] = useState(false);
 
   const [runCheckLoading, setRunCheckLoading] = useState(false);
   const [runCheckResult, setRunCheckResult] = useState<any>(null);
@@ -32,14 +32,14 @@ export default function App() {
 
   // Helper: open one modal and always close the other
   const openQuotaModal = useCallback(() => {
-    setShowLoginModal(false);
+    // setShowLoginModal(false);
     setShowQuotaModal(true);
   }, []);
 
-  const openLoginModal = useCallback(() => {
-    setShowQuotaModal(false);
-    setShowLoginModal(true);
-  }, []);
+  // const openLoginModal = useCallback(() => {
+  //   setShowQuotaModal(false);
+  //   setShowLoginModal(true);
+  // }, []);
 
   const handleCheckRunNow = useCallback(async () => {
     setRunCheckLoading(true);
@@ -86,27 +86,27 @@ export default function App() {
   const handleTabChange = useCallback(
     (tab: Tab) => {
       setActiveTab(tab);
-      if (isGuest && tab !== "home") {
-        openLoginModal();
-      } else {
+      // if (isGuest && tab !== "home") {
+      //   openLoginModal();
+      // } else {
         // Switching back to home clears both modals
         setShowQuotaModal(false);
-        setShowLoginModal(false);
-      }
+      //   setShowLoginModal(false);
+      // }
     },
-    [isGuest, openLoginModal],
+    [isGuest],
   );
 
   const handleSignUp = useCallback(() => {
     setShowQuotaModal(false);
-    setShowLoginModal(false);
+    // setShowLoginModal(false);
     // TODO: wire to your auth flow, then setIsGuest(false)
   }, []);
 
-  const handleLogin = useCallback(() => {
-    setShowLoginModal(false);
-    // TODO: wire to your auth flow, then setIsGuest(false)
-  }, []);
+  // const handleLogin = useCallback(() => {
+  //   setShowLoginModal(false);
+  //   // TODO: wire to your auth flow, then setIsGuest(false)
+  // }, []);
 
   const handleUpgrade = useCallback(() => {
     setShowQuotaModal(false);
@@ -157,7 +157,7 @@ export default function App() {
   };
 
   // Blur the entire page when a guest is on a locked tab
-  const shouldBlur = isGuest && activeTab !== "home";
+  // const shouldBlur = isGuest && activeTab !== "home";
 
   return (
     // Outer shell — never blurred, provides stacking context
@@ -165,9 +165,7 @@ export default function App() {
 
       {/* Page content — blurred as a whole when guest on locked tab */}
       <div
-        className={`flex min-h-screen flex-col transition-all duration-300 ${
-          shouldBlur ? "pointer-events-none select-none blur-sm brightness-50" : ""
-        }`}
+        className="flex min-h-screen flex-col transition-all duration-300"
       >
         <TopBar activeTab={activeTab} />
 
@@ -204,7 +202,7 @@ export default function App() {
         onUpgrade={handleUpgrade}
       />
 
-      {/* Login required modal */}
+      {/* Login required modal
       <LoginRequiredModal
         isOpen={showLoginModal}
         onClose={() => {
@@ -213,7 +211,7 @@ export default function App() {
         }}
         onSignUp={handleSignUp}
         onLogin={handleLogin}
-      />
+      /> */}
     </div>
   );
 }
