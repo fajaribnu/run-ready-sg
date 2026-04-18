@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { AlertCircle, Lock, X } from "lucide-react";
-import polyline from "@mapbox/polyline";
 import ShelterControls from "../components/ShelterControls";
 import ShelterBottomSheet from "../components/ShelterBottomSheet";
 import { findShelter, planRoute } from "../services/api";
@@ -13,7 +12,7 @@ type ShelterViewProps = {
   onRequireLogin?: () => void;
 };
 
-export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProps) => {
+export const ShelterView = ({ isGuest, onRequireLogin }: ShelterViewProps) => {
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -105,14 +104,8 @@ export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProp
       openPopup("No shelter selected", "Please choose a shelter marker first.");
       return;
     }
-
-    const encodedPolyline = selectedShelter?.route_polyline;
-
-    if (!encodedPolyline || typeof encodedPolyline !== "string" || !encodedPolyline.trim()) {
-      openPopup(
-        "Route not available yet",
-        "This shelter does not have route data yet. Please choose another shelter or try again later."
-      );
+    if (!currentUserPos) {
+      openPopup("Location unavailable", "Your location is not available yet. Please wait and try again.");
       return;
     }
 
@@ -267,9 +260,9 @@ export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProp
         </div>
       )}
 
-      {/* Login gate modal — shown when guest clicks Navigate */}
+      {/* Login gate modal — only rendered for guests, single condition */}
       <AnimatePresence>
-        {showLoginModal && (
+        {isGuest && showLoginModal && (
           <>
             <motion.div
               key="backdrop"
