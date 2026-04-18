@@ -106,13 +106,8 @@ export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProp
       return;
     }
 
-    const encodedPolyline = selectedShelter?.route_polyline;
-
-    if (!encodedPolyline || typeof encodedPolyline !== "string" || !encodedPolyline.trim()) {
-      openPopup(
-        "Route not available yet",
-        "This shelter does not have route data yet. Please choose another shelter or try again later."
-      );
+    if (!currentUserPos) {
+      openPopup("Location unavailable", "Could not determine your current position. Please enable location access.");
       return;
     }
 

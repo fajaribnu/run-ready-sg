@@ -24,7 +24,7 @@ function isTab(value: string | null): value is Tab {
 export default function App() {
   const auth = useAppAuth();
   const [activeTab, setActiveTab] = useState<Tab>("home");
-  const [isGuest, setIsGuest] = useState(true);
+  const isGuest = auth.enabled ? !auth.isAuthenticated : false;
   const quota = useGuestQuota();
   const [showQuotaModal, setShowQuotaModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
