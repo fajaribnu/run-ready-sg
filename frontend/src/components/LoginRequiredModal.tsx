@@ -29,7 +29,7 @@ export function LoginRequiredModal({
             onClick={onClose}
           />
 
-          {/* Modal */}
+
           <motion.div
             key="modal"
             initial={{ opacity: 0, scale: 0.92, y: 24 }}
@@ -43,9 +43,10 @@ export function LoginRequiredModal({
               className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1117] p-8 shadow-2xl"
               style={{ pointerEvents: "auto" }}
             >
+                   {/* Modal */}
               {/* Glow accent */}
-              <div className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-
+<!--               <div className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+ -->
               {/* Close */}
               <button
                 onClick={onClose}
@@ -67,15 +68,11 @@ export function LoginRequiredModal({
                 <Lock size={20} className="text-primary" />
               </div>
 
-              <h2
-                id="login-modal-title"
-                className="mb-2 text-xl font-semibold tracking-tight text-white"
-              >
+              <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">
                 Login required
               </h2>
               <p className="mb-6 text-sm leading-relaxed text-white/55">
-                This feature is only available to logged-in users. Sign up for
-                free or log in to access it.
+                Sign in or create an account to use shelter, route, and time recommendations.
               </p>
 
               <div className="flex flex-col gap-2.5">
@@ -83,7 +80,7 @@ export function LoginRequiredModal({
                   onClick={onSignUp}
                   className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-[#0f1117] transition hover:bg-white/90 active:scale-[0.98]"
                 >
-                  Sign up - it's free
+                  Sign up
                 </button>
                 <button
                   onClick={onLogin}

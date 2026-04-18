@@ -24,6 +24,7 @@ const MOCK = {
 };
 
 import axios from "axios";
+import { getStoredAuthToken } from "../auth/session";
 import {
   mockCheckRun,
   mockFindShelter,
@@ -35,6 +36,16 @@ import {
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE || "/api",
   timeout: 15000,
+});
+
+api.interceptors.request.use((config) => {
+  return getStoredAuthToken().then((token) => {
+    if (token) {
+      config.headers = config.headers ?? {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 });
 
 // =============================================
