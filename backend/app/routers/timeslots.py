@@ -3,11 +3,10 @@ F5: Smart Time-Slot Finder
 Suggests the safest time windows for outdoor activity based on forecast trends.
 """
 
-from fastapi import APIRouter, Depends, Query
-from app.auth import AuthenticatedUser, require_authenticated_user
 from datetime import datetime, timezone, timedelta
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
+from app.auth import AuthenticatedUser, require_authenticated_user
 from app.services.weather import fetch_forecast, fetch_wbgt, get_nearest
 
 SGT = timezone(timedelta(hours=8))

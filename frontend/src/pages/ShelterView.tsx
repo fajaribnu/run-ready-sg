@@ -4,7 +4,7 @@ import { AlertCircle, Lock, X } from "lucide-react";
 import polyline from "@mapbox/polyline";
 import ShelterControls from "../components/ShelterControls";
 import ShelterBottomSheet from "../components/ShelterBottomSheet";
-import { findShelter } from "../services/api";
+import { findShelter, planRoute } from "../services/api";
 import useLeafletMap from "../map/useLeafletMap";
 import { useLocation } from "../components/LocationProvider";
 
@@ -96,7 +96,7 @@ export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProp
     setPopup((prev) => ({ ...prev, open: false }));
   };
 
-  const onNavigate = () => {
+  const onNavigate = async () => {
     if (isGuest) {
       setShowLoginModal(true);
       return;
@@ -116,15 +116,23 @@ export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProp
       return;
     }
 
+    setLoading(true);
     try {
-      const decoded = polyline.decode(encodedPolyline);
+      const result = await planRoute(
+        currentUserPos.lat,
+        currentUserPos.lng,
+        1,
+        false,
+        selectedShelter.lat,
+        selectedShelter.lng,
+      );
 
-      if (!Array.isArray(decoded) || decoded.length < 2) {
-        openPopup("Invalid route data", "The route returned for this shelter could not be drawn.");
+      const firstFeature = (result as any)?.features?.[0];
+      const coords = firstFeature?.geometry?.coordinates;
+      if (!Array.isArray(coords) || coords.length < 2) {
+        openPopup("Route unavailable", "Could not generate a route to this shelter.");
         return;
       }
-
-      const coordinates = decoded.map(([lat, lng]) => [lng, lat]);
 
       const nextRouteGeoJson = {
         type: "FeatureCollection",
@@ -136,12 +144,11 @@ export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProp
               shelter_type: selectedShelter.type,
               distance_m: selectedShelter.distance_m,
               walk_time_min: selectedShelter.walk_time_min,
+              stroke: "#ef4444",
+              "stroke-width": 6,
               source: "shelter_route",
             },
-            geometry: {
-              type: "LineString",
-              coordinates,
-            },
+            geometry: firstFeature.geometry,
           },
         ],
       };
@@ -153,8 +160,10 @@ export const ShelterView = ({ isGuest = false, onRequireLogin }: ShelterViewProp
       markNavigationStarted();
       recenterOnUser();
     } catch (err) {
-      console.error("Failed to decode shelter route:", err);
-      openPopup("Route unavailable", "We could not render the route for this shelter.");
+      console.error("Failed to get shelter route:", err);
+      openPopup("Route unavailable", "We could not generate a route to this shelter.");
+    } finally {
+      setLoading(false);
     }
   };
 
