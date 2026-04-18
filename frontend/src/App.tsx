@@ -65,9 +65,6 @@ export default function App() {
 
   const handleCheckRunNow = useCallback(async () => {
     setRunCheckLoading(true);
-
-  const handleCheckRunNow = useCallback(async () => {
-    setRunCheckLoading(true);
     const lat = currentUserPos?.lat ?? 1.35;
     const lng = currentUserPos?.lng ?? 103.82;
     try {
@@ -108,19 +105,19 @@ export default function App() {
 
   // Tab switch — always switch route.
   // Guests on non-home tabs: show view blurred + LoginRequiredModal on top.
-  const handleTabChange = useCallback(
-    (tab: Tab) => {
-      setActiveTab(tab);
-      // if (isGuest && tab !== "home") {
-      //   openLoginModal();
-      // } else {
-        // Switching back to home clears both modals
-        setShowQuotaModal(false);
-      //   setShowLoginModal(false);
-      // }
-    },
-    [isGuest],
-  );
+  // const handleTabChange = useCallback(
+  //   (tab: Tab) => {
+  //     setActiveTab(tab);
+  //     // if (isGuest && tab !== "home") {
+  //     //   openLoginModal();
+  //     // } else {
+  //       // Switching back to home clears both modals
+  //       setShowQuotaModal(false);
+  //     //   setShowLoginModal(false);
+  //     // }
+  //   },
+  //   [isGuest],
+  // );
   const handleTabChange = useCallback(
     (tab: Tab) => {
       if (auth.enabled && !auth.isAuthenticated && tab !== "home") {
@@ -155,11 +152,11 @@ export default function App() {
     window.sessionStorage.removeItem(POST_LOGIN_TAB_KEY);
   }, []);
 
-  const handleSignUp = useCallback(() => {
-    setShowQuotaModal(false);
-    // setShowLoginModal(false);
-    // TODO: wire to your auth flow, then setIsGuest(false)
-  }, []);
+  // const handleSignUp = useCallback(() => {
+  //   setShowQuotaModal(false);
+  //   // setShowLoginModal(false);
+  //   // TODO: wire to your auth flow, then setIsGuest(false)
+  // }, []);
 
   // const handleLogin = useCallback(() => {
   //   setShowLoginModal(false);
@@ -310,7 +307,7 @@ export default function App() {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="mx-auto max-w-2xl"
           >
-            {renderContent()}
+            {renderTabContent()}
           </motion.div>
         </AnimatePresence>
       </main>
@@ -327,4 +324,6 @@ export default function App() {
       />
     </div>
   );
+
 }
+

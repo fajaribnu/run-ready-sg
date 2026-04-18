@@ -45,8 +45,8 @@ export function LoginRequiredModal({
             >
                    {/* Modal */}
               {/* Glow accent */}
-<!--               <div className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
- -->
+               {/* <div className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent" /> */}
+ 
               {/* Close */}
               <button
                 onClick={onClose}
