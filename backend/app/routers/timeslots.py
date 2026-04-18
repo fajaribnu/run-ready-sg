@@ -3,8 +3,12 @@ F5: Smart Time-Slot Finder
 Suggests the safest time windows for outdoor activity based on forecast trends.
 """
 
+from datetime import datetime, timezone, timedelta
+
 from fastapi import APIRouter, Query
 from app.services.weather import fetch_forecast, fetch_wbgt, get_nearest
+
+SGT = timezone(timedelta(hours=8))
 
 router = APIRouter()
 
@@ -107,7 +111,13 @@ def best_times(
             ("18:30", 28.5, -2.0),
         ]
 
+        now_sgt = datetime.now(SGT).strftime("%H:%M")
+
         for start_time, base_wbgt, wbgt_offset in time_slots:
+            # Skip slots that have already started today
+            if start_time <= now_sgt:
+                continue
+
             estimated_wbgt = current_wbgt + wbgt_offset
             # Use current forecast as proxy (MVP simplification)
             score = score_window(my_forecast, estimated_wbgt)
@@ -129,6 +139,16 @@ def best_times(
         # Sort by score descending, take top 3
         windows.sort(key=lambda w: w["score"], reverse=True)
         top_windows = windows[:3]
+
+        # If no slots remain today (e.g. user checks at 10pm), return empty with a message
+        if not top_windows:
+            return {
+                "location": f"Near {area_name}",
+                "requested_duration_min": duration_min,
+                "windows": [],
+                "message": "No more recommended slots for today. Check back tomorrow morning!",
+            }
+
         for i, w in enumerate(top_windows):
             w["rank"] = i + 1
 

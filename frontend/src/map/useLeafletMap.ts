@@ -16,6 +16,7 @@ import type {
 
 import { renderToStaticMarkup } from "react-dom/server";
 import { Umbrella } from "lucide-react";
+import { getLinkways } from "../services/api";
 
 /* =========================================================
  * MAP CONSTANTS
@@ -65,6 +66,8 @@ type UseLeafletMapParams = {
 
   onMapClick?: (lat: number, lng: number) => void;
   destPos?: { lat: number; lng: number } | null;
+
+  showLinkways?: boolean;
 };
 
 type AnimatePolylineOptions = {
@@ -326,6 +329,8 @@ export default function useLeafletMap({
 
   onMapClick,
   destPos = null,
+
+  showLinkways = false,
 }: UseLeafletMapParams) {
   const mapRef = useRef<LeafletMap | null>(null);
   const navArrowRef = useRef<Marker | null>(null);
@@ -333,6 +338,7 @@ export default function useLeafletMap({
   const routeLayerGroupRef = useRef<LayerGroup | null>(null);
   const shelterLayerGroupRef = useRef<LayerGroup | null>(null);
   const destMarkerRef = useRef<L.CircleMarker | null>(null);
+  const linkwayLayerRef = useRef<L.GeoJSON | null>(null);
 
   const programmaticMoveRef = useRef(false);
   const hasInitCenteredRef = useRef(false);
@@ -372,7 +378,8 @@ export default function useLeafletMap({
       routeLatLngsRef.current = []; lastProgressDistanceRef.current = 0;
       hasFittedSheltersRef.current = false;
     };
-  }, [mapContainerRef, currentUserPos, setAutoFollowUser, setShowRecenter]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapContainerRef, setAutoFollowUser, setShowRecenter]);
 
   useEffect(() => { hasFittedSheltersRef.current = false; }, [shelters]);
 
@@ -488,6 +495,77 @@ export default function useLeafletMap({
       fillOpacity: 1,
     }).addTo(map);
   }, [destPos]);
+
+  /* =====================================================
+   * LINKWAYS OVERLAY
+   * Fetches covered linkway segments from the backend and
+   * renders them as a teal dashed GeoJSON layer on the map.
+   * Re-fetches whenever the user pans or zooms (moveend).
+   * =================================================== */
+
+  useEffect(() => {
+    const map = mapRef.current;
+
+    if (!map || !showLinkways) {
+      if (linkwayLayerRef.current && mapRef.current) {
+        mapRef.current.removeLayer(linkwayLayerRef.current);
+        linkwayLayerRef.current = null;
+      }
+      return;
+    }
+
+    let cancelled = false;
+    let fetchId = 0;
+
+    async function fetchAndRender() {
+      const myId = ++fetchId;
+      const bounds = map!.getBounds();
+      try {
+        const data = await getLinkways(
+          bounds.getSouth(),
+          bounds.getWest(),
+          bounds.getNorth(),
+          bounds.getEast()
+        );
+
+        // Discard stale fetches — only the last-started fetch renders
+        if (cancelled || myId !== fetchId) return;
+
+        // Keep existing layer if new data has no features (e.g. empty area during zoom)
+        if (!data?.features?.length) return;
+
+        if (linkwayLayerRef.current) {
+          map!.removeLayer(linkwayLayerRef.current);
+        }
+
+        linkwayLayerRef.current = L.geoJSON(data, {
+          style: {
+            color: "#0ea5e9",
+            weight: 3,
+            opacity: 0.7,
+            dashArray: "6 4",
+          },
+          interactive: false,
+        }).addTo(map!);
+
+        linkwayLayerRef.current.bringToBack();
+      } catch {
+        // Linkways are non-critical — fail silently
+      }
+    }
+
+    fetchAndRender();
+    map.on("moveend", fetchAndRender);
+
+    return () => {
+      cancelled = true;
+      map.off("moveend", fetchAndRender);
+      if (linkwayLayerRef.current) {
+        map.removeLayer(linkwayLayerRef.current);
+        linkwayLayerRef.current = null;
+      }
+    };
+  }, [showLinkways]);
 
   /* =====================================================
    * ROUTE MODE: INITIAL DRAW + ANIMATION

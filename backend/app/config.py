@@ -30,7 +30,10 @@ class Settings:
     ONEMAP_PASSWORD: str = os.getenv("ONEMAP_PASSWORD", "")
 
     # --- CORS SETTINGS ---
-    CORS_ORIGINS: list = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+    CORS_ORIGINS: list = os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:5173,http://localhost:3000,https://dfiucv08q17cd.cloudfront.net",
+    ).split(",")
 
     # --- NEA API ENDPOINTS ---
     NEA_V1_BASE = "https://api.data.gov.sg/v1/environment"

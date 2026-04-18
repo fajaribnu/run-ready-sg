@@ -62,6 +62,7 @@ export const RouteView = () => {
       ? (lat, lng) => setDestPos({ lat, lng })
       : undefined,
     destPos,
+    showLinkways: true,
   });
 
   const openPopup = (title: string, message: string) => {
