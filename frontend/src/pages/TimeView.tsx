@@ -26,6 +26,7 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
   const [error, setError] = useState('');
   const [windows, setWindows] = useState<BestTimeWindow[]>([]);
   const [lastLocationLabel, setLastLocationLabel] = useState('');
+  const [message, setMessage] = useState('');
 
   const { currentUserPos } = useLocation();
 
@@ -45,6 +46,7 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
       const res = await bestTimes(lat, lng, duration);
       setWindows(Array.isArray(res?.windows) ? res.windows : []);
       setLastLocationLabel(typeof res?.location === 'string' ? res.location : '');
+      setMessage(typeof res?.message === 'string' ? res.message : '');
     } catch (err) {
       console.error('Failed to find best run time:', err);
       setWindows([]);
@@ -69,21 +71,15 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
     >
       {/* Hero Section */}
       <section className="space-y-4">
-        <h1 className="font-headline font-extrabold text-4xl text-on-surface tracking-tight leading-none">
-          Optimal Window
-        </h1>
-        <p className="text-on-surface-variant text-lg">
-          Plan your run around the Singapore heat and humidity for peak performance.
-        </p>
+        <h1 className="font-headline font-extrabold text-4xl text-on-surface tracking-tight leading-none">Optimal Window</h1>
+        <p className="text-on-surface-variant text-lg">Plan your run around the Singapore heat and humidity for peak performance.</p>
       </section>
 
       {/* Duration Selection */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="md:col-span-2 bg-surface-container-lowest p-8 rounded-3xl flex flex-col justify-between min-h-[220px] shadow-sm">
           <div>
-            <span className="text-[10px] text-primary font-black uppercase tracking-widest">
-              Run Duration
-            </span>
+            <span className="text-[10px] text-primary font-black uppercase tracking-widest">Run Duration</span>
             <div className="flex items-baseline gap-2 mt-2">
               <span className="font-headline font-extrabold text-5xl text-primary">{duration}</span>
               <span className="font-bold text-on-surface-variant">MINS</span>
@@ -103,33 +99,34 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={onFindBestTime}
-          disabled={loading}
-          className={cn(
-            "rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:opacity-90 active:scale-95 shadow-lg group disabled:opacity-70 disabled:cursor-not-allowed",
-            isGuest
-              ? "bg-surface-container-lowest shadow-sm"
-              : "bg-primary text-on-primary shadow-primary/20"
-          )}
-        >
-          <div className={cn(
-            "w-16 h-16 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform",
-            isGuest ? "bg-primary/10 ring-1 ring-primary/20" : "bg-primary-container"
-          )}>
-            {isGuest
-              ? <Lock size={28} className="text-primary" />
-              : <Search size={32} />
-            }
-          </div>
-          <span className={cn(
-            "font-headline font-bold text-lg",
-            isGuest ? "text-on-surface" : ""
-          )}>
-            {loading ? 'Finding...' : 'Find best time'}
-          </span>
-        </button>
+        {isGuest ? (
+          <button
+            type="button"
+            onClick={() => onRequireLogin?.()}
+            className="bg-primary text-on-primary rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:opacity-90 active:scale-95 shadow-lg shadow-primary/20 group disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            <div className="w-16 h-16 bg-primary-container rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Lock size={28} />
+            </div>
+            <span className="font-headline font-bold text-lg">
+              Find best time
+            </span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onFindBestTime}
+            disabled={loading}
+            className="bg-primary text-on-primary rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:opacity-90 active:scale-95 shadow-lg shadow-primary/20 group disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            <div className="w-16 h-16 bg-primary-container rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Search size={32} />
+            </div>
+            <span className="font-headline font-bold text-lg">
+              {loading ? 'Finding...' : 'Find best time'}
+            </span>
+          </button>
+        )}
       </section>
 
       {/* Results List */}
@@ -147,9 +144,7 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
 
         {!loading && !error && windows.length === 0 && (
           <div className="bg-surface-container-low p-4 rounded-2xl text-sm text-on-surface-variant">
-            {isGuest
-              ? 'Log in to fetch personalized time windows.'
-              : 'Tap "Find best time" to fetch personalized time windows.'}
+            {message || (isGuest ? 'Log in to fetch personalized time windows.' : 'Tap "Find best time" to fetch personalized time windows.')}
           </div>
         )}
 
@@ -223,8 +218,7 @@ export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
           <div>
             <h4 className="font-headline font-bold text-on-surface">Heat Safety Algorithm</h4>
             <p className="text-sm text-on-surface-variant mt-1 leading-relaxed">
-              Safety scores are calculated based on humidity, UV radiation, and real-time shelter
-              availability along your routes.
+              Safety scores are calculated based on humidity, UV radiation, and real-time shelter availability along your routes.
             </p>
           </div>
         </div>

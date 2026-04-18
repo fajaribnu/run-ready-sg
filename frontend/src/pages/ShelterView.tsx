@@ -46,11 +46,12 @@ export const ShelterView = ({ isGuest, onRequireLogin }: ShelterViewProps) => {
     selectedShelter,
     onSelectShelter: setSelectedShelter,
     fitSheltersOnLoad: !routeGeoJson,
-    showLinkways: true,
+    showLinkways: !isGuest,
   });
 
   useEffect(() => {
     if (!currentUserPos) return;
+    if (isGuest) return;
 
     let cancelled = false;
 
@@ -84,7 +85,7 @@ export const ShelterView = ({ isGuest, onRequireLogin }: ShelterViewProps) => {
 
     loadShelters();
     return () => { cancelled = true; };
-  }, [currentUserPos]);
+  }, [currentUserPos, isGuest]);
 
   const openPopup = (title: string, message: string) => {
     setPopup({ open: true, title, message });
@@ -95,11 +96,6 @@ export const ShelterView = ({ isGuest, onRequireLogin }: ShelterViewProps) => {
   };
 
   const onNavigate = async () => {
-    if (isGuest) {
-      onRequireLogin?.();
-      return;
-    }
-
     if (!selectedShelter) {
       openPopup("No shelter selected", "Please choose a shelter marker first.");
       return;
@@ -183,26 +179,53 @@ export const ShelterView = ({ isGuest, onRequireLogin }: ShelterViewProps) => {
       <ShelterControls onRecenter={recenterOnUser} showRecenter={showRecenter} />
 
       {!navigationMode && (
-        <ShelterBottomSheet
-          navigationMode={navigationMode}
-          shelterName={
-            !locationReady
-              ? "Getting your location..."
-              : loading
-              ? "Finding nearby shelters..."
-              : selectedShelter?.name ?? "No shelter selected"
-          }
-          distanceM={selectedShelter?.distance_m ?? 0}
-          durationMin={selectedShelter?.walk_time_min ?? 0}
-          onNavigate={onNavigate}
-          onExitNavigation={onExitNavigation}
-          isShelterReady={
-            locationReady &&
-            permissionState !== "denied" &&
-            shelters.length > 0 &&
-            selectedShelter != null
-          }
-        />
+        isGuest ? (
+          <div className="absolute bottom-6 left-4 right-4 z-40">
+            <div className="rounded-3xl border border-outline-variant/10 bg-surface-container-lowest p-6 shadow-[0_20px_50px_rgba(0,94,83,0.12)]">
+              <div className="mx-auto mb-6 h-1.5 w-12 rounded-full bg-surface-container-high" />
+              <div>
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="rounded-md bg-secondary-container px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-on-secondary-container">
+                    Shelter
+                  </span>
+                  <span className="text-sm font-medium tracking-tight text-outline">
+                    Nearby safe point
+                  </span>
+                </div>
+              </div>
+              <h2 className="mb-2 font-headline text-2xl font-bold text-on-surface">Find shelter nearby</h2>
+              <p className="mb-6 text-sm text-outline">Sign in to find and navigate to the nearest sheltered routes around you.</p>
+              <button
+                onClick={() => onRequireLogin?.()}
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
+              >
+                Find Nearest Shelter
+              </button>
+            </div>
+          </div>
+        ) : (
+          <ShelterBottomSheet
+            navigationMode={navigationMode}
+            shelterName={
+              !locationReady
+                ? "Getting your location..."
+                : loading
+                ? "Finding nearby shelters..."
+                : selectedShelter?.name ?? "No shelter selected"
+            }
+            distanceM={selectedShelter?.distance_m ?? 0}
+            durationMin={selectedShelter?.walk_time_min ?? 0}
+            onNavigate={onNavigate}
+            onExitNavigation={onExitNavigation}
+            isShelterReady={
+              locationReady &&
+              permissionState !== "denied" &&
+              shelters.length > 0 &&
+              selectedShelter != null
+            }
+            isLoading={loading}
+          />
+        )
       )}
 
       {navigationMode && (

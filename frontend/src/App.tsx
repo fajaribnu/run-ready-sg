@@ -74,8 +74,9 @@ export default function App() {
   }, [quota, handleCheckRunNow, openQuotaModal]);
 
   const handleTabChange = useCallback((tab: Tab) => {
+    setShowLoginModal(false); // close modal when switching to other tabs
     setActiveTab(tab);
-  }, []);
+  }, [isGuest, openLoginModal]);
 
   const handleLogin = useCallback(() => {
     setShowLoginModal(false);

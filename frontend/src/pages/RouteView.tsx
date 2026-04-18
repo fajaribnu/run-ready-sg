@@ -67,7 +67,7 @@ export const RouteView = ({ isGuest, onRequireLogin }: RouteViewProps) => {
         ? (lat, lng) => setDestPos({ lat, lng })
         : undefined,
     destPos,
-    showLinkways: true,
+    showLinkways: !isGuest,
   });
 
   const openPopup = (title: string, message: string) => {

@@ -16,6 +16,7 @@ type ShelterBottomSheetProps = {
   onNavigate: () => void;
   onExitNavigation: () => void;
   isShelterReady: boolean;
+  isLoading?: boolean;
 };
 
 export default function ShelterBottomSheet({
@@ -26,6 +27,7 @@ export default function ShelterBottomSheet({
   onNavigate,
   onExitNavigation,
   isShelterReady,
+  isLoading,
 }: ShelterBottomSheetProps) {
   return (
     <motion.div
@@ -87,22 +89,27 @@ export default function ShelterBottomSheet({
 
             <div className="flex gap-3">
               <button
-                onClick={onNavigate}
-                disabled={!isShelterReady}
-                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-4 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {isShelterReady ? (
-                  <>
-                    <Navigation size={20} fill="currentColor" />
-                    Navigate Now
-                  </>
-                ) : (
-                  <>
-                    <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
-                    Finding Shelter...
-                  </>
-                )}
-              </button>
+              onClick={onNavigate}
+              disabled={!isShelterReady || isLoading}
+              className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-4 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
+                  Loading route...
+                </>
+              ) : isShelterReady ? (
+                <>
+                  <Navigation size={20} fill="currentColor" />
+                  Navigate Now
+                </>
+              ) : (
+                <>
+                  <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
+                  Finding Shelter...
+                </>
+              )}
+            </button>
             </div>
           </>
         ) : (
