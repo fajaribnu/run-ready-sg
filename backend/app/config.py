@@ -3,6 +3,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw_value = os.getenv(name)
+    if raw_value is None:
+        return default
+    return raw_value.strip().lower() in {"1", "true", "yes", "on"}
+
+
 class Settings:
     # --- DATABASE SETTINGS ---
     DB_HOST: str = os.getenv("DB_HOST", "runready-db.c3q46oykql8z.ap-southeast-1.rds.amazonaws.com")
@@ -31,6 +39,17 @@ class Settings:
 
     # --- CORS SETTINGS ---
     CORS_ORIGINS: list = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+
+    # --- AUTH SETTINGS ---
+    AUTH_ENABLED: bool = _env_bool("AUTH_ENABLED", False)
+    AUTH_PROVIDER_NAME: str = os.getenv("AUTH_PROVIDER_NAME", "Clerk")
+    AUTH_ISSUER: str = os.getenv("AUTH_ISSUER", "")
+    AUTH_JWKS_URL: str = os.getenv("AUTH_JWKS_URL", "")
+    AUTH_AUTHORIZED_PARTIES: list[str] = [
+        value.strip()
+        for value in os.getenv("AUTH_AUTHORIZED_PARTIES", "").split(",")
+        if value.strip()
+    ]
 
     # --- NEA API ENDPOINTS ---
     NEA_V1_BASE = "https://api.data.gov.sg/v1/environment"
