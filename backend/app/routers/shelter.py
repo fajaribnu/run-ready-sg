@@ -3,7 +3,8 @@ F2: Find Shelter Now
 One-tap nearest shelter finder with walking route via OneMap.
 """
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
+from app.auth import AuthenticatedUser, require_authenticated_user
 from app.services.spatial import find_nearest_shelters
 
 router = APIRouter()
@@ -14,6 +15,7 @@ def find_shelter(
     lat: float = Query(..., description="User latitude"),
     lng: float = Query(..., description="User longitude"),
     limit: int = Query(3, description="Number of shelters to return"),
+    user: AuthenticatedUser | None = Depends(require_authenticated_user),
 ):
     """
     Returns the nearest shelters to the user's location.

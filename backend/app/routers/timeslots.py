@@ -3,6 +3,8 @@ F5: Smart Time-Slot Finder
 Suggests the safest time windows for outdoor activity based on forecast trends.
 """
 
+from fastapi import APIRouter, Depends, Query
+from app.auth import AuthenticatedUser, require_authenticated_user
 from datetime import datetime, timezone, timedelta
 
 from fastapi import APIRouter, Query
@@ -64,6 +66,7 @@ def best_times(
     lat: float = Query(..., description="User latitude"),
     lng: float = Query(..., description="User longitude"),
     duration_min: int = Query(45, description="Desired activity duration in minutes"),
+    user: AuthenticatedUser | None = Depends(require_authenticated_user),
 ):
     """
     Scans today's forecast periods and returns the safest time windows
