@@ -33,6 +33,13 @@ export default function App() {
 
   const { currentUserPos, locationReady, permissionState } = useLocation();
 
+  // Sync isGuest with auth state
+  useEffect(() => {
+    if (auth.enabled) {
+      setIsGuest(!auth.isAuthenticated);
+    }
+  }, [auth.enabled, auth.isAuthenticated]);
+
   // Helper: open one modal and always close the other
   const openQuotaModal = useCallback(() => {
     setShowLoginModal(false);
@@ -96,21 +103,6 @@ export default function App() {
     return true;
   }, [quota, handleCheckRunNow, openQuotaModal]);
 
-  // Tab switch — always switch route.
-  // Guests on non-home tabs: show view blurred + LoginRequiredModal on top.
-  // const handleTabChange = useCallback(
-  //   (tab: Tab) => {
-  //     setActiveTab(tab);
-  //     // if (isGuest && tab !== "home") {
-  //     //   openLoginModal();
-  //     // } else {
-  //       // Switching back to home clears both modals
-  //       setShowQuotaModal(false);
-  //     //   setShowLoginModal(false);
-  //     // }
-  //   },
-  //   [isGuest],
-  // );
   const handleTabChange = useCallback(
     (tab: Tab) => {
       if (auth.enabled && !auth.isAuthenticated && tab !== "home") {
@@ -121,7 +113,7 @@ export default function App() {
       }
       setActiveTab(tab);
     },
-    [auth.enabled, auth.isAuthenticated, isGuest, openLoginModal],
+    [auth.enabled, auth.isAuthenticated],
   );
 
   const handleLogin = useCallback(() => {
@@ -146,17 +138,6 @@ export default function App() {
     setActiveTab("home");
     window.sessionStorage.removeItem(POST_LOGIN_TAB_KEY);
   }, []);
-
-  // const handleSignUp = useCallback(() => {
-  //   setShowQuotaModal(false);
-  //   // setShowLoginModal(false);
-  //   // TODO: wire to your auth flow, then setIsGuest(false)
-  // }, []);
-
-  // const handleLogin = useCallback(() => {
-  //   setShowLoginModal(false);
-  //   // TODO: wire to your auth flow, then setIsGuest(false)
-  // }, []);
 
   const handleUpgrade = useCallback(() => {
     setShowQuotaModal(false);
@@ -207,15 +188,14 @@ export default function App() {
   };
 
   return (
-    // Outer shell — never blurred, provides stacking context
     <div className="relative min-h-screen bg-background">
-        <TopBar
-          activeTab={activeTab}
-          authEnabled={auth.enabled}
-          isAuthenticated={auth.isAuthenticated}
-          userLabel={auth.user?.name ?? auth.user?.email ?? "Runner"}
-          onLogin={handleLogin}
-        />
+      <TopBar
+        activeTab={activeTab}
+        authEnabled={auth.enabled}
+        isAuthenticated={auth.isAuthenticated}
+        userLabel={auth.user?.name ?? auth.user?.email ?? "Runner"}
+        onLogin={handleLogin}
+      />
 
       <main className="flex-1 overflow-x-hidden px-6 pt-4">
         {auth.enabled && auth.error && (
@@ -237,10 +217,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-        {/* Spacer so content doesn't sit behind the fixed BottomNav */}
-        <div className="h-32" />
+      <div className="h-32" />
 
-      {/* BottomNav — fixed, always floats above everything including blur */}
       <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Quota exhausted modal */}
