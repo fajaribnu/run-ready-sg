@@ -1,6 +1,5 @@
-import { AnimatePresence, motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Lock } from "lucide-react";
-
 
 type LoginRequiredModalProps = {
   isOpen: boolean;
@@ -19,6 +18,7 @@ export function LoginRequiredModal({
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Backdrop - full screen, BottomNav floats above via its own z-index */}
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -28,6 +28,7 @@ export function LoginRequiredModal({
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
             onClick={onClose}
           />
+
 
           <motion.div
             key="modal"
@@ -42,6 +43,11 @@ export function LoginRequiredModal({
               className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1117] p-8 shadow-2xl"
               style={{ pointerEvents: "auto" }}
             >
+                   {/* Modal */}
+              {/* Glow accent */}
+<!--               <div className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+ -->
+              {/* Close */}
               <button
                 onClick={onClose}
                 className="absolute right-4 top-4 rounded-full p-1 text-white/40 transition hover:text-white/80"
@@ -57,6 +63,7 @@ export function LoginRequiredModal({
                 </svg>
               </button>
 
+              {/* Icon */}
               <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
                 <Lock size={20} className="text-primary" />
               </div>
@@ -80,6 +87,12 @@ export function LoginRequiredModal({
                   className="w-full rounded-xl border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 active:scale-[0.98]"
                 >
                   Log in
+                </button>
+                <button
+                  onClick={onClose}
+                  className="w-full py-2 text-xs text-white/30 transition hover:text-white/50"
+                >
+                  Maybe later
                 </button>
               </div>
             </div>
