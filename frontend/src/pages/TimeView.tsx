@@ -20,7 +20,7 @@ type TimeViewProps = {
   onRequireLogin?: () => void;
 };
 
-export const TimeView = ({ isGuest = false, onRequireLogin }: TimeViewProps) => {
+export const TimeView = ({ isGuest, onRequireLogin }: TimeViewProps) => {
   const [duration, setDuration] = useState(45);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -233,10 +233,9 @@ export const TimeView = ({ isGuest = false, onRequireLogin }: TimeViewProps) => 
           </div>
         </div>
       </section>
-
-      {/* Login gate modal */}
+        
       <AnimatePresence>
-        {showLoginModal && (
+        {isGuest && showLoginModal && (
           <>
             <motion.div
               key="backdrop"
