@@ -33,13 +33,6 @@ export default function App() {
 
   const { currentUserPos, locationReady, permissionState } = useLocation();
 
-  // Sync isGuest with auth state
-  useEffect(() => {
-    if (auth.enabled) {
-      setIsGuest(!auth.isAuthenticated);
-    }
-  }, [auth.enabled, auth.isAuthenticated]);
-
   // Helper: open one modal and always close the other
   const openQuotaModal = useCallback(() => {
     setShowLoginModal(false);
