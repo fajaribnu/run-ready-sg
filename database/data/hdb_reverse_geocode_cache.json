@@ -1,0 +1,3292 @@
+{
+  "ADD01P": {
+    "road": "ADMIRALTY DRIVE",
+    "sample_address": "354 ADMIRALTY DRIVE",
+    "source_postal_code": "750354"
+  },
+  "ADL01U": {
+    "road": "ADMIRALTY LINK",
+    "sample_address": "489 ADMIRALTY LINK",
+    "source_postal_code": "750489"
+  },
+  "ADM00K": {
+    "road": "ADMIRALTY ROAD",
+    "sample_address": "6A ADMIRALTY ROAD",
+    "source_postal_code": "732006"
+  },
+  "AHH00K": {
+    "road": "AH HOOD ROAD",
+    "sample_address": "103 AH HOOD ROAD",
+    "source_postal_code": "320103"
+  },
+  "AHS00H": {
+    "road": "LORONG AH SOO",
+    "sample_address": "144 LORONG AH SOO",
+    "source_postal_code": "530144"
+  },
+  "ALA05S": {
+    "road": "ALJUNIED AVENUE 2",
+    "sample_address": "118 ALJUNIED AVENUE 2",
+    "source_postal_code": "380118"
+  },
+  "ALC02U": {
+    "road": "ALJUNIED CRESCENT",
+    "sample_address": "110 ALJUNIED CRESCENT",
+    "source_postal_code": "380110"
+  },
+  "ALC04L": {
+    "road": "ALKAFF CRESCENT",
+    "sample_address": "112A ALKAFF CRESCENT",
+    "source_postal_code": "341112"
+  },
+  "ALJ00Q": {
+    "road": "ALJUNIED ROAD",
+    "sample_address": "125 ALJUNIED ROAD",
+    "source_postal_code": "380125"
+  },
+  "ANA02E": {
+    "road": "ANG MO KIO AVENUE 1",
+    "sample_address": "332 ANG MO KIO AVENUE 1",
+    "source_postal_code": "560332"
+  },
+  "ANA03L": {
+    "road": "ANG MO KIO AVENUE 10",
+    "sample_address": "553 ANG MO KIO AVENUE 10",
+    "source_postal_code": "560553"
+  },
+  "ANA04L": {
+    "road": "ANG MO KIO AVENUE 2",
+    "sample_address": "259 ANG MO KIO AVENUE 2",
+    "source_postal_code": "560259"
+  },
+  "ANA05P": {
+    "road": "ANG MO KIO AVENUE 3",
+    "sample_address": "347A ANG MO KIO AVENUE 3",
+    "source_postal_code": "561347"
+  },
+  "ANA06H": {
+    "road": "ANG MO KIO AVENUE 4",
+    "sample_address": "171 ANG MO KIO AVENUE 4",
+    "source_postal_code": "560171"
+  },
+  "ANA07B": {
+    "road": "ANG MO KIO AVENUE 5",
+    "sample_address": "611 ANG MO KIO AVENUE 5",
+    "source_postal_code": "560611"
+  },
+  "ANA08H": {
+    "road": "ANG MO KIO AVENUE 6",
+    "sample_address": "712 ANG MO KIO AVENUE 6",
+    "source_postal_code": "560712"
+  },
+  "ANA09H": {
+    "road": "ANG MO KIO AVENUE 8",
+    "sample_address": "703 ANG MO KIO AVENUE 8",
+    "source_postal_code": "560703"
+  },
+  "ANA10L": {
+    "road": "ANG MO KIO AVENUE 9",
+    "sample_address": "627 ANG MO KIO AVENUE 9",
+    "source_postal_code": "560627"
+  },
+  "ANC04Y": {
+    "road": "ANCHORVALE ROAD",
+    "sample_address": "307 ANCHORVALE ROAD",
+    "source_postal_code": "540307"
+  },
+  "ANC05U": {
+    "road": "ANCHORVALE CRESCENT",
+    "sample_address": "335C ANCHORVALE CRESCENT",
+    "source_postal_code": "543335"
+  },
+  "AND04D": {
+    "road": "ANCHORVALE DRIVE",
+    "sample_address": "319C ANCHORVALE DRIVE",
+    "source_postal_code": "543319"
+  },
+  "ANL03N": {
+    "road": "ANCHORVALE LANE",
+    "sample_address": "311C ANCHORVALE LANE",
+    "source_postal_code": "543311"
+  },
+  "ANL04Y": {
+    "road": "ANCHORVALE LINK",
+    "sample_address": "306D ANCHORVALE LINK",
+    "source_postal_code": "544306"
+  },
+  "ANS01L": {
+    "road": "ANG MO KIO STREET 11",
+    "sample_address": "104C ANG MO KIO STREET 11",
+    "source_postal_code": "562104"
+  },
+  "ANS02R": {
+    "road": "ANG MO KIO STREET 12",
+    "sample_address": "130A ANG MO KIO STREET 12",
+    "source_postal_code": "561130"
+  },
+  "ANS04R": {
+    "road": "ANG MO KIO STREET 21",
+    "sample_address": "246C ANG MO KIO STREET 21",
+    "source_postal_code": "563246"
+  },
+  "ANS05X": {
+    "road": "ANG MO KIO STREET 22",
+    "sample_address": "226H ANG MO KIO STREET 22",
+    "source_postal_code": "568226"
+  },
+  "ANS06N": {
+    "road": "ANG MO KIO STREET 23",
+    "sample_address": "227 ANG MO KIO STREET 23",
+    "source_postal_code": "560227"
+  },
+  "ANS08K": {
+    "road": "ANG MO KIO STREET 31",
+    "sample_address": "315B ANG MO KIO STREET 31",
+    "source_postal_code": "563315"
+  },
+  "ANS09Q": {
+    "road": "ANG MO KIO STREET 32",
+    "sample_address": "350 ANG MO KIO STREET 32",
+    "source_postal_code": "560350"
+  },
+  "ANS11X": {
+    "road": "ANG MO KIO STREET 42",
+    "sample_address": "424A ANG MO KIO STREET 42",
+    "source_postal_code": "561424"
+  },
+  "ANS12C": {
+    "road": "ANG MO KIO STREET 44",
+    "sample_address": "455 ANG MO KIO STREET 44",
+    "source_postal_code": "560455"
+  },
+  "ANS13Z": {
+    "road": "ANG MO KIO STREET 51",
+    "sample_address": "590A ANG MO KIO STREET 51",
+    "source_postal_code": "561590"
+  },
+  "ANS14L": {
+    "road": "ANG MO KIO STREET 52",
+    "sample_address": "589 ANG MO KIO STREET 52",
+    "source_postal_code": "560589"
+  },
+  "ANS17M": {
+    "road": "ANG MO KIO STREET 61",
+    "sample_address": "650 ANG MO KIO STREET 61",
+    "source_postal_code": "560650"
+  },
+  "ANS27P": {
+    "road": "ANCHORVALE STREET",
+    "sample_address": "330A ANCHORVALE STREET",
+    "source_postal_code": "541330"
+  },
+  "ARA04H": {
+    "road": "KAMPONG ARANG ROAD",
+    "sample_address": "12 KAMPONG ARANG ROAD",
+    "source_postal_code": "431012"
+  },
+  "AYE02J": {
+    "road": "JALAN AYER",
+    "sample_address": "115A JALAN AYER",
+    "source_postal_code": "382115"
+  },
+  "BAH02L": {
+    "road": "JALAN BAHAGIA",
+    "sample_address": "35 JALAN BAHAGIA",
+    "source_postal_code": "320035"
+  },
+  "BAL03N": {
+    "road": "BALAM ROAD",
+    "sample_address": "29 BALAM ROAD",
+    "source_postal_code": "370029"
+  },
+  "BAL04S": {
+    "road": "BALESTIER ROAD",
+    "sample_address": "2A BALESTIER ROAD",
+    "source_postal_code": "321002"
+  },
+  "BAN00L": {
+    "road": "BANGKIT ROAD",
+    "sample_address": "255 BANGKIT ROAD",
+    "source_postal_code": "670255"
+  },
+  "BAS02G": {
+    "road": "BAIN STREET",
+    "sample_address": "233 BAIN STREET",
+    "source_postal_code": "180233"
+  },
+  "BAS05U": {
+    "road": "BANDA STREET",
+    "sample_address": "5 BANDA STREET",
+    "source_postal_code": "050005"
+  },
+  "BAT08G": {
+    "road": "JALAN BATU",
+    "sample_address": "10 JALAN BATU",
+    "source_postal_code": "431010"
+  },
+  "BAW02B": {
+    "road": "BARTLEY WALK",
+    "sample_address": "226A BARTLEY WALK",
+    "source_postal_code": "361226"
+  },
+  "BEA00Y": {
+    "road": "BEACH ROAD",
+    "sample_address": "15 BEACH ROAD",
+    "source_postal_code": "190015"
+  },
+  "BEA05R": {
+    "road": "BEDOK NORTH AVENUE 1",
+    "sample_address": "423 BEDOK NORTH AVENUE 1",
+    "source_postal_code": "460423"
+  },
+  "BEA06N": {
+    "road": "BEDOK NORTH AVENUE 2",
+    "sample_address": "518 BEDOK NORTH AVENUE 2",
+    "source_postal_code": "460518"
+  },
+  "BEA07U": {
+    "road": "BEDOK NORTH AVENUE 3",
+    "sample_address": "505 BEDOK NORTH AVENUE 3",
+    "source_postal_code": "460505"
+  },
+  "BEA08R": {
+    "road": "BEDOK NORTH AVENUE 4",
+    "sample_address": "94D BEDOK NORTH AVENUE 4",
+    "source_postal_code": "463094"
+  },
+  "BEA09N": {
+    "road": "BEDOK SOUTH AVENUE 1",
+    "sample_address": "1 BEDOK SOUTH AVENUE 1",
+    "source_postal_code": "460001"
+  },
+  "BEA10U": {
+    "road": "BEDOK SOUTH AVENUE 2",
+    "sample_address": "14 BEDOK SOUTH AVENUE 2",
+    "source_postal_code": "460014"
+  },
+  "BEA11N": {
+    "road": "BEDOK SOUTH AVENUE 3",
+    "sample_address": "157 BEDOK SOUTH AVENUE 3",
+    "source_postal_code": "460157"
+  },
+  "BEC05N": {
+    "road": "BEO CRESCENT",
+    "sample_address": "38 BEO CRESCENT",
+    "source_postal_code": "160038"
+  },
+  "BEC08N": {
+    "road": "BEDOK RESERVOIR CRESCENT",
+    "sample_address": "747C BEDOK RESERVOIR CRESCENT",
+    "source_postal_code": "473747"
+  },
+  "BEC09N": {
+    "road": "BEDOK CENTRAL",
+    "sample_address": "221B BEDOK CENTRAL",
+    "source_postal_code": "462221"
+  },
+  "BED07K": {
+    "road": "BEDOK NORTH DRIVE",
+    "sample_address": "222 BEDOK NORTH DRIVE",
+    "source_postal_code": "460222"
+  },
+  "BEN00L": {
+    "road": "BEDOK NORTH ROAD",
+    "sample_address": "431A BEDOK NORTH ROAD",
+    "source_postal_code": "461431"
+  },
+  "BEN01R": {
+    "road": "BENDEMEER ROAD",
+    "sample_address": "11 BENDEMEER ROAD",
+    "source_postal_code": "330011"
+  },
+  "BER00B": {
+    "road": "BEDOK RESERVOIR ROAD",
+    "sample_address": "134 BEDOK RESERVOIR ROAD",
+    "source_postal_code": "470134"
+  },
+  "BER11Z": {
+    "road": "JALAN BERSEH",
+    "sample_address": "25 JALAN BERSEH",
+    "source_postal_code": "200025"
+  },
+  "BES00D": {
+    "road": "BEDOK NORTH STREET 1",
+    "sample_address": "205 BEDOK NORTH STREET 1",
+    "source_postal_code": "460205"
+  },
+  "BES01K": {
+    "road": "BEDOK NORTH STREET 2",
+    "sample_address": "140 BEDOK NORTH STREET 2",
+    "source_postal_code": "460140"
+  },
+  "BES02T": {
+    "road": "BEDOK NORTH STREET 3",
+    "sample_address": "502 BEDOK NORTH STREET 3",
+    "source_postal_code": "460502"
+  },
+  "BES03D": {
+    "road": "BEDOK NORTH STREET 4",
+    "sample_address": "186B BEDOK NORTH STREET 4",
+    "source_postal_code": "462186"
+  },
+  "BES05G": {
+    "road": "BEDOK SOUTH ROAD",
+    "sample_address": "21 BEDOK SOUTH ROAD",
+    "source_postal_code": "460021"
+  },
+  "BEV00N": {
+    "road": "BEDOK RESERVOIR VIEW",
+    "sample_address": "763 BEDOK RESERVOIR VIEW",
+    "source_postal_code": "470763"
+  },
+  "BID04Y": {
+    "road": "BIDADARI PARK DRIVE",
+    "sample_address": "102A BIDADARI PARK DRIVE",
+    "source_postal_code": "341102"
+  },
+  "BIS04Q": {
+    "road": "BISHAN STREET 11",
+    "sample_address": "507 BISHAN STREET 11",
+    "source_postal_code": "570507"
+  },
+  "BIS05M": {
+    "road": "BISHAN STREET 12",
+    "sample_address": "119 BISHAN STREET 12",
+    "source_postal_code": "570119"
+  },
+  "BIS06N": {
+    "road": "BISHAN STREET 13",
+    "sample_address": "168 BISHAN STREET 13",
+    "source_postal_code": "570168"
+  },
+  "BIS07K": {
+    "road": "BISHAN STREET 14",
+    "sample_address": "532A BISHAN STREET 14",
+    "source_postal_code": "571532"
+  },
+  "BIS09N": {
+    "road": "BISHAN STREET 22",
+    "sample_address": "254 BISHAN STREET 22",
+    "source_postal_code": "570254"
+  },
+  "BIS10Q": {
+    "road": "BISHAN STREET 23",
+    "sample_address": "211 BISHAN STREET 23",
+    "source_postal_code": "570211"
+  },
+  "BIS15M": {
+    "road": "BISHAN STREET 24",
+    "sample_address": "268A BISHAN STREET 24",
+    "source_postal_code": "571268"
+  },
+  "BOA01Y": {
+    "road": "BOON LAY AVENUE",
+    "sample_address": "218B BOON LAY AVENUE",
+    "source_postal_code": "642218"
+  },
+  "BOD01D": {
+    "road": "BOON LAY DRIVE",
+    "sample_address": "198 BOON LAY DRIVE",
+    "source_postal_code": "640198"
+  },
+  "BOK01Q": {
+    "road": "BOON KENG ROAD",
+    "sample_address": "6A BOON KENG ROAD",
+    "source_postal_code": "331006"
+  },
+  "BOP00F": {
+    "road": "BOON LAY PLACE",
+    "sample_address": "212A BOON LAY PLACE",
+    "source_postal_code": "641212"
+  },
+  "BOT04R": {
+    "road": "BOON TIONG ROAD",
+    "sample_address": "6C BOON TIONG ROAD",
+    "source_postal_code": "166006"
+  },
+  "BRD01K": {
+    "road": "BRIGHT HILL DRIVE",
+    "sample_address": "448A BRIGHT HILL DRIVE",
+    "source_postal_code": "571448"
+  },
+  "BUA05U": {
+    "road": "BUKIT BATOK EAST AVENUE 3",
+    "sample_address": "222 BUKIT BATOK EAST AVENUE 3",
+    "source_postal_code": "650222"
+  },
+  "BUA06N": {
+    "road": "BUKIT BATOK EAST AVENUE 4",
+    "sample_address": "264 BUKIT BATOK EAST AVENUE 4",
+    "source_postal_code": "650264"
+  },
+  "BUA07K": {
+    "road": "BUKIT BATOK EAST AVENUE 5",
+    "sample_address": "248 BUKIT BATOK EAST AVENUE 5",
+    "source_postal_code": "650248"
+  },
+  "BUA08A": {
+    "road": "BUKIT BATOK EAST AVENUE 6",
+    "sample_address": "292D BUKIT BATOK EAST AVENUE 6",
+    "source_postal_code": "654292"
+  },
+  "BUA09Y": {
+    "road": "BUKIT BATOK WEST AVENUE 2",
+    "sample_address": "424 BUKIT BATOK WEST AVENUE 2",
+    "source_postal_code": "650424"
+  },
+  "BUA11F": {
+    "road": "BUKIT BATOK WEST AVENUE 4",
+    "sample_address": "417 BUKIT BATOK WEST AVENUE 4",
+    "source_postal_code": "650417"
+  },
+  "BUA12U": {
+    "road": "BUKIT BATOK WEST AVENUE 5",
+    "sample_address": "393 BUKIT BATOK WEST AVENUE 5",
+    "source_postal_code": "650393"
+  },
+  "BUA13S": {
+    "road": "BUKIT BATOK WEST AVENUE 6",
+    "sample_address": "109 BUKIT BATOK WEST AVENUE 6",
+    "source_postal_code": "650109"
+  },
+  "BUA14A": {
+    "road": "BUKIT BATOK WEST AVENUE 7",
+    "sample_address": "402 BUKIT BATOK WEST AVENUE 7",
+    "source_postal_code": "650402"
+  },
+  "BUA15B": {
+    "road": "BUKIT BATOK WEST AVENUE 8",
+    "sample_address": "433B BUKIT BATOK WEST AVENUE 8",
+    "source_postal_code": "652433"
+  },
+  "BUA22D": {
+    "road": "BUKIT BATOK WEST AVENUE 9",
+    "sample_address": "447A BUKIT BATOK WEST AVENUE 9",
+    "source_postal_code": "651447"
+  },
+  "BUC02M": {
+    "road": "BUKIT BATOK CENTRAL",
+    "sample_address": "124 BUKIT BATOK CENTRAL",
+    "source_postal_code": "650124"
+  },
+  "BUC04Y": {
+    "road": "BUKIT MERAH CENTRAL",
+    "sample_address": "162 BUKIT MERAH CENTRAL",
+    "source_postal_code": "150162"
+  },
+  "BUC11G": {
+    "road": "BUANGKOK CRESCENT",
+    "sample_address": "998A BUANGKOK CRESCENT",
+    "source_postal_code": "531998"
+  },
+  "BUF09A": {
+    "road": "BUFFALO ROAD",
+    "sample_address": "661 BUFFALO ROAD",
+    "source_postal_code": "210661"
+  },
+  "BUG06A": {
+    "road": "BUANGKOK GREEN",
+    "sample_address": "987B BUANGKOK GREEN",
+    "source_postal_code": "532987"
+  },
+  "BUL00Q": {
+    "road": "BUKIT MERAH LANE 1",
+    "sample_address": "125 BUKIT MERAH LANE 1",
+    "source_postal_code": "150125"
+  },
+  "BUL13G": {
+    "road": "BUANGKOK LINK",
+    "sample_address": "994A BUANGKOK LINK",
+    "source_postal_code": "531994"
+  },
+  "BUM03D": {
+    "road": "JALAN BUKIT MERAH",
+    "sample_address": "14 JALAN BUKIT MERAH",
+    "source_postal_code": "150014"
+  },
+  "BUP05Q": {
+    "road": "BUKIT PURMEI ROAD",
+    "sample_address": "112 BUKIT PURMEI ROAD",
+    "source_postal_code": "090112"
+  },
+  "BUR00D": {
+    "road": "BUKIT PANJANG RING ROAD",
+    "sample_address": "541 BUKIT PANJANG RING ROAD",
+    "source_postal_code": "670541"
+  },
+  "BUS02Q": {
+    "road": "BUKIT BATOK STREET 11",
+    "sample_address": "153 BUKIT BATOK STREET 11",
+    "source_postal_code": "650153"
+  },
+  "BUS03F": {
+    "road": "BUKIT BATOK STREET 21",
+    "sample_address": "202 BUKIT BATOK STREET 21",
+    "source_postal_code": "650202"
+  },
+  "BUS04S": {
+    "road": "BUKIT BATOK STREET 22",
+    "sample_address": "299 BUKIT BATOK STREET 22",
+    "source_postal_code": "650299"
+  },
+  "BUS06N": {
+    "road": "BUKIT BATOK STREET 24",
+    "sample_address": "290G BUKIT BATOK STREET 24",
+    "source_postal_code": "656290"
+  },
+  "BUS07Q": {
+    "road": "BUKIT BATOK STREET 25",
+    "sample_address": "289B BUKIT BATOK STREET 25",
+    "source_postal_code": "651289"
+  },
+  "BUS09S": {
+    "road": "BUKIT BATOK STREET 31",
+    "sample_address": "358 BUKIT BATOK STREET 31",
+    "source_postal_code": "650358"
+  },
+  "BUS10K": {
+    "road": "BUKIT BATOK STREET 32",
+    "sample_address": "332 BUKIT BATOK STREET 32",
+    "source_postal_code": "650332"
+  },
+  "BUS11Y": {
+    "road": "BUKIT BATOK STREET 33",
+    "sample_address": "322 BUKIT BATOK STREET 33",
+    "source_postal_code": "650322"
+  },
+  "BUS12P": {
+    "road": "BUKIT BATOK STREET 34",
+    "sample_address": "344 BUKIT BATOK STREET 34",
+    "source_postal_code": "650344"
+  },
+  "BUS13N": {
+    "road": "BUKIT BATOK STREET 51",
+    "sample_address": "528 BUKIT BATOK STREET 51",
+    "source_postal_code": "650528"
+  },
+  "BUS14E": {
+    "road": "BUKIT BATOK STREET 52",
+    "sample_address": "508 BUKIT BATOK STREET 52",
+    "source_postal_code": "650508"
+  },
+  "BUS22C": {
+    "road": "JALAN BUKIT HO SWEE",
+    "sample_address": "32 JALAN BUKIT HO SWEE",
+    "source_postal_code": "160032"
+  },
+  "BUS26A": {
+    "road": "BUKIT BATOK STREET 41",
+    "sample_address": "463 BUKIT BATOK STREET 41",
+    "source_postal_code": "650463"
+  },
+  "BUV00C": {
+    "road": "BUKIT MERAH VIEW",
+    "sample_address": "126 BUKIT MERAH VIEW",
+    "source_postal_code": "151126"
+  },
+  "CAC07Y": {
+    "road": "CASSIA CRESCENT",
+    "sample_address": "36 CASSIA CRESCENT",
+    "source_postal_code": "390036"
+  },
+  "CAC10Y": {
+    "road": "CANTONMENT CLOSE",
+    "sample_address": "11 CANTONMENT CLOSE",
+    "source_postal_code": "080011"
+  },
+  "CAC12F": {
+    "road": "CANBERRA CRESCENT",
+    "sample_address": "120D CANBERRA CRESCENT",
+    "source_postal_code": "754120"
+  },
+  "CAD04W": {
+    "road": "CANBERRA DRIVE",
+    "sample_address": "378 CANBERRA DRIVE",
+    "source_postal_code": "760378"
+  },
+  "CAL06H": {
+    "road": "CANBERRA LINK",
+    "sample_address": "505 CANBERRA LINK",
+    "source_postal_code": "750505"
+  },
+  "CAM01K": {
+    "road": "CAMBRIDGE ROAD",
+    "sample_address": "39 CAMBRIDGE ROAD",
+    "source_postal_code": "210039"
+  },
+  "CAN02U": {
+    "road": "CANBERRA ROAD",
+    "sample_address": "303 CANBERRA ROAD",
+    "source_postal_code": "750303"
+  },
+  "CAN04Y": {
+    "road": "CANTONMENT ROAD",
+    "sample_address": "1E CANTONMENT ROAD",
+    "source_postal_code": "085501"
+  },
+  "CAS08K": {
+    "road": "CASHEW ROAD",
+    "sample_address": "133 CASHEW ROAD",
+    "source_postal_code": "670133"
+  },
+  "CAS15J": {
+    "road": "CANBERRA STREET",
+    "sample_address": "121 CANBERRA STREET",
+    "source_postal_code": "750121"
+  },
+  "CAV02U": {
+    "road": "CANBERRA VIEW",
+    "sample_address": "132C CANBERRA VIEW",
+    "source_postal_code": "753132"
+  },
+  "CAW04A": {
+    "road": "CANBERRA WALK",
+    "sample_address": "108B CANBERRA WALK",
+    "source_postal_code": "752108"
+  },
+  "CHA00U": {
+    "road": "CHAI CHEE AVENUE",
+    "sample_address": "40 CHAI CHEE AVENUE",
+    "source_postal_code": "461040"
+  },
+  "CHA02K": {
+    "road": "CHANDER ROAD",
+    "sample_address": "668 CHANDER ROAD",
+    "source_postal_code": "210668"
+  },
+  "CHA41M": {
+    "road": "CHOA CHU KANG AVENUE 1",
+    "sample_address": "131 CHOA CHU KANG AVENUE 1",
+    "source_postal_code": "680131"
+  },
+  "CHA42Y": {
+    "road": "CHOA CHU KANG AVENUE 2",
+    "sample_address": "249 CHOA CHU KANG AVENUE 2",
+    "source_postal_code": "680249"
+  },
+  "CHA43F": {
+    "road": "CHOA CHU KANG AVENUE 3",
+    "sample_address": "408 CHOA CHU KANG AVENUE 3",
+    "source_postal_code": "680408"
+  },
+  "CHA44R": {
+    "road": "CHOA CHU KANG AVENUE 4",
+    "sample_address": "458 CHOA CHU KANG AVENUE 4",
+    "source_postal_code": "680458"
+  },
+  "CHA45S": {
+    "road": "CHOA CHU KANG AVENUE 5",
+    "sample_address": "485C CHOA CHU KANG AVENUE 5",
+    "source_postal_code": "683485"
+  },
+  "CHA47H": {
+    "road": "CHOA CHU KANG AVENUE 7",
+    "sample_address": "810B CHOA CHU KANG AVENUE 7",
+    "source_postal_code": "682810"
+  },
+  "CHC00U": {
+    "road": "CHAI CHEE ROAD",
+    "sample_address": "27 CHAI CHEE ROAD",
+    "source_postal_code": "460027"
+  },
+  "CHC16G": {
+    "road": "CHOA CHU KANG CENTRAL",
+    "sample_address": "217 CHOA CHU KANG CENTRAL",
+    "source_postal_code": "680217"
+  },
+  "CHC17Y": {
+    "road": "CHOA CHU KANG CRESCENT",
+    "sample_address": "686C CHOA CHU KANG CRESCENT",
+    "source_postal_code": "683686"
+  },
+  "CHD07A": {
+    "road": "CHAI CHEE DRIVE",
+    "sample_address": "56 CHAI CHEE DRIVE",
+    "source_postal_code": "460056"
+  },
+  "CHD08D": {
+    "road": "CHOA CHU KANG DRIVE",
+    "sample_address": "787B CHOA CHU KANG DRIVE",
+    "source_postal_code": "681787"
+  },
+  "CHL09C": {
+    "road": "CHOA CHU KANG LOOP",
+    "sample_address": "344 CHOA CHU KANG LOOP",
+    "source_postal_code": "680344"
+  },
+  "CHN03D": {
+    "road": "CHOA CHU KANG NORTH 5",
+    "sample_address": "765 CHOA CHU KANG NORTH 5",
+    "source_postal_code": "680765"
+  },
+  "CHN04D": {
+    "road": "CHOA CHU KANG NORTH 6",
+    "sample_address": "635 CHOA CHU KANG NORTH 6",
+    "source_postal_code": "680635"
+  },
+  "CHN05D": {
+    "road": "CHOA CHU KANG NORTH 7",
+    "sample_address": "617 CHOA CHU KANG NORTH 7",
+    "source_postal_code": "680617"
+  },
+  "CHS01A": {
+    "road": "CHAI CHEE STREET",
+    "sample_address": "42 CHAI CHEE STREET",
+    "source_postal_code": "461042"
+  },
+  "CHS03F": {
+    "road": "CHAY YAN STREET",
+    "sample_address": "80 CHAY YAN STREET",
+    "source_postal_code": "160080"
+  },
+  "CHS11A": {
+    "road": "CHIN SWEE ROAD",
+    "sample_address": "52 CHIN SWEE ROAD",
+    "source_postal_code": "160052"
+  },
+  "CHS24J": {
+    "road": "CHOA CHU KANG STREET 51",
+    "sample_address": "511 CHOA CHU KANG STREET 51",
+    "source_postal_code": "680511"
+  },
+  "CHS25Y": {
+    "road": "CHOA CHU KANG STREET 52",
+    "sample_address": "567A CHOA CHU KANG STREET 52",
+    "source_postal_code": "681567"
+  },
+  "CHS26U": {
+    "road": "CHOA CHU KANG STREET 53",
+    "sample_address": "704 CHOA CHU KANG STREET 53",
+    "source_postal_code": "680704"
+  },
+  "CHS27B": {
+    "road": "CHOA CHU KANG STREET 54",
+    "sample_address": "768 CHOA CHU KANG STREET 54",
+    "source_postal_code": "680768"
+  },
+  "CHS28W": {
+    "road": "CHOA CHU KANG STREET 62",
+    "sample_address": "608 CHOA CHU KANG STREET 62",
+    "source_postal_code": "680608"
+  },
+  "CHS29M": {
+    "road": "CHOA CHU KANG STREET 64",
+    "sample_address": "640 CHOA CHU KANG STREET 64",
+    "source_postal_code": "680640"
+  },
+  "CHV00F": {
+    "road": "CHANGI VILLAGE ROAD",
+    "sample_address": "5 CHANGI VILLAGE ROAD",
+    "source_postal_code": "500005"
+  },
+  "CHW08D": {
+    "road": "CHAMPIONS WAY",
+    "sample_address": "568B CHAMPIONS WAY",
+    "source_postal_code": "732568"
+  },
+  "CIR01Q": {
+    "road": "CIRCUIT ROAD",
+    "sample_address": "52 CIRCUIT ROAD",
+    "source_postal_code": "370052"
+  },
+  "CLA04L": {
+    "road": "CLEMENTI AVENUE 1",
+    "sample_address": "420A CLEMENTI AVENUE 1",
+    "source_postal_code": "121420"
+  },
+  "CLA05L": {
+    "road": "CLEMENTI AVENUE 2",
+    "sample_address": "364 CLEMENTI AVENUE 2",
+    "source_postal_code": "120364"
+  },
+  "CLA06H": {
+    "road": "CLEMENTI AVENUE 3",
+    "sample_address": "434 CLEMENTI AVENUE 3",
+    "source_postal_code": "120434"
+  },
+  "CLA07H": {
+    "road": "CLEMENTI AVENUE 4",
+    "sample_address": "303 CLEMENTI AVENUE 4",
+    "source_postal_code": "120303"
+  },
+  "CLA08B": {
+    "road": "CLEMENTI AVENUE 5",
+    "sample_address": "326 CLEMENTI AVENUE 5",
+    "source_postal_code": "120326"
+  },
+  "CLA09K": {
+    "road": "CLEMENTI AVENUE 6",
+    "sample_address": "210A CLEMENTI AVENUE 6",
+    "source_postal_code": "121210"
+  },
+  "CLL00K": {
+    "road": "CLARENCE LANE",
+    "sample_address": "132 CLARENCE LANE",
+    "source_postal_code": "140132"
+  },
+  "CLS01D": {
+    "road": "CLEMENTI STREET 11",
+    "sample_address": "109 CLEMENTI STREET 11",
+    "source_postal_code": "120109"
+  },
+  "CLS02Q": {
+    "road": "CLEMENTI STREET 12",
+    "sample_address": "106 CLEMENTI STREET 12",
+    "source_postal_code": "120106"
+  },
+  "CLS03T": {
+    "road": "CLEMENTI STREET 13",
+    "sample_address": "112 CLEMENTI STREET 13",
+    "source_postal_code": "120112"
+  },
+  "CLS04Q": {
+    "road": "CLEMENTI STREET 14",
+    "sample_address": "101 CLEMENTI STREET 14",
+    "source_postal_code": "120101"
+  },
+  "CLS06Q": {
+    "road": "CLEMENTI WEST STREET 1",
+    "sample_address": "601 CLEMENTI WEST STREET 1",
+    "source_postal_code": "120601"
+  },
+  "CLS07F": {
+    "road": "CLEMENTI WEST STREET 2",
+    "sample_address": "711 CLEMENTI WEST STREET 2",
+    "source_postal_code": "120711"
+  },
+  "COA01B": {
+    "road": "COMMONWEALTH AVENUE",
+    "sample_address": "7A COMMONWEALTH AVENUE",
+    "source_postal_code": "141007"
+  },
+  "COB00D": {
+    "road": "COMPASSVALE BOW",
+    "sample_address": "266D COMPASSVALE BOW",
+    "source_postal_code": "544266"
+  },
+  "COC03N": {
+    "road": "COMMONWEALTH CLOSE",
+    "sample_address": "86 COMMONWEALTH CLOSE",
+    "source_postal_code": "140086"
+  },
+  "COC04U": {
+    "road": "COMMONWEALTH CRESCENT",
+    "sample_address": "109 COMMONWEALTH CRESCENT",
+    "source_postal_code": "140109"
+  },
+  "COC08K": {
+    "road": "COMPASSVALE CRESCENT",
+    "sample_address": "290B COMPASSVALE CRESCENT",
+    "source_postal_code": "542290"
+  },
+  "COD00B": {
+    "road": "COMMONWEALTH DRIVE",
+    "sample_address": "59 COMMONWEALTH DRIVE",
+    "source_postal_code": "140059"
+  },
+  "COD04N": {
+    "road": "CORPORATION DRIVE",
+    "sample_address": "184A CORPORATION DRIVE",
+    "source_postal_code": "611184"
+  },
+  "COD05D": {
+    "road": "COMPASSVALE DRIVE",
+    "sample_address": "216A COMPASSVALE DRIVE",
+    "source_postal_code": "541216"
+  },
+  "COL05F": {
+    "road": "COMPASSVALE LANE",
+    "sample_address": "210 COMPASSVALE LANE",
+    "source_postal_code": "540210"
+  },
+  "COL07W": {
+    "road": "COMPASSVALE LINK",
+    "sample_address": "275 COMPASSVALE LINK",
+    "source_postal_code": "540275"
+  },
+  "COM00A": {
+    "road": "COMPASSVALE ROAD",
+    "sample_address": "247A COMPASSVALE ROAD",
+    "source_postal_code": "541247"
+  },
+  "COS09T": {
+    "road": "COMPASSVALE STREET",
+    "sample_address": "299B COMPASSVALE STREET",
+    "source_postal_code": "542299"
+  },
+  "COW00F": {
+    "road": "COMMONWEALTH AVENUE WEST",
+    "sample_address": "414 COMMONWEALTH AVENUE WEST",
+    "source_postal_code": "120414"
+  },
+  "COW04S": {
+    "road": "COMPASSVALE WALK",
+    "sample_address": "224D COMPASSVALE WALK",
+    "source_postal_code": "544224"
+  },
+  "CRL00Q": {
+    "road": "CRAWFORD LANE",
+    "sample_address": "466 CRAWFORD LANE",
+    "source_postal_code": "190466"
+  },
+  "DAC02U": {
+    "road": "DAKOTA CRESCENT",
+    "sample_address": "60 DAKOTA CRESCENT",
+    "source_postal_code": "390060"
+  },
+  "DAM01K": {
+    "road": "JALAN DAMAI",
+    "sample_address": "666 JALAN DAMAI",
+    "source_postal_code": "410666"
+  },
+  "DAW00K": {
+    "road": "DAWSON ROAD",
+    "sample_address": "86A DAWSON ROAD",
+    "source_postal_code": "142086"
+  },
+  "DEA08K": {
+    "road": "DELTA AVENUE",
+    "sample_address": "5 DELTA AVENUE",
+    "source_postal_code": "160005"
+  },
+  "DEP00N": {
+    "road": "DEPOT ROAD",
+    "sample_address": "113 DEPOT ROAD",
+    "source_postal_code": "100113"
+  },
+  "DOC00B": {
+    "road": "DOVER CRESCENT",
+    "sample_address": "28D DOVER CRESCENT",
+    "source_postal_code": "134028"
+  },
+  "DOE01D": {
+    "road": "DOVER CLOSE EAST",
+    "sample_address": "13 DOVER CLOSE EAST",
+    "source_postal_code": "130013"
+  },
+  "DOR01F": {
+    "road": "DORSET ROAD",
+    "sample_address": "48A DORSET ROAD",
+    "source_postal_code": "211048"
+  },
+  "DOV00W": {
+    "road": "DOVER ROAD",
+    "sample_address": "3 DOVER ROAD",
+    "source_postal_code": "130003"
+  },
+  "DUA02A": {
+    "road": "JALAN DUA",
+    "sample_address": "93A JALAN DUA",
+    "source_postal_code": "391093"
+  },
+  "DUS04X": {
+    "road": "JALAN DUSUN",
+    "sample_address": "102 JALAN DUSUN",
+    "source_postal_code": "320102"
+  },
+  "EDP01G": {
+    "road": "EDGEDALE PLAINS",
+    "sample_address": "129 EDGEDALE PLAINS",
+    "source_postal_code": "820129"
+  },
+  "EDP02K": {
+    "road": "EDGEFIELD PLAINS",
+    "sample_address": "674 EDGEFIELD PLAINS",
+    "source_postal_code": "820674"
+  },
+  "EDW00D": {
+    "road": "EDGEFIELD WALK",
+    "sample_address": "621A EDGEFIELD WALK",
+    "source_postal_code": "821621"
+  },
+  "ELI00F": {
+    "road": "ELIAS ROAD",
+    "sample_address": "613A ELIAS ROAD",
+    "source_postal_code": "511613"
+  },
+  "EMP01P": {
+    "road": "EMPRESS ROAD",
+    "sample_address": "8 EMPRESS ROAD",
+    "source_postal_code": "260008"
+  },
+  "ENS00Y": {
+    "road": "ENG HOON STREET",
+    "sample_address": "56 ENG HOON STREET",
+    "source_postal_code": "160056"
+  },
+  "ENS01B": {
+    "road": "ENG WATT STREET",
+    "sample_address": "73 ENG WATT STREET",
+    "source_postal_code": "160073"
+  },
+  "EUC01D": {
+    "road": "EUNOS CRESCENT",
+    "sample_address": "4A EUNOS CRESCENT",
+    "source_postal_code": "402004"
+  },
+  "EUR01M": {
+    "road": "EUNOS ROAD 2",
+    "sample_address": "38A EUNOS ROAD 2",
+    "source_postal_code": "401038"
+  },
+  "EUR04C": {
+    "road": "EUNOS ROAD 5",
+    "sample_address": "411 EUNOS ROAD 5",
+    "source_postal_code": "400411"
+  },
+  "EVP00A": {
+    "road": "EVERTON PARK",
+    "sample_address": "7 EVERTON PARK",
+    "source_postal_code": "080007"
+  },
+  "FAJ00N": {
+    "road": "FAJAR ROAD",
+    "sample_address": "405 FAJAR ROAD",
+    "source_postal_code": "670405"
+  },
+  "FAP01K": {
+    "road": "FARRER PARK ROAD",
+    "sample_address": "14A FARRER PARK ROAD",
+    "source_postal_code": "211014"
+  },
+  "FAR01K": {
+    "road": "FARRER ROAD",
+    "sample_address": "5 FARRER ROAD",
+    "source_postal_code": "260005"
+  },
+  "FEL01D": {
+    "road": "FERNVALE LANE",
+    "sample_address": "403C FERNVALE LANE",
+    "source_postal_code": "793403"
+  },
+  "FEL02Q": {
+    "road": "FERNVALE LINK",
+    "sample_address": "417 FERNVALE LINK",
+    "source_postal_code": "790417"
+  },
+  "FER01D": {
+    "road": "FERNVALE ROAD",
+    "sample_address": "435A FERNVALE ROAD",
+    "source_postal_code": "791435"
+  },
+  "FES00D": {
+    "road": "FERNVALE STREET",
+    "sample_address": "472 FERNVALE STREET",
+    "source_postal_code": "790472"
+  },
+  "FRE00F": {
+    "road": "FRENCH ROAD",
+    "sample_address": "809 FRENCH ROAD",
+    "source_postal_code": "200809"
+  },
+  "GAA02B": {
+    "road": "GANGES AVENUE",
+    "sample_address": "568 GANGES AVENUE",
+    "source_postal_code": "160568"
+  },
+  "GAN01N": {
+    "road": "GANGSA ROAD",
+    "sample_address": "105 GANGSA ROAD",
+    "source_postal_code": "670105"
+  },
+  "GEA00Y": {
+    "road": "GEYLANG EAST AVENUE 1",
+    "sample_address": "128 GEYLANG EAST AVENUE 1",
+    "source_postal_code": "380128"
+  },
+  "GEA01R": {
+    "road": "GEYLANG EAST AVENUE 2",
+    "sample_address": "129 GEYLANG EAST AVENUE 2",
+    "source_postal_code": "380129"
+  },
+  "GEB00B": {
+    "road": "GEYLANG BAHRU",
+    "sample_address": "69 GEYLANG BAHRU",
+    "source_postal_code": "330069"
+  },
+  "GEC01Q": {
+    "road": "GEYLANG EAST CENTRAL",
+    "sample_address": "122 GEYLANG EAST CENTRAL",
+    "source_postal_code": "380122"
+  },
+  "GES01G": {
+    "road": "GEYLANG SERAI",
+    "sample_address": "2C GEYLANG SERAI",
+    "source_postal_code": "405002"
+  },
+  "GEY28W": {
+    "road": "LORONG 3 GEYLANG",
+    "sample_address": "111 LORONG 3 GEYLANG",
+    "source_postal_code": "381111"
+  },
+  "GHL00P": {
+    "road": "GHIM MOH LINK",
+    "sample_address": "29 GHIM MOH LINK",
+    "source_postal_code": "270029"
+  },
+  "GHM00D": {
+    "road": "GHIM MOH ROAD",
+    "sample_address": "6 GHIM MOH ROAD",
+    "source_postal_code": "270006"
+  },
+  "GLO00W": {
+    "road": "GLOUCESTER ROAD",
+    "sample_address": "9 GLOUCESTER ROAD",
+    "source_postal_code": "210009"
+  },
+  "GUS00Y": {
+    "road": "GUAN CHUAN STREET",
+    "sample_address": "76 GUAN CHUAN STREET",
+    "source_postal_code": "160076"
+  },
+  "HAI00U": {
+    "road": "HAIG ROAD",
+    "sample_address": "23 HAIG ROAD",
+    "source_postal_code": "430023"
+  },
+  "HAV00N": {
+    "road": "HAVELOCK ROAD",
+    "sample_address": "22 HAVELOCK ROAD",
+    "source_postal_code": "160022"
+  },
+  "HEC00Q": {
+    "road": "HENDERSON CRESCENT",
+    "sample_address": "103 HENDERSON CRESCENT",
+    "source_postal_code": "150103"
+  },
+  "HEN00D": {
+    "road": "HENDERSON ROAD",
+    "sample_address": "95B HENDERSON ROAD",
+    "source_postal_code": "152095"
+  },
+  "HOA00Q": {
+    "road": "HOLLAND AVENUE",
+    "sample_address": "8A HOLLAND AVENUE",
+    "source_postal_code": "273008"
+  },
+  "HOA03T": {
+    "road": "HOUGANG AVENUE 1",
+    "sample_address": "109 HOUGANG AVENUE 1",
+    "source_postal_code": "530109"
+  },
+  "HOA04L": {
+    "road": "HOUGANG AVENUE 10",
+    "sample_address": "406 HOUGANG AVENUE 10",
+    "source_postal_code": "530406"
+  },
+  "HOA05Y": {
+    "road": "HOUGANG AVENUE 2",
+    "sample_address": "711 HOUGANG AVENUE 2",
+    "source_postal_code": "530711"
+  },
+  "HOA06N": {
+    "road": "HOUGANG AVENUE 3",
+    "sample_address": "1 HOUGANG AVENUE 3",
+    "source_postal_code": "530001"
+  },
+  "HOA07L": {
+    "road": "HOUGANG AVENUE 4",
+    "sample_address": "576A HOUGANG AVENUE 4",
+    "source_postal_code": "531576"
+  },
+  "HOA08B": {
+    "road": "HOUGANG AVENUE 5",
+    "sample_address": "308 HOUGANG AVENUE 5",
+    "source_postal_code": "530308"
+  },
+  "HOA09N": {
+    "road": "HOUGANG AVENUE 6",
+    "sample_address": "521 HOUGANG AVENUE 6",
+    "source_postal_code": "530521"
+  },
+  "HOA10D": {
+    "road": "HOUGANG AVENUE 7",
+    "sample_address": "354 HOUGANG AVENUE 7",
+    "source_postal_code": "530354"
+  },
+  "HOA11S": {
+    "road": "HOUGANG AVENUE 8",
+    "sample_address": "507 HOUGANG AVENUE 8",
+    "source_postal_code": "530507"
+  },
+  "HOA14W": {
+    "road": "HOUGANG AVENUE 9",
+    "sample_address": "968 HOUGANG AVENUE 9",
+    "source_postal_code": "530968"
+  },
+  "HOC00D": {
+    "road": "HO CHING ROAD",
+    "sample_address": "114 HO CHING ROAD",
+    "source_postal_code": "610114"
+  },
+  "HOC04B": {
+    "road": "HOLLAND CLOSE",
+    "sample_address": "5A HOLLAND CLOSE",
+    "source_postal_code": "271005"
+  },
+  "HOC07N": {
+    "road": "HOUGANG CENTRAL",
+    "sample_address": "809 HOUGANG CENTRAL",
+    "source_postal_code": "530809"
+  },
+  "HOD00F": {
+    "road": "HOLLAND DRIVE",
+    "sample_address": "45 HOLLAND DRIVE",
+    "source_postal_code": "270045"
+  },
+  "HOF00Q": {
+    "road": "HOY FATT ROAD",
+    "sample_address": "50 HOY FATT ROAD",
+    "source_postal_code": "150050"
+  },
+  "HOS06B": {
+    "road": "HOUGANG STREET 11",
+    "sample_address": "158 HOUGANG STREET 11",
+    "source_postal_code": "530158"
+  },
+  "HOS07G": {
+    "road": "HOUGANG STREET 21",
+    "sample_address": "231 HOUGANG STREET 21",
+    "source_postal_code": "530231"
+  },
+  "HOS08G": {
+    "road": "HOUGANG STREET 22",
+    "sample_address": "243 HOUGANG STREET 22",
+    "source_postal_code": "530243"
+  },
+  "HOS09R": {
+    "road": "HOUGANG STREET 61",
+    "sample_address": "687 HOUGANG STREET 61",
+    "source_postal_code": "530687"
+  },
+  "HOS12Q": {
+    "road": "HOUGANG STREET 51",
+    "sample_address": "552 HOUGANG STREET 51",
+    "source_postal_code": "530552"
+  },
+  "HOS13L": {
+    "road": "HOUGANG STREET 52",
+    "sample_address": "538 HOUGANG STREET 52",
+    "source_postal_code": "530538"
+  },
+  "HOS14W": {
+    "road": "HOUGANG STREET 91",
+    "sample_address": "957 HOUGANG STREET 91",
+    "source_postal_code": "530957"
+  },
+  "HOS15X": {
+    "road": "HOUGANG STREET 92",
+    "sample_address": "937 HOUGANG STREET 92",
+    "source_postal_code": "530937"
+  },
+  "HOS18W": {
+    "road": "HOUGANG STREET 31",
+    "sample_address": "370 HOUGANG STREET 31",
+    "source_postal_code": "530370"
+  },
+  "HOS20S": {
+    "road": "HOUGANG STREET 32",
+    "sample_address": "376C HOUGANG STREET 32",
+    "source_postal_code": "533376"
+  },
+  "HOS21Q": {
+    "road": "HOUGANG STREET 12",
+    "sample_address": "179 HOUGANG STREET 12",
+    "source_postal_code": "530179"
+  },
+  "HOS22Q": {
+    "road": "HOUGANG STREET 13",
+    "sample_address": "175 HOUGANG STREET 13",
+    "source_postal_code": "530175"
+  },
+  "IND01D": {
+    "road": "INDUS ROAD",
+    "sample_address": "77 INDUS ROAD",
+    "source_postal_code": "160077"
+  },
+  "JEL03J": {
+    "road": "JELAPANG ROAD",
+    "sample_address": "511 JELAPANG ROAD",
+    "source_postal_code": "670511"
+  },
+  "JEL04R": {
+    "road": "JELLICOE ROAD",
+    "sample_address": "814 JELLICOE ROAD",
+    "source_postal_code": "200814"
+  },
+  "JEL08J": {
+    "road": "JELEBU ROAD",
+    "sample_address": "183A JELEBU ROAD",
+    "source_postal_code": "671183"
+  },
+  "JOC03T": {
+    "road": "JOO CHIAT ROAD",
+    "sample_address": "4 JOO CHIAT ROAD",
+    "source_postal_code": "420004"
+  },
+  "JOS01G": {
+    "road": "JOO SENG ROAD",
+    "sample_address": "10 JOO SENG ROAD",
+    "source_postal_code": "360010"
+  },
+  "JUA00N": {
+    "road": "JURONG EAST AVENUE 1",
+    "sample_address": "240A JURONG EAST AVENUE 1",
+    "source_postal_code": "601240"
+  },
+  "JUA01Q": {
+    "road": "JURONG WEST AVENUE 1",
+    "sample_address": "442 JURONG WEST AVENUE 1",
+    "source_postal_code": "640442"
+  },
+  "JUA02D": {
+    "road": "JURONG WEST AVENUE 5",
+    "sample_address": "719 JURONG WEST AVENUE 5",
+    "source_postal_code": "640719"
+  },
+  "JUA04Q": {
+    "road": "JURONG WEST AVENUE 3",
+    "sample_address": "273A JURONG WEST AVENUE 3",
+    "source_postal_code": "641273"
+  },
+  "JUC06T": {
+    "road": "JURONG WEST CENTRAL 1",
+    "sample_address": "693 JURONG WEST CENTRAL 1",
+    "source_postal_code": "640693"
+  },
+  "JUC08W": {
+    "road": "JURONG WEST CENTRAL 3",
+    "sample_address": "698B JURONG WEST CENTRAL 3",
+    "source_postal_code": "642698"
+  },
+  "JUG00K": {
+    "road": "JURONG GATEWAY ROAD",
+    "sample_address": "133 JURONG GATEWAY ROAD",
+    "source_postal_code": "600133"
+  },
+  "JUS03N": {
+    "road": "JURONG EAST STREET 13",
+    "sample_address": "108 JURONG EAST STREET 13",
+    "source_postal_code": "600108"
+  },
+  "JUS04Q": {
+    "road": "JURONG EAST STREET 21",
+    "sample_address": "202 JURONG EAST STREET 21",
+    "source_postal_code": "600202"
+  },
+  "JUS05Q": {
+    "road": "JURONG EAST STREET 24",
+    "sample_address": "245 JURONG EAST STREET 24",
+    "source_postal_code": "600245"
+  },
+  "JUS06Q": {
+    "road": "JURONG EAST STREET 31",
+    "sample_address": "328 JURONG EAST STREET 31",
+    "source_postal_code": "600328"
+  },
+  "JUS07F": {
+    "road": "JURONG EAST STREET 32",
+    "sample_address": "371 JURONG EAST STREET 32",
+    "source_postal_code": "600371"
+  },
+  "JUS09H": {
+    "road": "JURONG WEST STREET 41",
+    "sample_address": "479 JURONG WEST STREET 41",
+    "source_postal_code": "640479"
+  },
+  "JUS10Y": {
+    "road": "JURONG WEST STREET 42",
+    "sample_address": "415 JURONG WEST STREET 42",
+    "source_postal_code": "640415"
+  },
+  "JUS11E": {
+    "road": "JURONG WEST STREET 51",
+    "sample_address": "504 JURONG WEST STREET 51",
+    "source_postal_code": "640504"
+  },
+  "JUS12Y": {
+    "road": "JURONG WEST STREET 52",
+    "sample_address": "520 JURONG WEST STREET 52",
+    "source_postal_code": "640520"
+  },
+  "JUS13F": {
+    "road": "JURONG WEST STREET 91",
+    "sample_address": "917 JURONG WEST STREET 91",
+    "source_postal_code": "640917"
+  },
+  "JUS14M": {
+    "road": "JURONG WEST STREET 92",
+    "sample_address": "931 JURONG WEST STREET 92",
+    "source_postal_code": "640931"
+  },
+  "JUS15T": {
+    "road": "JURONG WEST STREET 93",
+    "sample_address": "990 JURONG WEST STREET 93",
+    "source_postal_code": "640990"
+  },
+  "JUS16M": {
+    "road": "JURONG WEST STREET 81",
+    "sample_address": "840 JURONG WEST STREET 81",
+    "source_postal_code": "640840"
+  },
+  "JUS17T": {
+    "road": "JURONG WEST STREET 73",
+    "sample_address": "749 JURONG WEST STREET 73",
+    "source_postal_code": "640749"
+  },
+  "JUS18J": {
+    "road": "JURONG WEST STREET 71",
+    "sample_address": "701 JURONG WEST STREET 71",
+    "source_postal_code": "640701"
+  },
+  "JUS19B": {
+    "road": "JURONG WEST STREET 72",
+    "sample_address": "731 JURONG WEST STREET 72",
+    "source_postal_code": "640731"
+  },
+  "JUS22J": {
+    "road": "JURONG WEST STREET 61",
+    "sample_address": "652 JURONG WEST STREET 61",
+    "source_postal_code": "640652"
+  },
+  "JUS23Y": {
+    "road": "JURONG WEST STREET 62",
+    "sample_address": "604 JURONG WEST STREET 62",
+    "source_postal_code": "640604"
+  },
+  "JUS25R": {
+    "road": "JURONG WEST STREET 64",
+    "sample_address": "665A JURONG WEST STREET 64",
+    "source_postal_code": "641665"
+  },
+  "JUS26E": {
+    "road": "JURONG WEST STREET 74",
+    "sample_address": "759 JURONG WEST STREET 74",
+    "source_postal_code": "640759"
+  },
+  "JUS27Q": {
+    "road": "JURONG WEST STREET 75",
+    "sample_address": "738 JURONG WEST STREET 75",
+    "source_postal_code": "640738"
+  },
+  "JUS29A": {
+    "road": "JURONG WEST STREET 65",
+    "sample_address": "635 JURONG WEST STREET 65",
+    "source_postal_code": "640635"
+  },
+  "JUS33Q": {
+    "road": "JURONG WEST STREET 24",
+    "sample_address": "271B JURONG WEST STREET 24",
+    "source_postal_code": "642271"
+  },
+  "JUS34C": {
+    "road": "JURONG WEST STREET 25",
+    "sample_address": "276D JURONG WEST STREET 25",
+    "source_postal_code": "644276"
+  },
+  "KAB03N": {
+    "road": "KALLANG BAHRU",
+    "sample_address": "71 KALLANG BAHRU",
+    "source_postal_code": "330071"
+  },
+  "KAC06N": {
+    "road": "KANG CHING ROAD",
+    "sample_address": "339B KANG CHING ROAD",
+    "source_postal_code": "612339"
+  },
+  "KAY00H": {
+    "road": "JALAN KAYU",
+    "sample_address": "447A JALAN KAYU",
+    "source_postal_code": "791447"
+  },
+  "KAY01G": {
+    "road": "KAMPONG KAYU ROAD",
+    "sample_address": "1 KAMPONG KAYU ROAD",
+    "source_postal_code": "431001"
+  },
+  "KEC11X": {
+    "road": "KEAT HONG CLOSE",
+    "sample_address": "801A KEAT HONG CLOSE",
+    "source_postal_code": "681801"
+  },
+  "KEL11L": {
+    "road": "KELANTAN LANE",
+    "sample_address": "31 KELANTAN LANE",
+    "source_postal_code": "200031"
+  },
+  "KEL12T": {
+    "road": "KELANTAN ROAD",
+    "sample_address": "28A KELANTAN ROAD",
+    "source_postal_code": "201028"
+  },
+  "KEL20Q": {
+    "road": "KEAT HONG LINK",
+    "sample_address": "817B KEAT HONG LINK",
+    "source_postal_code": "682817"
+  },
+  "KEM08W": {
+    "road": "KEMPAS ROAD",
+    "sample_address": "1C KEMPAS ROAD",
+    "source_postal_code": "333001"
+  },
+  "KEN03T": {
+    "road": "KENT ROAD",
+    "sample_address": "53 KENT ROAD",
+    "source_postal_code": "210053"
+  },
+  "KIA02A": {
+    "road": "KIM KEAT AVENUE",
+    "sample_address": "195A KIM KEAT AVENUE",
+    "source_postal_code": "311195"
+  },
+  "KIA03N": {
+    "road": "KING GEORGE'S AVENUE",
+    "sample_address": "804 KING GEORGE'S AVENUE",
+    "source_postal_code": "200804"
+  },
+  "KIL05U": {
+    "road": "KIM KEAT LINK",
+    "sample_address": "244 KIM KEAT LINK",
+    "source_postal_code": "310244"
+  },
+  "KIP00G": {
+    "road": "KIM PONG ROAD",
+    "sample_address": "38 KIM PONG ROAD",
+    "source_postal_code": "161038"
+  },
+  "KIP01M": {
+    "road": "KIM TIAN PLACE",
+    "sample_address": "124 KIM TIAN PLACE",
+    "source_postal_code": "160124"
+  },
+  "KIS00G": {
+    "road": "KIM CHENG STREET",
+    "sample_address": "34 KIM CHENG STREET",
+    "source_postal_code": "161034"
+  },
+  "KIT04C": {
+    "road": "KIM TIAN ROAD",
+    "sample_address": "119B KIM TIAN ROAD",
+    "source_postal_code": "162119"
+  },
+  "KIT07C": {
+    "road": "KITCHENER ROAD",
+    "sample_address": "2 KITCHENER ROAD",
+    "source_postal_code": "200002"
+  },
+  "KLI00W": {
+    "road": "JALAN KLINIK",
+    "sample_address": "28 JALAN KLINIK",
+    "source_postal_code": "160028"
+  },
+  "KLL00G": {
+    "road": "KLANG LANE",
+    "sample_address": "672 KLANG LANE",
+    "source_postal_code": "210672"
+  },
+  "KRA02N": {
+    "road": "KRETA AYER ROAD",
+    "sample_address": "333 KRETA AYER ROAD",
+    "source_postal_code": "080333"
+  },
+  "KUK00J": {
+    "road": "JALAN KUKOH",
+    "sample_address": "2 JALAN KUKOH",
+    "source_postal_code": "163002"
+  },
+  "LEB02Q": {
+    "road": "LENGKOK BAHRU",
+    "sample_address": "44 LENGKOK BAHRU",
+    "source_postal_code": "150044"
+  },
+  "LEL03J": {
+    "road": "LORONG LEW LIAN",
+    "sample_address": "2A LORONG LEW LIAN",
+    "source_postal_code": "532002"
+  },
+  "LET03Z": {
+    "road": "LENGKONG TIGA",
+    "sample_address": "114 LENGKONG TIGA",
+    "source_postal_code": "410114"
+  },
+  "LIM05E": {
+    "road": "LORONG LIMAU",
+    "sample_address": "76 LORONG LIMAU",
+    "source_postal_code": "320076"
+  },
+  "LIS02X": {
+    "road": "LIM LIAK STREET",
+    "sample_address": "19 LIM LIAK STREET",
+    "source_postal_code": "161019"
+  },
+  "LOD02F": {
+    "road": "LOWER DELTA ROAD",
+    "sample_address": "48 LOWER DELTA ROAD",
+    "source_postal_code": "160048"
+  },
+  "LOM01S": {
+    "road": "LOMPANG ROAD",
+    "sample_address": "178 LOMPANG ROAD",
+    "source_postal_code": "670178"
+  },
+  "MAC11X": {
+    "road": "MARINE CRESCENT",
+    "sample_address": "34 MARINE CRESCENT",
+    "source_postal_code": "440034"
+  },
+  "MAC12L": {
+    "road": "MARINE PARADE CENTRAL",
+    "sample_address": "85 MARINE PARADE CENTRAL",
+    "source_postal_code": "440085"
+  },
+  "MAC13T": {
+    "road": "MARSILING CRESCENT",
+    "sample_address": "210 MARSILING CRESCENT",
+    "source_postal_code": "730210"
+  },
+  "MAD03B": {
+    "road": "MARGARET DRIVE",
+    "sample_address": "30A MARGARET DRIVE",
+    "source_postal_code": "142030"
+  },
+  "MAD06N": {
+    "road": "MARINE DRIVE",
+    "sample_address": "77 MARINE DRIVE",
+    "source_postal_code": "440077"
+  },
+  "MAD07G": {
+    "road": "MARSILING DRIVE",
+    "sample_address": "202 MARSILING DRIVE",
+    "source_postal_code": "730202"
+  },
+  "MAL03N": {
+    "road": "MACPHERSON LANE",
+    "sample_address": "82A MACPHERSON LANE",
+    "source_postal_code": "361082"
+  },
+  "MAL10K": {
+    "road": "MARSILING LANE",
+    "sample_address": "12C MARSILING LANE",
+    "source_postal_code": "733012"
+  },
+  "MAM00B": {
+    "road": "JALAN MA'MOR",
+    "sample_address": "64 JALAN MA'MOR",
+    "source_postal_code": "320064"
+  },
+  "MAR19A": {
+    "road": "MARSILING RISE",
+    "sample_address": "118 MARSILING RISE",
+    "source_postal_code": "730118"
+  },
+  "MAR20D": {
+    "road": "MARSILING ROAD",
+    "sample_address": "4 MARSILING ROAD",
+    "source_postal_code": "730004"
+  },
+  "MAT14R": {
+    "road": "MARINE TERRACE",
+    "sample_address": "5 MARINE TERRACE",
+    "source_postal_code": "440005"
+  },
+  "MAU02U": {
+    "road": "MAUDE ROAD",
+    "sample_address": "1 MAUDE ROAD",
+    "source_postal_code": "200001"
+  },
+  "MCN00F": {
+    "road": "MCNAIR ROAD",
+    "sample_address": "121 MCNAIR ROAD",
+    "source_postal_code": "320121"
+  },
+  "MEC00Y": {
+    "road": "MEI CHIN ROAD",
+    "sample_address": "150A MEI CHIN ROAD",
+    "source_postal_code": "140150"
+  },
+  "MEM00D": {
+    "road": "JALAN MEMBINA",
+    "sample_address": "118 JALAN MEMBINA",
+    "source_postal_code": "160118"
+  },
+  "MES04U": {
+    "road": "MEI LING STREET",
+    "sample_address": "153A MEI LING STREET",
+    "source_postal_code": "141153"
+  },
+  "MIN01G": {
+    "road": "JALAN MINYAK",
+    "sample_address": "6 JALAN MINYAK",
+    "source_postal_code": "162006"
+  },
+  "MOD04F": {
+    "road": "MONTREAL DRIVE",
+    "sample_address": "504 MONTREAL DRIVE",
+    "source_postal_code": "750504"
+  },
+  "MOL06T": {
+    "road": "MONTREAL LINK",
+    "sample_address": "593 MONTREAL LINK",
+    "source_postal_code": "750593"
+  },
+  "MOT00M": {
+    "road": "MOH GUAN TERRACE",
+    "sample_address": "78 MOH GUAN TERRACE",
+    "source_postal_code": "162078"
+  },
+  "MOU00L": {
+    "road": "MOULMEIN ROAD",
+    "sample_address": "69 MOULMEIN ROAD",
+    "source_postal_code": "300069"
+  },
+  "MOV02Q": {
+    "road": "MOUNT VERNON ROAD",
+    "sample_address": "222A MOUNT VERNON ROAD",
+    "source_postal_code": "361222"
+  },
+  "NEC03R": {
+    "road": "NEW UPPER CHANGI ROAD",
+    "sample_address": "24 NEW UPPER CHANGI ROAD",
+    "source_postal_code": "461024"
+  },
+  "NEM00F": {
+    "road": "NEW MARKET ROAD",
+    "sample_address": "32 NEW MARKET ROAD",
+    "source_postal_code": "050032"
+  },
+  "NEP02B": {
+    "road": "NEW PUNGGOL ROAD",
+    "sample_address": "443A NEW PUNGGOL ROAD",
+    "source_postal_code": "821443"
+  },
+  "NOB02Q": {
+    "road": "NORTH BRIDGE ROAD",
+    "sample_address": "12 NORTH BRIDGE ROAD",
+    "source_postal_code": "190012"
+  },
+  "NOC02F": {
+    "road": "NORTHSHORE CRESCENT",
+    "sample_address": "425A NORTHSHORE CRESCENT",
+    "source_postal_code": "821425"
+  },
+  "NOD04D": {
+    "road": "NORTHPOINT DRIVE",
+    "sample_address": "3 NORTHPOINT DRIVE",
+    "source_postal_code": "768020"
+  },
+  "NOD05F": {
+    "road": "NORTHSHORE DRIVE",
+    "sample_address": "402A NORTHSHORE DRIVE",
+    "source_postal_code": "821402"
+  },
+  "NOL03E": {
+    "road": "NORTHSHORE LINK",
+    "sample_address": "407B NORTHSHORE LINK",
+    "source_postal_code": "822407"
+  },
+  "NOW02S": {
+    "road": "NORTHSHORE WALK",
+    "sample_address": "405 NORTHSHORE WALK",
+    "source_postal_code": "820405"
+  },
+  "OLA00B": {
+    "road": "OLD AIRPORT ROAD",
+    "sample_address": "13 OLD AIRPORT ROAD",
+    "source_postal_code": "390013"
+  },
+  "OWE00X": {
+    "road": "OWEN ROAD",
+    "sample_address": "47 OWEN ROAD",
+    "source_postal_code": "210047"
+  },
+  "PAA07B": {
+    "road": "PASIR RIS AVENUE",
+    "sample_address": "52 PASIR RIS AVENUE",
+    "source_postal_code": "519736"
+  },
+  "PAC04H": {
+    "road": "PARK CRESCENT",
+    "sample_address": "33 PARK CRESCENT",
+    "source_postal_code": "050033"
+  },
+  "PAC12L": {
+    "road": "PASIR RIS CENTRAL",
+    "sample_address": "7 PASIR RIS CENTRAL",
+    "source_postal_code": "519613"
+  },
+  "PAD05N": {
+    "road": "PASIR RIS DRIVE 4",
+    "sample_address": "232 PASIR RIS DRIVE 4",
+    "source_postal_code": "510232"
+  },
+  "PAD06N": {
+    "road": "PASIR RIS DRIVE 6",
+    "sample_address": "407 PASIR RIS DRIVE 6",
+    "source_postal_code": "510407"
+  },
+  "PAD07X": {
+    "road": "PASIR RIS DRIVE 1",
+    "sample_address": "529 PASIR RIS DRIVE 1",
+    "source_postal_code": "510529"
+  },
+  "PAD08R": {
+    "road": "PASIR RIS DRIVE 3",
+    "sample_address": "631A PASIR RIS DRIVE 3",
+    "source_postal_code": "511631"
+  },
+  "PAD11B": {
+    "road": "PASIR RIS DRIVE 10",
+    "sample_address": "645 PASIR RIS DRIVE 10",
+    "source_postal_code": "510645"
+  },
+  "PAG01X": {
+    "road": "PANDAN GARDENS",
+    "sample_address": "415 PANDAN GARDENS",
+    "source_postal_code": "600415"
+  },
+  "PAH04B": {
+    "road": "PASIR RIS HEIGHTS",
+    "sample_address": "23 PASIR RIS HEIGHTS",
+    "source_postal_code": "519230"
+  },
+  "PAR09C": {
+    "road": "PASIR RIS ROAD",
+    "sample_address": "120 PASIR RIS ROAD",
+    "source_postal_code": "519118"
+  },
+  "PAS18R": {
+    "road": "PASIR RIS STREET 11",
+    "sample_address": "132 PASIR RIS STREET 11",
+    "source_postal_code": "510132"
+  },
+  "PAS19M": {
+    "road": "PASIR RIS STREET 12",
+    "sample_address": "197 PASIR RIS STREET 12",
+    "source_postal_code": "510197"
+  },
+  "PAS20G": {
+    "road": "PASIR RIS STREET 21",
+    "sample_address": "240 PASIR RIS STREET 21",
+    "source_postal_code": "510240"
+  },
+  "PAS21K": {
+    "road": "PASIR RIS STREET 41",
+    "sample_address": "465 PASIR RIS STREET 41",
+    "source_postal_code": "510465"
+  },
+  "PAS22U": {
+    "road": "PASIR RIS STREET 51",
+    "sample_address": "526 PASIR RIS STREET 51",
+    "source_postal_code": "510526"
+  },
+  "PAS23E": {
+    "road": "PASIR RIS STREET 71",
+    "sample_address": "751 PASIR RIS STREET 71",
+    "source_postal_code": "510751"
+  },
+  "PAS24W": {
+    "road": "PASIR RIS STREET 72",
+    "sample_address": "710 PASIR RIS STREET 72",
+    "source_postal_code": "510710"
+  },
+  "PAS25J": {
+    "road": "PASIR RIS STREET 52",
+    "sample_address": "505 PASIR RIS STREET 52",
+    "source_postal_code": "510505"
+  },
+  "PAS26M": {
+    "road": "PASIR RIS STREET 53",
+    "sample_address": "575 PASIR RIS STREET 53",
+    "source_postal_code": "510575"
+  },
+  "PAS27Z": {
+    "road": "PASIR RIS STREET 13",
+    "sample_address": "149A PASIR RIS STREET 13",
+    "source_postal_code": "511149"
+  },
+  "PAT06T": {
+    "road": "PASIR RIS TERRACE",
+    "sample_address": "29 PASIR RIS TERRACE",
+    "source_postal_code": "518673"
+  },
+  "PAW02M": {
+    "road": "PAYA LEBAR WAY",
+    "sample_address": "123 PAYA LEBAR WAY",
+    "source_postal_code": "381123"
+  },
+  "PEN07R": {
+    "road": "PENDING ROAD",
+    "sample_address": "119 PENDING ROAD",
+    "source_postal_code": "670119"
+  },
+  "PER17S": {
+    "road": "PERUMAL ROAD",
+    "sample_address": "678 PERUMAL ROAD",
+    "source_postal_code": "210678"
+  },
+  "PET10G": {
+    "road": "PETIR ROAD",
+    "sample_address": "203 PETIR ROAD",
+    "source_postal_code": "670203"
+  },
+  "PIC02A": {
+    "road": "PINE CLOSE",
+    "sample_address": "1 PINE CLOSE",
+    "source_postal_code": "390001"
+  },
+  "PIL01R": {
+    "road": "PINE LANE",
+    "sample_address": "37 PINE LANE",
+    "source_postal_code": "390037"
+  },
+  "PIP00P": {
+    "road": "PIPIT ROAD",
+    "sample_address": "52A PIPIT ROAD",
+    "source_postal_code": "372052"
+  },
+  "PLC00Q": {
+    "road": "PLANTATION CRESCENT",
+    "sample_address": "113A PLANTATION CRESCENT",
+    "source_postal_code": "691113"
+  },
+  "POA04Y": {
+    "road": "POTONG PASIR AVENUE 1",
+    "sample_address": "127 POTONG PASIR AVENUE 1",
+    "source_postal_code": "350127"
+  },
+  "POA05N": {
+    "road": "POTONG PASIR AVENUE 2",
+    "sample_address": "144 POTONG PASIR AVENUE 2",
+    "source_postal_code": "350144"
+  },
+  "POA06N": {
+    "road": "POTONG PASIR AVENUE 3",
+    "sample_address": "140 POTONG PASIR AVENUE 3",
+    "source_postal_code": "350140"
+  },
+  "PUC09U": {
+    "road": "PUNGGOL CENTRAL",
+    "sample_address": "189 PUNGGOL CENTRAL",
+    "source_postal_code": "820189"
+  },
+  "PUD06M": {
+    "road": "PUNGGOL DRIVE",
+    "sample_address": "616 PUNGGOL DRIVE",
+    "source_postal_code": "820616"
+  },
+  "PUE01K": {
+    "road": "PUNGGOL EAST",
+    "sample_address": "658C PUNGGOL EAST",
+    "source_postal_code": "823658"
+  },
+  "PUF02Z": {
+    "road": "PUNGGOL FIELD",
+    "sample_address": "259C PUNGGOL FIELD",
+    "source_postal_code": "823259"
+  },
+  "PUN03D": {
+    "road": "PUNGGOL ROAD",
+    "sample_address": "604B PUNGGOL ROAD",
+    "source_postal_code": "822604"
+  },
+  "PUP08R": {
+    "road": "PUNGGOL PLACE",
+    "sample_address": "210C PUNGGOL PLACE",
+    "source_postal_code": "823210"
+  },
+  "PUW00T": {
+    "road": "PUNGGOL WAY",
+    "sample_address": "315A PUNGGOL WAY",
+    "source_postal_code": "821315"
+  },
+  "PUW01Q": {
+    "road": "PUNGGOL FIELD WALK",
+    "sample_address": "128C PUNGGOL FIELD WALK",
+    "source_postal_code": "823128"
+  },
+  "PUW02H": {
+    "road": "PUNGGOL WALK",
+    "sample_address": "272A PUNGGOL WALK",
+    "source_postal_code": "821272"
+  },
+  "QUC01C": {
+    "road": "QUEEN'S CLOSE",
+    "sample_address": "19 QUEEN'S CLOSE",
+    "source_postal_code": "140019"
+  },
+  "QUE01M": {
+    "road": "QUEEN'S ROAD",
+    "sample_address": "1 QUEEN'S ROAD",
+    "source_postal_code": "260001"
+  },
+  "QUE02Z": {
+    "road": "QUEENSWAY",
+    "sample_address": "168A QUEENSWAY",
+    "source_postal_code": "140168"
+  },
+  "QUS00Z": {
+    "road": "QUEEN STREET",
+    "sample_address": "269C QUEEN STREET",
+    "source_postal_code": "183269"
+  },
+  "RAC01Y": {
+    "road": "RACE COURSE ROAD",
+    "sample_address": "684 RACE COURSE ROAD",
+    "source_postal_code": "210684"
+  },
+  "RAJ00B": {
+    "road": "JALAN RAJAH",
+    "sample_address": "106 JALAN RAJAH",
+    "source_postal_code": "321106"
+  },
+  "RAN02Q": {
+    "road": "RANGOON ROAD",
+    "sample_address": "677 RANGOON ROAD",
+    "source_postal_code": "210677"
+  },
+  "REC01B": {
+    "road": "REDHILL CLOSE",
+    "sample_address": "68 REDHILL CLOSE",
+    "source_postal_code": "150068"
+  },
+  "RED01D": {
+    "road": "REDHILL ROAD",
+    "sample_address": "77 REDHILL ROAD",
+    "source_postal_code": "150077"
+  },
+  "REL01F": {
+    "road": "REDHILL LANE",
+    "sample_address": "81 REDHILL LANE",
+    "source_postal_code": "150081"
+  },
+  "RIC03F": {
+    "road": "RIVERVALE CRESCENT",
+    "sample_address": "159 RIVERVALE CRESCENT",
+    "source_postal_code": "540159"
+  },
+  "RID02A": {
+    "road": "RIVERVALE DRIVE",
+    "sample_address": "189A RIVERVALE DRIVE",
+    "source_postal_code": "541189"
+  },
+  "RIS01A": {
+    "road": "RIVERVALE STREET",
+    "sample_address": "135A RIVERVALE STREET",
+    "source_postal_code": "541135"
+  },
+  "RIW00T": {
+    "road": "RIVERVALE WALK",
+    "sample_address": "109 RIVERVALE WALK",
+    "source_postal_code": "540109"
+  },
+  "ROW01P": {
+    "road": "ROWELL ROAD",
+    "sample_address": "642 ROWELL ROAD",
+    "source_postal_code": "200642"
+  },
+  "RUT00R": {
+    "road": "JALAN RUMAH TINGGI",
+    "sample_address": "9 JALAN RUMAH TINGGI",
+    "source_postal_code": "150009"
+  },
+  "SAL07N": {
+    "road": "SAGO LANE",
+    "sample_address": "4 SAGO LANE",
+    "source_postal_code": "050004"
+  },
+  "SAT00T": {
+    "road": "JALAN SATU",
+    "sample_address": "90A JALAN SATU",
+    "source_postal_code": "391090"
+  },
+  "SAU00Q": {
+    "road": "SAUJANA ROAD",
+    "sample_address": "409 SAUJANA ROAD",
+    "source_postal_code": "670409"
+  },
+  "SEA11N": {
+    "road": "SERANGOON AVENUE 2",
+    "sample_address": "308 SERANGOON AVENUE 2",
+    "source_postal_code": "550308"
+  },
+  "SEA12Y": {
+    "road": "SERANGOON AVENUE 3",
+    "sample_address": "329 SERANGOON AVENUE 3",
+    "source_postal_code": "550329"
+  },
+  "SEA13U": {
+    "road": "SERANGOON AVENUE 4",
+    "sample_address": "213 SERANGOON AVENUE 4",
+    "source_postal_code": "550213"
+  },
+  "SEA14Z": {
+    "road": "SERANGOON NORTH AVENUE 1",
+    "sample_address": "152B SERANGOON NORTH AVENUE 1",
+    "source_postal_code": "552152"
+  },
+  "SEA15J": {
+    "road": "SERANGOON NORTH AVENUE 2",
+    "sample_address": "141 SERANGOON NORTH AVENUE 2",
+    "source_postal_code": "550141"
+  },
+  "SEA17K": {
+    "road": "SERANGOON AVENUE 1",
+    "sample_address": "425 SERANGOON AVENUE 1",
+    "source_postal_code": "550425"
+  },
+  "SEA18U": {
+    "road": "SERANGOON NORTH AVENUE 3",
+    "sample_address": "543 SERANGOON NORTH AVENUE 3",
+    "source_postal_code": "550543"
+  },
+  "SEA19N": {
+    "road": "SERANGOON NORTH AVENUE 4",
+    "sample_address": "529 SERANGOON NORTH AVENUE 4",
+    "source_postal_code": "550529"
+  },
+  "SEA22E": {
+    "road": "SENGKANG EAST AVENUE",
+    "sample_address": "281A SENGKANG EAST AVENUE",
+    "source_postal_code": "541281"
+  },
+  "SEA23T": {
+    "road": "SENGKANG WEST AVENUE",
+    "sample_address": "438 SENGKANG WEST AVENUE",
+    "source_postal_code": "790438"
+  },
+  "SEA25E": {
+    "road": "SEMBAWANG AVENUE",
+    "sample_address": "372 SEMBAWANG AVENUE",
+    "source_postal_code": "750372"
+  },
+  "SEC07D": {
+    "road": "SERANGOON CENTRAL",
+    "sample_address": "202 SERANGOON CENTRAL",
+    "source_postal_code": "550202"
+  },
+  "SEC13Y": {
+    "road": "SENGKANG CENTRAL",
+    "sample_address": "271B SENGKANG CENTRAL",
+    "source_postal_code": "542271"
+  },
+  "SEC14F": {
+    "road": "SEMBAWANG CRESCENT",
+    "sample_address": "327 SEMBAWANG CRESCENT",
+    "source_postal_code": "750327"
+  },
+  "SEC15R": {
+    "road": "SEMBAWANG CLOSE",
+    "sample_address": "322A SEMBAWANG CLOSE",
+    "source_postal_code": "751322"
+  },
+  "SEC21K": {
+    "road": "SENJA CLOSE",
+    "sample_address": "646 SENJA CLOSE",
+    "source_postal_code": "670646"
+  },
+  "SED06Q": {
+    "road": "SERANGOON CENTRAL DRIVE",
+    "sample_address": "263 SERANGOON CENTRAL DRIVE",
+    "source_postal_code": "550263"
+  },
+  "SED07J": {
+    "road": "SENGKANG EAST DRIVE",
+    "sample_address": "172B SENGKANG EAST DRIVE",
+    "source_postal_code": "542172"
+  },
+  "SED08Q": {
+    "road": "SEMBAWANG DRIVE",
+    "sample_address": "481 SEMBAWANG DRIVE",
+    "source_postal_code": "750481"
+  },
+  "SEE05U": {
+    "road": "SENGKANG EAST ROAD",
+    "sample_address": "200A SENGKANG EAST ROAD",
+    "source_postal_code": "541200"
+  },
+  "SEG05C": {
+    "road": "SEGAR ROAD",
+    "sample_address": "457A SEGAR ROAD",
+    "source_postal_code": "671457"
+  },
+  "SEL11N": {
+    "road": "SELEGIE ROAD",
+    "sample_address": "9A SELEGIE ROAD",
+    "source_postal_code": "181009"
+  },
+  "SEL14B": {
+    "road": "SENG POH LANE",
+    "sample_address": "62 SENG POH LANE",
+    "source_postal_code": "160062"
+  },
+  "SEL29G": {
+    "road": "SENJA LINK",
+    "sample_address": "651 SENJA LINK",
+    "source_postal_code": "670651"
+  },
+  "SEN12T": {
+    "road": "SENJA ROAD",
+    "sample_address": "623 SENJA ROAD",
+    "source_postal_code": "670623"
+  },
+  "SEP03Y": {
+    "road": "SENG POH ROAD",
+    "sample_address": "77 SENG POH ROAD",
+    "source_postal_code": "161077"
+  },
+  "SEV02J": {
+    "road": "SEMBAWANG VISTA",
+    "sample_address": "317 SEMBAWANG VISTA",
+    "source_postal_code": "750317"
+  },
+  "SEW07Y": {
+    "road": "SENGKANG EAST WAY",
+    "sample_address": "260D SENGKANG EAST WAY",
+    "source_postal_code": "544260"
+  },
+  "SEW08G": {
+    "road": "SENGKANG WEST WAY",
+    "sample_address": "462 SENGKANG WEST WAY",
+    "source_postal_code": "790462"
+  },
+  "SEW10J": {
+    "road": "SEMBAWANG WAY",
+    "sample_address": "355 SEMBAWANG WAY",
+    "source_postal_code": "750355"
+  },
+  "SEW14X": {
+    "road": "SENGKANG WEST ROAD",
+    "sample_address": "458A SENGKANG WEST ROAD",
+    "source_postal_code": "791458"
+  },
+  "SHU01R": {
+    "road": "SHUNFU ROAD",
+    "sample_address": "309 SHUNFU ROAD",
+    "source_postal_code": "570309"
+  },
+  "SIA07X": {
+    "road": "SILAT AVENUE",
+    "sample_address": "149 SILAT AVENUE",
+    "source_postal_code": "160149"
+  },
+  "SIA10K": {
+    "road": "SIMS AVENUE",
+    "sample_address": "842 SIMS AVENUE",
+    "source_postal_code": "400842"
+  },
+  "SIA16G": {
+    "road": "SIN MING AVENUE",
+    "sample_address": "453 SIN MING AVENUE",
+    "source_postal_code": "570453"
+  },
+  "SID03T": {
+    "road": "SIMS DRIVE",
+    "sample_address": "50 SIMS DRIVE",
+    "source_postal_code": "380050"
+  },
+  "SID04Q": {
+    "road": "SIN MING DRIVE",
+    "sample_address": "38 SIN MING DRIVE",
+    "source_postal_code": "575712"
+  },
+  "SIL10A": {
+    "road": "SIMEI LANE",
+    "sample_address": "168 SIMEI LANE",
+    "source_postal_code": "520168"
+  },
+  "SIM02X": {
+    "road": "SIMEI ROAD",
+    "sample_address": "162 SIMEI ROAD",
+    "source_postal_code": "520162"
+  },
+  "SIM04C": {
+    "road": "SIN MING ROAD",
+    "sample_address": "22A SIN MING ROAD",
+    "source_postal_code": "571022"
+  },
+  "SIP07N": {
+    "road": "SIMS PLACE",
+    "sample_address": "47 SIMS PLACE",
+    "source_postal_code": "380047"
+  },
+  "SIS04J": {
+    "road": "SIMEI STREET 1",
+    "sample_address": "254 SIMEI STREET 1",
+    "source_postal_code": "520254"
+  },
+  "SIS05T": {
+    "road": "SIMEI STREET 2",
+    "sample_address": "144 SIMEI STREET 2",
+    "source_postal_code": "520144"
+  },
+  "SIS06H": {
+    "road": "SIMEI STREET 3",
+    "sample_address": "248 SIMEI STREET 3",
+    "source_postal_code": "520248"
+  },
+  "SIS07L": {
+    "road": "SIMEI STREET 4",
+    "sample_address": "222 SIMEI STREET 4",
+    "source_postal_code": "520222"
+  },
+  "SIS12N": {
+    "road": "SIMEI STREET 5",
+    "sample_address": "247 SIMEI STREET 5",
+    "source_postal_code": "520247"
+  },
+  "SMS00U": {
+    "road": "SMITH STREET",
+    "sample_address": "335 SMITH STREET",
+    "source_postal_code": "050335"
+  },
+  "SOD01W": {
+    "road": "SOUTH WOODLANDS DRIVE",
+    "sample_address": "900 SOUTH WOODLANDS DRIVE",
+    "source_postal_code": "730900"
+  },
+  "SPP00M": {
+    "road": "SPOTTISWOODE PARK ROAD",
+    "sample_address": "105 SPOTTISWOODE PARK ROAD",
+    "source_postal_code": "080105"
+  },
+  "STA11R": {
+    "road": "STRATHMORE AVENUE",
+    "sample_address": "82 STRATHMORE AVENUE",
+    "source_postal_code": "141082"
+  },
+  "STG00S": {
+    "road": "SAINT GEORGE'S ROAD",
+    "sample_address": "12 SAINT GEORGE'S ROAD",
+    "source_postal_code": "320012"
+  },
+  "STI02L": {
+    "road": "STIRLING ROAD",
+    "sample_address": "163 STIRLING ROAD",
+    "source_postal_code": "140163"
+  },
+  "STL00N": {
+    "road": "SAINT GEORGE'S LANE",
+    "sample_address": "5 SAINT GEORGE'S LANE",
+    "source_postal_code": "320005"
+  },
+  "SUL01M": {
+    "road": "JALAN SULTAN",
+    "sample_address": "19 JALAN SULTAN",
+    "source_postal_code": "190019"
+  },
+  "SUL10M": {
+    "road": "SUMANG LINK",
+    "sample_address": "312A SUMANG LINK",
+    "source_postal_code": "821312"
+  },
+  "SUL11B": {
+    "road": "SUMANG LANE",
+    "sample_address": "223A SUMANG LANE",
+    "source_postal_code": "821223"
+  },
+  "SUW06A": {
+    "road": "SUMANG WALK",
+    "sample_address": "217C SUMANG WALK",
+    "source_postal_code": "823217"
+  },
+  "TAA06N": {
+    "road": "TAMPINES AVENUE 1",
+    "sample_address": "890D TAMPINES AVENUE 1",
+    "source_postal_code": "524890"
+  },
+  "TAA07R": {
+    "road": "TAMPINES AVENUE 2",
+    "sample_address": "208A TAMPINES AVENUE 2",
+    "source_postal_code": "521208"
+  },
+  "TAA09N": {
+    "road": "TAMPINES AVENUE 4",
+    "sample_address": "816 TAMPINES AVENUE 4",
+    "source_postal_code": "520816"
+  },
+  "TAA10E": {
+    "road": "TAMPINES AVENUE 5",
+    "sample_address": "858A TAMPINES AVENUE 5",
+    "source_postal_code": "521858"
+  },
+  "TAA11N": {
+    "road": "TAMPINES AVENUE 7",
+    "sample_address": "390 TAMPINES AVENUE 7",
+    "source_postal_code": "520390"
+  },
+  "TAA12N": {
+    "road": "TAMPINES AVENUE 8",
+    "sample_address": "893A TAMPINES AVENUE 8",
+    "source_postal_code": "521893"
+  },
+  "TAA13A": {
+    "road": "TAMPINES AVENUE 9",
+    "sample_address": "492B TAMPINES AVENUE 9",
+    "source_postal_code": "520492"
+  },
+  "TAA29A": {
+    "road": "TAMPINES AVENUE 12",
+    "sample_address": "623B TAMPINES AVENUE 12",
+    "source_postal_code": "522623"
+  },
+  "TAC00N": {
+    "road": "TAH CHING ROAD",
+    "sample_address": "332 TAH CHING ROAD",
+    "source_postal_code": "610332"
+  },
+  "TAC08D": {
+    "road": "TAO CHING ROAD",
+    "sample_address": "113 TAO CHING ROAD",
+    "source_postal_code": "610113"
+  },
+  "TAC10N": {
+    "road": "TAMPINES CENTRAL 1",
+    "sample_address": "504 TAMPINES CENTRAL 1",
+    "source_postal_code": "520504"
+  },
+  "TAC19R": {
+    "road": "TAMPINES CENTRAL 7",
+    "sample_address": "523C TAMPINES CENTRAL 7",
+    "source_postal_code": "523523"
+  },
+  "TAC20A": {
+    "road": "TAMPINES CENTRAL 8",
+    "sample_address": "519D TAMPINES CENTRAL 8",
+    "source_postal_code": "524519"
+  },
+  "TAD07G": {
+    "road": "TAMPINES NORTH DRIVE 2",
+    "sample_address": "636B TAMPINES NORTH DRIVE 2",
+    "source_postal_code": "522636"
+  },
+  "TAD08A": {
+    "road": "TAMPINES NORTH DRIVE 1",
+    "sample_address": "608A TAMPINES NORTH DRIVE 1",
+    "source_postal_code": "521608"
+  },
+  "TAH03D": {
+    "road": "TANGLIN HALT ROAD",
+    "sample_address": "35A TANGLIN HALT ROAD",
+    "source_postal_code": "142035"
+  },
+  "TAP10G": {
+    "road": "TANJONG PAGAR PLAZA",
+    "sample_address": "5 TANJONG PAGAR PLAZA",
+    "source_postal_code": "081005"
+  },
+  "TAS03D": {
+    "road": "TAMAN HO SWEE",
+    "sample_address": "12 TAMAN HO SWEE",
+    "source_postal_code": "162012"
+  },
+  "TAS12R": {
+    "road": "TAMPINES STREET 11",
+    "sample_address": "104 TAMPINES STREET 11",
+    "source_postal_code": "520104"
+  },
+  "TAS13M": {
+    "road": "TAMPINES STREET 12",
+    "sample_address": "161 TAMPINES STREET 12",
+    "source_postal_code": "521161"
+  },
+  "TAS14R": {
+    "road": "TAMPINES STREET 21",
+    "sample_address": "242 TAMPINES STREET 21",
+    "source_postal_code": "521242"
+  },
+  "TAS15G": {
+    "road": "TAMPINES STREET 22",
+    "sample_address": "297 TAMPINES STREET 22",
+    "source_postal_code": "520297"
+  },
+  "TAS16C": {
+    "road": "TAMPINES STREET 23",
+    "sample_address": "201E TAMPINES STREET 23",
+    "source_postal_code": "527201"
+  },
+  "TAS17G": {
+    "road": "TAMPINES STREET 24",
+    "sample_address": "223 TAMPINES STREET 24",
+    "source_postal_code": "521223"
+  },
+  "TAS19U": {
+    "road": "TAMPINES STREET 41",
+    "sample_address": "422 TAMPINES STREET 41",
+    "source_postal_code": "520422"
+  },
+  "TAS20C": {
+    "road": "TAMPINES STREET 42",
+    "sample_address": "450B TAMPINES STREET 42",
+    "source_postal_code": "522450"
+  },
+  "TAS21R": {
+    "road": "TAMPINES STREET 43",
+    "sample_address": "494A TAMPINES STREET 43",
+    "source_postal_code": "521494"
+  },
+  "TAS22Y": {
+    "road": "TAMPINES STREET 44",
+    "sample_address": "468 TAMPINES STREET 44",
+    "source_postal_code": "520468"
+  },
+  "TAS23F": {
+    "road": "TAMPINES STREET 45",
+    "sample_address": "494G TAMPINES STREET 45",
+    "source_postal_code": "527494"
+  },
+  "TAS24M": {
+    "road": "TAMPINES STREET 61",
+    "sample_address": "619A TAMPINES STREET 61",
+    "source_postal_code": "521619"
+  },
+  "TAS25T": {
+    "road": "TAMPINES STREET 62",
+    "sample_address": "646B TAMPINES STREET 62",
+    "source_postal_code": "522646"
+  },
+  "TAS26A": {
+    "road": "TAMPINES STREET 81",
+    "sample_address": "898A TAMPINES STREET 81",
+    "source_postal_code": "521898"
+  },
+  "TAS27G": {
+    "road": "TAMPINES STREET 82",
+    "sample_address": "854 TAMPINES STREET 82",
+    "source_postal_code": "520854"
+  },
+  "TAS28R": {
+    "road": "TAMPINES STREET 83",
+    "sample_address": "870 TAMPINES STREET 83",
+    "source_postal_code": "520870"
+  },
+  "TAS29Y": {
+    "road": "TAMPINES STREET 84",
+    "sample_address": "881 TAMPINES STREET 84",
+    "source_postal_code": "520881"
+  },
+  "TAS30D": {
+    "road": "TAMPINES STREET 91",
+    "sample_address": "931 TAMPINES STREET 91",
+    "source_postal_code": "520931"
+  },
+  "TAS39U": {
+    "road": "TAMPINES STREET 32",
+    "sample_address": "381 TAMPINES STREET 32",
+    "source_postal_code": "520381"
+  },
+  "TAS40G": {
+    "road": "TAMPINES STREET 33",
+    "sample_address": "342 TAMPINES STREET 33",
+    "source_postal_code": "520342"
+  },
+  "TAS43K": {
+    "road": "TAMPINES STREET 34",
+    "sample_address": "362 TAMPINES STREET 34",
+    "source_postal_code": "520362"
+  },
+  "TAS45P": {
+    "road": "TAMPINES STREET 71",
+    "sample_address": "732 TAMPINES STREET 71",
+    "source_postal_code": "520732"
+  },
+  "TAS46M": {
+    "road": "TAMPINES STREET 72",
+    "sample_address": "741 TAMPINES STREET 72",
+    "source_postal_code": "520741"
+  },
+  "TAS48N": {
+    "road": "TAMPINES STREET 85",
+    "sample_address": "874D TAMPINES STREET 85",
+    "source_postal_code": "524874"
+  },
+  "TAS49H": {
+    "road": "TAMPINES STREET 86",
+    "sample_address": "870B TAMPINES STREET 86",
+    "source_postal_code": "522870"
+  },
+  "TAS55P": {
+    "road": "TAMPINES STREET 64",
+    "sample_address": "662B TAMPINES STREET 64",
+    "source_postal_code": "522662"
+  },
+  "TAS57Q": {
+    "road": "TAMPINES STREET 96",
+    "sample_address": "953 TAMPINES STREET 96",
+    "source_postal_code": "520953"
+  },
+  "TAW07K": {
+    "road": "TAMPINES WALK",
+    "sample_address": "858C TAMPINES WALK",
+    "source_postal_code": "523858"
+  },
+  "TEA02X": {
+    "road": "TECK WHYE AVENUE",
+    "sample_address": "3 TECK WHYE AVENUE",
+    "source_postal_code": "680003"
+  },
+  "TEA08X": {
+    "road": "TENGAH PARK AVENUE",
+    "sample_address": "319B TENGAH PARK AVENUE",
+    "source_postal_code": "692319"
+  },
+  "TEA09T": {
+    "road": "TENGAH GARDEN AVENUE",
+    "sample_address": "131A TENGAH GARDEN AVENUE",
+    "source_postal_code": "691131"
+  },
+  "TEC01D": {
+    "road": "TELOK BLANGAH CRESCENT",
+    "sample_address": "16 TELOK BLANGAH CRESCENT",
+    "source_postal_code": "090016"
+  },
+  "TEC02D": {
+    "road": "TECK WHYE CRESCENT",
+    "sample_address": "165 TECK WHYE CRESCENT",
+    "source_postal_code": "680165"
+  },
+  "TEC06T": {
+    "road": "TENGAH CENTRAL",
+    "sample_address": "244A TENGAH CENTRAL",
+    "source_postal_code": "691244"
+  },
+  "TED00T": {
+    "road": "TELOK BLANGAH DRIVE",
+    "sample_address": "64 TELOK BLANGAH DRIVE",
+    "source_postal_code": "100064"
+  },
+  "TED03R": {
+    "road": "TENGAH DRIVE",
+    "sample_address": "230A TENGAH DRIVE",
+    "source_postal_code": "691230"
+  },
+  "TEG02M": {
+    "road": "TEBAN GARDENS ROAD",
+    "sample_address": "38 TEBAN GARDENS ROAD",
+    "source_postal_code": "600038"
+  },
+  "TEH01X": {
+    "road": "TELOK BLANGAH HEIGHTS",
+    "sample_address": "88A TELOK BLANGAH HEIGHTS",
+    "source_postal_code": "101088"
+  },
+  "TEL13D": {
+    "road": "TECK WHYE LANE",
+    "sample_address": "103 TECK WHYE LANE",
+    "source_postal_code": "680103"
+  },
+  "TEN00H": {
+    "road": "JALAN TENAGA",
+    "sample_address": "650 JALAN TENAGA",
+    "source_postal_code": "410650"
+  },
+  "TEN05G": {
+    "road": "JALAN TENTERAM",
+    "sample_address": "21 JALAN TENTERAM",
+    "source_postal_code": "320021"
+  },
+  "TEN06A": {
+    "road": "TENGAH ROAD",
+    "sample_address": "316 TENGAH ROAD",
+    "source_postal_code": "690316"
+  },
+  "TEP06A": {
+    "road": "TELOK PAKU ROAD",
+    "sample_address": "1A TELOK PAKU ROAD",
+    "source_postal_code": "498730"
+  },
+  "TER09S": {
+    "road": "TELOK BLANGAH RISE",
+    "sample_address": "37 TELOK BLANGAH RISE",
+    "source_postal_code": "090037"
+  },
+  "TES08L": {
+    "road": "TELOK BLANGAH STREET 31",
+    "sample_address": "80B TELOK BLANGAH STREET 31",
+    "source_postal_code": "102080"
+  },
+  "TES09S": {
+    "road": "TELOK BLANGAH STREET 32",
+    "sample_address": "78A TELOK BLANGAH STREET 32",
+    "source_postal_code": "101078"
+  },
+  "TES13S": {
+    "road": "TESSENSOHN ROAD",
+    "sample_address": "683 TESSENSOHN ROAD",
+    "source_postal_code": "210683"
+  },
+  "TEW00S": {
+    "road": "JALAN TECK WHYE",
+    "sample_address": "153 JALAN TECK WHYE",
+    "source_postal_code": "680153"
+  },
+  "TEW01W": {
+    "road": "TELOK BLANGAH WAY",
+    "sample_address": "34 TELOK BLANGAH WAY",
+    "source_postal_code": "090034"
+  },
+  "TEW06G": {
+    "road": "TENGAH GARDEN WALK",
+    "sample_address": "235B TENGAH GARDEN WALK",
+    "source_postal_code": "692235"
+  },
+  "THO00S": {
+    "road": "THOMSON ROAD",
+    "sample_address": "1 THOMSON ROAD",
+    "source_postal_code": "300001"
+  },
+  "TIB01D": {
+    "road": "TIONG BAHRU ROAD",
+    "sample_address": "28 TIONG BAHRU ROAD",
+    "source_postal_code": "163028"
+  },
+  "TIG00W": {
+    "road": "JALAN TIGA",
+    "sample_address": "49 JALAN TIGA",
+    "source_postal_code": "390049"
+  },
+  "TIP01T": {
+    "road": "TIONG POH ROAD",
+    "sample_address": "74 TIONG POH ROAD",
+    "source_postal_code": "160074"
+  },
+  "TOC00J": {
+    "road": "TOA PAYOH CENTRAL",
+    "sample_address": "78C TOA PAYOH CENTRAL",
+    "source_postal_code": "313078"
+  },
+  "TOD03Z": {
+    "road": "TOH YI DRIVE",
+    "sample_address": "19 TOH YI DRIVE",
+    "source_postal_code": "590019"
+  },
+  "TOE00A": {
+    "road": "TOA PAYOH EAST",
+    "sample_address": "261 TOA PAYOH EAST",
+    "source_postal_code": "310261"
+  },
+  "TOG02Q": {
+    "road": "TOH GUAN ROAD",
+    "sample_address": "275 TOH GUAN ROAD",
+    "source_postal_code": "600275"
+  },
+  "TON01D": {
+    "road": "TOA PAYOH NORTH",
+    "sample_address": "208 TOA PAYOH NORTH",
+    "source_postal_code": "310208"
+  },
+  "TOP02W": {
+    "road": "LORONG 1 TOA PAYOH",
+    "sample_address": "161 LORONG 1 TOA PAYOH",
+    "source_postal_code": "310161"
+  },
+  "TOP03L": {
+    "road": "LORONG 1A TOA PAYOH",
+    "sample_address": "138 LORONG 1A TOA PAYOH",
+    "source_postal_code": "310138"
+  },
+  "TOP04U": {
+    "road": "LORONG 2 TOA PAYOH",
+    "sample_address": "146 LORONG 2 TOA PAYOH",
+    "source_postal_code": "310146"
+  },
+  "TOP05K": {
+    "road": "LORONG 3 TOA PAYOH",
+    "sample_address": "96 LORONG 3 TOA PAYOH",
+    "source_postal_code": "310096"
+  },
+  "TOP06M": {
+    "road": "LORONG 4 TOA PAYOH",
+    "sample_address": "56 LORONG 4 TOA PAYOH",
+    "source_postal_code": "310056"
+  },
+  "TOP07K": {
+    "road": "LORONG 5 TOA PAYOH",
+    "sample_address": "48 LORONG 5 TOA PAYOH",
+    "source_postal_code": "310048"
+  },
+  "TOP08A": {
+    "road": "LORONG 6 TOA PAYOH",
+    "sample_address": "490 LORONG 6 TOA PAYOH",
+    "source_postal_code": "310490"
+  },
+  "TOP09C": {
+    "road": "LORONG 7 TOA PAYOH",
+    "sample_address": "13 LORONG 7 TOA PAYOH",
+    "source_postal_code": "310013"
+  },
+  "TOP10F": {
+    "road": "LORONG 8 TOA PAYOH",
+    "sample_address": "221 LORONG 8 TOA PAYOH",
+    "source_postal_code": "310221"
+  },
+  "TOW03Z": {
+    "road": "TOWNER ROAD",
+    "sample_address": "101 TOWNER ROAD",
+    "source_postal_code": "322101"
+  },
+  "UBA00H": {
+    "road": "UBI AVENUE 1",
+    "sample_address": "302 UBI AVENUE 1",
+    "source_postal_code": "400302"
+  },
+  "UBR03D": {
+    "road": "UBI ROAD 3",
+    "sample_address": "355 UBI ROAD 3",
+    "source_postal_code": "400355"
+  },
+  "UPA01N": {
+    "road": "UPPER ALJUNIED ROAD",
+    "sample_address": "233B UPPER ALJUNIED ROAD",
+    "source_postal_code": "362233"
+  },
+  "UPC03F": {
+    "road": "UPPER SERANGOON CRESCENT",
+    "sample_address": "473B UPPER SERANGOON CRESCENT",
+    "source_postal_code": "532473"
+  },
+  "UPJ00J": {
+    "road": "UPPER JURONG ROAD",
+    "sample_address": "991A UPPER JURONG ROAD",
+    "source_postal_code": "631991"
+  },
+  "UPK00W": {
+    "road": "UPPER BOON KENG ROAD",
+    "sample_address": "14A UPPER BOON KENG ROAD",
+    "source_postal_code": "381014"
+  },
+  "UPL00W": {
+    "road": "UPPER ALJUNIED LANE",
+    "sample_address": "7 UPPER ALJUNIED LANE",
+    "source_postal_code": "360007"
+  },
+  "UPS01M": {
+    "road": "UPPER CROSS STREET",
+    "sample_address": "34 UPPER CROSS STREET",
+    "source_postal_code": "050034"
+  },
+  "UPS06W": {
+    "road": "UPPER SERANGOON ROAD",
+    "sample_address": "465 UPPER SERANGOON ROAD",
+    "source_postal_code": "530465"
+  },
+  "UPV01W": {
+    "road": "UPPER SERANGOON VIEW",
+    "sample_address": "477A UPPER SERANGOON VIEW",
+    "source_postal_code": "531477"
+  },
+  "VEE00N": {
+    "road": "VEERASAMY ROAD",
+    "sample_address": "635 VEERASAMY ROAD",
+    "source_postal_code": "200635"
+  },
+  "WAS05J": {
+    "road": "WATERLOO STREET",
+    "sample_address": "261 WATERLOO STREET",
+    "source_postal_code": "180261"
+  },
+  "WEC01D": {
+    "road": "WEST COAST ROAD",
+    "sample_address": "701 WEST COAST ROAD",
+    "source_postal_code": "120701"
+  },
+  "WEC03F": {
+    "road": "WEST COAST CRESCENT",
+    "sample_address": "801B WEST COAST CRESCENT",
+    "source_postal_code": "122801"
+  },
+  "WEC05F": {
+    "road": "WELLINGTON CIRCLE",
+    "sample_address": "510A WELLINGTON CIRCLE",
+    "source_postal_code": "751510"
+  },
+  "WED00D": {
+    "road": "WEST COAST DRIVE",
+    "sample_address": "501 WEST COAST DRIVE",
+    "source_postal_code": "120501"
+  },
+  "WHA00Y": {
+    "road": "WHAMPOA ROAD",
+    "sample_address": "109 WHAMPOA ROAD",
+    "source_postal_code": "321109"
+  },
+  "WHD00Q": {
+    "road": "WHAMPOA DRIVE",
+    "sample_address": "81 WHAMPOA DRIVE",
+    "source_postal_code": "320081"
+  },
+  "WHS00F": {
+    "road": "WHAMPOA SOUTH",
+    "sample_address": "49A WHAMPOA SOUTH",
+    "source_postal_code": "331049"
+  },
+  "WHW00K": {
+    "road": "WHAMPOA WEST",
+    "sample_address": "34 WHAMPOA WEST",
+    "source_postal_code": "330034"
+  },
+  "WOA00N": {
+    "road": "WOODLANDS AVENUE 1",
+    "sample_address": "336 WOODLANDS AVENUE 1",
+    "source_postal_code": "730336"
+  },
+  "WOA01D": {
+    "road": "WOODLANDS AVENUE 3",
+    "sample_address": "348 WOODLANDS AVENUE 3",
+    "source_postal_code": "730348"
+  },
+  "WOA02N": {
+    "road": "WOODLANDS AVENUE 4",
+    "sample_address": "757A WOODLANDS AVENUE 4",
+    "source_postal_code": "731757"
+  },
+  "WOA03F": {
+    "road": "WOODLANDS AVENUE 5",
+    "sample_address": "361 WOODLANDS AVENUE 5",
+    "source_postal_code": "730361"
+  },
+  "WOA05F": {
+    "road": "WOODLANDS AVENUE 9",
+    "sample_address": "781A WOODLANDS AVENUE 9",
+    "source_postal_code": "731781"
+  },
+  "WOA09D": {
+    "road": "WOODLANDS AVENUE 8",
+    "sample_address": "10 WOODLANDS AVENUE 8",
+    "source_postal_code": "738973"
+  },
+  "WOA12P": {
+    "road": "WOODLANDS AVENUE 6",
+    "sample_address": "719 WOODLANDS AVENUE 6",
+    "source_postal_code": "730719"
+  },
+  "WOC05L": {
+    "road": "WOODLANDS CRESCENT",
+    "sample_address": "780A WOODLANDS CRESCENT",
+    "source_postal_code": "731780"
+  },
+  "WOC06Q": {
+    "road": "WOODLANDS CIRCLE",
+    "sample_address": "747A WOODLANDS CIRCLE",
+    "source_postal_code": "731747"
+  },
+  "WOD04K": {
+    "road": "WOODLANDS DRIVE 50",
+    "sample_address": "898A WOODLANDS DRIVE 50",
+    "source_postal_code": "730898"
+  },
+  "WOD06X": {
+    "road": "WOODLANDS DRIVE 14",
+    "sample_address": "536A WOODLANDS DRIVE 14",
+    "source_postal_code": "731536"
+  },
+  "WOD07M": {
+    "road": "WOODLANDS DRIVE 16",
+    "sample_address": "575A WOODLANDS DRIVE 16",
+    "source_postal_code": "731575"
+  },
+  "WOD08Y": {
+    "road": "WOODLANDS DRIVE 40",
+    "sample_address": "706 WOODLANDS DRIVE 40",
+    "source_postal_code": "730706"
+  },
+  "WOD09K": {
+    "road": "WOODLANDS DRIVE 42",
+    "sample_address": "605 WOODLANDS DRIVE 42",
+    "source_postal_code": "730605"
+  },
+  "WOD11T": {
+    "road": "WOODLANDS DRIVE 44",
+    "sample_address": "550 WOODLANDS DRIVE 44",
+    "source_postal_code": "730550"
+  },
+  "WOD12K": {
+    "road": "WOODLANDS DRIVE 52",
+    "sample_address": "626A WOODLANDS DRIVE 52",
+    "source_postal_code": "731626"
+  },
+  "WOD13Z": {
+    "road": "WOODLANDS DRIVE 53",
+    "sample_address": "554A WOODLANDS DRIVE 53",
+    "source_postal_code": "731554"
+  },
+  "WOD14U": {
+    "road": "WOODLANDS DRIVE 60",
+    "sample_address": "786A WOODLANDS DRIVE 60",
+    "source_postal_code": "731786"
+  },
+  "WOD16Y": {
+    "road": "WOODLANDS DRIVE 62",
+    "sample_address": "682B WOODLANDS DRIVE 62",
+    "source_postal_code": "732682"
+  },
+  "WOD21K": {
+    "road": "WOODLANDS DRIVE 70",
+    "sample_address": "712 WOODLANDS DRIVE 70",
+    "source_postal_code": "730712"
+  },
+  "WOD22C": {
+    "road": "WOODLANDS DRIVE 71",
+    "sample_address": "671A WOODLANDS DRIVE 71",
+    "source_postal_code": "731671"
+  },
+  "WOD23F": {
+    "road": "WOODLANDS DRIVE 72",
+    "sample_address": "795 WOODLANDS DRIVE 72",
+    "source_postal_code": "730795"
+  },
+  "WOD24Y": {
+    "road": "WOODLANDS DRIVE 73",
+    "sample_address": "691 WOODLANDS DRIVE 73",
+    "source_postal_code": "730691"
+  },
+  "WOD26Q": {
+    "road": "WOODLANDS DRIVE 75",
+    "sample_address": "690A WOODLANDS DRIVE 75",
+    "source_postal_code": "731690"
+  },
+  "WOE03C": {
+    "road": "WOODLANDS INDUSTRIAL PARK E3",
+    "sample_address": "1 WOODLANDS INDUSTRIAL PARK E3",
+    "source_postal_code": "757780"
+  },
+  "WOL05S": {
+    "road": "WOODLEIGH LINK",
+    "sample_address": "206A WOODLEIGH LINK",
+    "source_postal_code": "361206"
+  },
+  "WOR03P": {
+    "road": "WOODLANDS RING ROAD",
+    "sample_address": "632 WOODLANDS RING ROAD",
+    "source_postal_code": "730632"
+  },
+  "WOR04F": {
+    "road": "WOODLANDS RISE",
+    "sample_address": "783E WOODLANDS RISE",
+    "source_postal_code": "735783"
+  },
+  "WOS00L": {
+    "road": "WOODLANDS STREET 11",
+    "sample_address": "171 WOODLANDS STREET 11",
+    "source_postal_code": "730171"
+  },
+  "WOS01P": {
+    "road": "WOODLANDS STREET 13",
+    "sample_address": "104 WOODLANDS STREET 13",
+    "source_postal_code": "730104"
+  },
+  "WOS02Y": {
+    "road": "WOODLANDS STREET 31",
+    "sample_address": "318 WOODLANDS STREET 31",
+    "source_postal_code": "730318"
+  },
+  "WOS03D": {
+    "road": "WOODLANDS STREET 32",
+    "sample_address": "325 WOODLANDS STREET 32",
+    "source_postal_code": "730325"
+  },
+  "WOS04F": {
+    "road": "WOODLANDS STREET 41",
+    "sample_address": "406 WOODLANDS STREET 41",
+    "source_postal_code": "730406"
+  },
+  "WOS05J": {
+    "road": "WOODLANDS STREET 81",
+    "sample_address": "804 WOODLANDS STREET 81",
+    "source_postal_code": "730804"
+  },
+  "WOS06T": {
+    "road": "WOODLANDS STREET 82",
+    "sample_address": "881 WOODLANDS STREET 82",
+    "source_postal_code": "730881"
+  },
+  "WOS07U": {
+    "road": "WOODLANDS STREET 83",
+    "sample_address": "854 WOODLANDS STREET 83",
+    "source_postal_code": "730854"
+  },
+  "WOS10P": {
+    "road": "WOODLANDS STREET 12",
+    "sample_address": "4 WOODLANDS STREET 12",
+    "source_postal_code": "738623"
+  },
+  "YIA00N": {
+    "road": "YISHUN AVENUE 1",
+    "sample_address": "432A YISHUN AVENUE 1",
+    "source_postal_code": "761432"
+  },
+  "YIA01R": {
+    "road": "YISHUN AVENUE 11",
+    "sample_address": "429C YISHUN AVENUE 11",
+    "source_postal_code": "763429"
+  },
+  "YIA02A": {
+    "road": "YISHUN AVENUE 2",
+    "sample_address": "776 YISHUN AVENUE 2",
+    "source_postal_code": "760776"
+  },
+  "YIA03D": {
+    "road": "YISHUN AVENUE 3",
+    "sample_address": "768 YISHUN AVENUE 3",
+    "source_postal_code": "760768"
+  },
+  "YIA04Q": {
+    "road": "YISHUN AVENUE 4",
+    "sample_address": "675C YISHUN AVENUE 4",
+    "source_postal_code": "763675"
+  },
+  "YIA05T": {
+    "road": "YISHUN AVENUE 5",
+    "sample_address": "732 YISHUN AVENUE 5",
+    "source_postal_code": "760732"
+  },
+  "YIA06H": {
+    "road": "YISHUN AVENUE 6",
+    "sample_address": "392 YISHUN AVENUE 6",
+    "source_postal_code": "760392"
+  },
+  "YIA07N": {
+    "road": "YISHUN AVENUE 7",
+    "sample_address": "172 YISHUN AVENUE 7",
+    "source_postal_code": "760172"
+  },
+  "YIA08Y": {
+    "road": "YISHUN AVENUE 9",
+    "sample_address": "316A YISHUN AVENUE 9",
+    "source_postal_code": "761316"
+  },
+  "YIC01R": {
+    "road": "YISHUN CENTRAL",
+    "sample_address": "305 YISHUN CENTRAL",
+    "source_postal_code": "760305"
+  },
+  "YIC02Q": {
+    "road": "YISHUN CENTRAL 1",
+    "sample_address": "932 YISHUN CENTRAL 1",
+    "source_postal_code": "760932"
+  },
+  "YIR00Z": {
+    "road": "YISHUN RING ROAD",
+    "sample_address": "140 YISHUN RING ROAD",
+    "source_postal_code": "760140"
+  },
+  "YIS00U": {
+    "road": "YISHUN STREET 11",
+    "sample_address": "146 YISHUN STREET 11",
+    "source_postal_code": "760146"
+  },
+  "YIS01N": {
+    "road": "YISHUN STREET 21",
+    "sample_address": "229 YISHUN STREET 21",
+    "source_postal_code": "760229"
+  },
+  "YIS02A": {
+    "road": "YISHUN STREET 22",
+    "sample_address": "262 YISHUN STREET 22",
+    "source_postal_code": "760262"
+  },
+  "YIS03Q": {
+    "road": "YISHUN STREET 41",
+    "sample_address": "457 YISHUN STREET 41",
+    "source_postal_code": "760457"
+  },
+  "YIS04C": {
+    "road": "YISHUN STREET 61",
+    "sample_address": "629 YISHUN STREET 61",
+    "source_postal_code": "760629"
+  },
+  "YIS05W": {
+    "road": "YISHUN STREET 71",
+    "sample_address": "724 YISHUN STREET 71",
+    "source_postal_code": "760724"
+  },
+  "YIS06Q": {
+    "road": "YISHUN STREET 72",
+    "sample_address": "750 YISHUN STREET 72",
+    "source_postal_code": "760750"
+  },
+  "YIS07F": {
+    "road": "YISHUN STREET 81",
+    "sample_address": "828 YISHUN STREET 81",
+    "source_postal_code": "760828"
+  },
+  "YIS10N": {
+    "road": "YISHUN STREET 20",
+    "sample_address": "296A YISHUN STREET 20",
+    "source_postal_code": "761296"
+  },
+  "YIS11F": {
+    "road": "YISHUN STREET 31",
+    "sample_address": "382A YISHUN STREET 31",
+    "source_postal_code": "761382"
+  },
+  "YIS13Q": {
+    "road": "YISHUN STREET 51",
+    "sample_address": "511 YISHUN STREET 51",
+    "source_postal_code": "760511"
+  },
+  "YIS15U": {
+    "road": "YISHUN STREET 42",
+    "sample_address": "479A YISHUN STREET 42",
+    "source_postal_code": "761479"
+  },
+  "YIS16M": {
+    "road": "YISHUN STREET 43",
+    "sample_address": "469 YISHUN STREET 43",
+    "source_postal_code": "760469"
+  },
+  "YIS17S": {
+    "road": "YISHUN STREET 44",
+    "sample_address": "477 YISHUN STREET 44",
+    "source_postal_code": "760477"
+  },
+  "YOH00X": {
+    "road": "YORK HILL",
+    "sample_address": "11 YORK HILL",
+    "source_postal_code": "162011"
+  },
+  "YOS00D": {
+    "road": "YONG SIAK STREET",
+    "sample_address": "78 YONG SIAK STREET",
+    "source_postal_code": "163078"
+  },
+  "YUA01W": {
+    "road": "YUNG AN ROAD",
+    "sample_address": "364 YUNG AN ROAD",
+    "source_postal_code": "610364"
+  },
+  "YUC00G": {
+    "road": "YUAN CHING ROAD",
+    "sample_address": "139 YUAN CHING ROAD",
+    "source_postal_code": "610139"
+  },
+  "YUH00N": {
+    "road": "YUNG HO ROAD",
+    "sample_address": "153 YUNG HO ROAD",
+    "source_postal_code": "610153"
+  },
+  "YUK00D": {
+    "road": "YUNG KUANG ROAD",
+    "sample_address": "164 YUNG KUANG ROAD",
+    "source_postal_code": "610164"
+  },
+  "YUL00C": {
+    "road": "YUNG LOH ROAD",
+    "sample_address": "158 YUNG LOH ROAD",
+    "source_postal_code": "610158"
+  },
+  "YUP00Y": {
+    "road": "YUNG PING ROAD",
+    "sample_address": "163A YUNG PING ROAD",
+    "source_postal_code": "611163"
+  },
+  "YUS00D": {
+    "road": "YUNG SHENG ROAD",
+    "sample_address": "184 YUNG SHENG ROAD",
+    "source_postal_code": "610184"
+  },
+  "ZIO00W": {
+    "road": "ZION ROAD",
+    "sample_address": "87 ZION ROAD",
+    "source_postal_code": "160087"
+  }
+}

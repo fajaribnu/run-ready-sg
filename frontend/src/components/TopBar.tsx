@@ -1,14 +1,45 @@
 import React from 'react';
+import { UserButton } from '@clerk/react';
 import { MapPin, Bell, Search, CloudRain } from 'lucide-react';
-import { cn, type Tab } from '../types';
+import { type Tab } from '../types';
 
 interface TopBarProps {
   activeTab: Tab;
   location?: string;
   rainWarning?: boolean;
+  authEnabled?: boolean;
+  isAuthenticated?: boolean;
+  userLabel?: string | null;
+  onLogin?: () => void;
+  onLogout?: () => void;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ activeTab, location = "Marina Bay", rainWarning }) => {
+export const TopBar: React.FC<TopBarProps> = ({
+  activeTab,
+  location = "Marina Bay",
+  authEnabled = false,
+  isAuthenticated = false,
+  userLabel,
+  onLogin,
+  onLogout,
+}) => {
+  const authButtonLabel = !authEnabled
+    ? "Dev"
+    : isAuthenticated
+      ? "Log out"
+      : "Log in";
+
+  const handleAuthClick = () => {
+    if (!authEnabled) {
+      return;
+    }
+    if (isAuthenticated) {
+      onLogout?.();
+      return;
+    }
+    onLogin?.();
+  };
+
   return (
     <header className="bg-background/70 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full sticky top-0 z-50">
       <div className="flex items-center gap-2">
@@ -36,14 +67,23 @@ export const TopBar: React.FC<TopBarProps> = ({ activeTab, location = "Marina Ba
           {activeTab === 'shelter' ? <Search size={20} /> : <Bell size={20} className="text-primary" />}
         </button>
 
-        <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/20">
-          <img 
-            className="w-full h-full object-cover" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmtDBqYqN7j3pXILe3HB3sQ2oaFGn1YeHluJTcdy4_QtfUak-LZjEpdgwq5uEjXbSFpmkLJ7AoMq7OSKKEmXkrBcxqTDua_DERIYEIimeaaF_Ys2uZykm5E8VhPd9dSHzFIqBJ2NJYnk3fdRnkRLdV4aFWD1lyGUZtKBBgHKZXWmMlT3r5yMPqHi9axoyKgzFSFPgMUodJpafWbXbkMohC-CAxmOGgUUK9qJGba2Ma6Q3Crx5jOxXaSnU4utqB1WCnif-GN2L_c_w" 
-            alt="User profile"
-            referrerPolicy="no-referrer"
-          />
-        </div>
+        {authEnabled && isAuthenticated ? (
+          <div
+            className="rounded-full border border-outline-variant/20 bg-surface-container-high p-1"
+            title={userLabel ? `Signed in as ${userLabel}` : "Account"}
+          >
+            <UserButton />
+          </div>
+        ) : (
+          <button
+            className="rounded-full border border-outline-variant/20 bg-surface-container-high px-4 py-2 text-xs font-bold text-primary transition-opacity hover:opacity-80 active:scale-95"
+            onClick={handleAuthClick}
+            title={authButtonLabel}
+            type="button"
+          >
+            {authButtonLabel}
+          </button>
+        )}
       </div>
     </header>
   );

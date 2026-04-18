@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useAppAuth } from "./auth/AppAuthProvider";
 import { TopBar } from "./components/TopBar";
 import { BottomNav } from "./components/BottomNav";
 import { HomeView } from "./pages/HomeView";
@@ -14,11 +15,17 @@ import { useLocation } from "./components/LocationProvider";
 import { useGuestQuota } from "./map/useGuestQuota";
 import { type Tab } from "./types";
 
+const POST_LOGIN_TAB_KEY = "runready_post_login_tab";
+
+function isTab(value: string | null): value is Tab {
+  return value === "home" || value === "shelter" || value === "route" || value === "time";
+}
+
 export default function App() {
+  const auth = useAppAuth();
   const [activeTab, setActiveTab] = useState<Tab>("home");
 
-  // Replace `true` with a real session check when you add auth.
-  const [isGuest, setIsGuest] = useState(true);
+  const isGuest = auth.enabled && !auth.isAuthenticated;
 
   const quota = useGuestQuota();
 
@@ -29,6 +36,18 @@ export default function App() {
   const [runCheckResult, setRunCheckResult] = useState<any>(null);
 
   const { currentUserPos, locationReady, permissionState } = useLocation();
+
+  useEffect(() => {
+    if (!auth.enabled || !auth.isAuthenticated) {
+      return;
+    }
+
+    const nextTab = window.sessionStorage.getItem(POST_LOGIN_TAB_KEY);
+    if (isTab(nextTab) && nextTab !== "home") {
+      setActiveTab(nextTab);
+    }
+    window.sessionStorage.removeItem(POST_LOGIN_TAB_KEY);
+  }, [auth.enabled, auth.isAuthenticated]);
 
   // Helper: open one modal and always close the other
   const openQuotaModal = useCallback(() => {
@@ -87,6 +106,7 @@ export default function App() {
     (tab: Tab) => {
       setActiveTab(tab);
       if (isGuest && tab !== "home") {
+        window.sessionStorage.setItem(POST_LOGIN_TAB_KEY, tab);
         openLoginModal();
       } else {
         // Switching back to home clears both modals
@@ -100,13 +120,30 @@ export default function App() {
   const handleSignUp = useCallback(() => {
     setShowQuotaModal(false);
     setShowLoginModal(false);
-    // TODO: wire to your auth flow, then setIsGuest(false)
-  }, []);
+    if (!auth.enabled) {
+      return;
+    }
+    void auth.signUp();
+  }, [auth.enabled, auth.signUp]);
 
   const handleLogin = useCallback(() => {
     setShowLoginModal(false);
-    // TODO: wire to your auth flow, then setIsGuest(false)
-  }, []);
+    if (!auth.enabled) {
+      return;
+    }
+    void auth.signIn();
+  }, [auth.enabled, auth.signIn]);
+
+  const handleLogout = useCallback(() => {
+    setShowQuotaModal(false);
+    setShowLoginModal(false);
+    setActiveTab("home");
+    window.sessionStorage.removeItem(POST_LOGIN_TAB_KEY);
+    if (!auth.enabled) {
+      return;
+    }
+    void auth.signOut();
+  }, [auth.enabled, auth.signOut]);
 
   const handleUpgrade = useCallback(() => {
     setShowQuotaModal(false);
@@ -159,6 +196,21 @@ export default function App() {
   // Blur the entire page when a guest is on a locked tab
   const shouldBlur = isGuest && activeTab !== "home";
 
+  if (auth.enabled && auth.isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-6 text-center">
+        <div className="max-w-sm rounded-3xl border border-outline-variant/20 bg-surface-container-lowest px-6 py-8 shadow-sm">
+          <p className="font-headline text-2xl font-extrabold tracking-tight text-primary">
+            Checking your session
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+            Finishing the sign-in flow and restoring your access.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     // Outer shell — never blurred, provides stacking context
     <div className="relative min-h-screen bg-background">
@@ -169,9 +221,21 @@ export default function App() {
           shouldBlur ? "pointer-events-none select-none blur-sm brightness-50" : ""
         }`}
       >
-        <TopBar activeTab={activeTab} />
+        <TopBar
+          activeTab={activeTab}
+          authEnabled={auth.enabled}
+          isAuthenticated={auth.isAuthenticated}
+          userLabel={auth.user?.name ?? auth.user?.email ?? "Runner"}
+          onLogin={handleLogin}
+          onLogout={handleLogout}
+        />
 
         <main className="flex-1 overflow-x-hidden px-6 pt-4">
+          {auth.enabled && auth.error && (
+            <div className="mx-auto mb-4 max-w-2xl rounded-2xl border border-error/20 bg-error/5 px-4 py-3 text-sm text-error">
+              {auth.error}
+            </div>
+          )}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

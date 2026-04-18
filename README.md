@@ -107,8 +107,16 @@ npm run dev
 
 Frontend runs at http://localhost:5173
 
+### Optional: enable authentication
+
+RunReady SG now supports Clerk authentication for the locked features
+(`find-shelter`, `best-times`, `plan-route`). Setup steps live in
+[docs/auth-setup.md](/home/mustafaah/run-ready-sg/docs/auth-setup.md).
+
 ### 4. Run tests
 ```bash
+.venv/bin/pip install -r backend/requirements-dev.txt
+.venv/bin/python -m pytest backend/tests/test_auth.py -q
 docker exec -it runready-backend python -m pytest tests/ --ignore=tests/test_browser.py -v
 ```
 

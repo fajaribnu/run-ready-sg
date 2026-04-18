@@ -15,6 +15,59 @@ Health check.
 
 ---
 
+## Authentication
+
+When backend auth is enabled (`AUTH_ENABLED=true`), these endpoints require an
+`Authorization: Bearer <Clerk session token>` header:
+
+- `GET /api/find-shelter`
+- `GET /api/best-times`
+- `GET /api/plan-route`
+
+These endpoints stay public:
+
+- `GET /health`
+- `GET /api/check-run`
+- `GET /api/auth/me`
+
+RunReady SG is wired for Clerk session tokens in this branch.
+
+---
+
+## `GET /api/auth/me`
+
+Returns the current auth session as seen by the backend.
+
+**Headers (optional):**
+- `Authorization: Bearer <Clerk session token>`
+
+**Response (200) — guest or auth disabled:**
+```json
+{
+  "authenticated": false,
+  "auth_enabled": false,
+  "provider": "Clerk",
+  "user": null
+}
+```
+
+**Response (200) — authenticated:**
+```json
+{
+  "authenticated": true,
+  "auth_enabled": true,
+  "provider": "Clerk",
+  "user": {
+    "sub": "user-123",
+    "email": "user@example.com",
+    "name": "Runner Example",
+    "picture": null
+  }
+}
+```
+
+---
+
 ## `GET /api/check-run` — F1: Decision Engine
 
 **Params:**
@@ -44,6 +97,8 @@ Health check.
 ---
 
 ## `GET /api/find-shelter` — F2: Shelter Finder
+
+**Auth:** Requires bearer token when backend auth is enabled.
 
 **Params:**
 | Param | Type  | Required | Default | Example |
@@ -75,6 +130,8 @@ Health check.
 ---
 
 ## `GET /api/plan-route` — F4: Route Coverage Scorer
+
+**Auth:** Requires bearer token when backend auth is enabled.
 
 **Priority:** Last priority. Only build if Track A linkway data is ready.
 
@@ -114,6 +171,8 @@ Note: team decided to generate 1 route (not 2–3) to reduce complexity.
 ---
 
 ## `GET /api/best-times` — F5: Smart Time-Slot Finder
+
+**Auth:** Requires bearer token when backend auth is enabled.
 
 **Params:**
 | Param        | Type  | Required | Default | Example |

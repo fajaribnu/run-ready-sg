@@ -3,8 +3,10 @@ import random
 import requests
 import polyline
 import logging
-from fastapi import APIRouter, HTTPException
-from app.config import settings 
+from fastapi import APIRouter, Depends, HTTPException
+
+from app.auth import require_authenticated_user
+from app.config import settings
 
 router = APIRouter()
 logging.basicConfig(level=logging.INFO)
@@ -67,6 +69,7 @@ async def plan_route(
     loop: bool = False,
     dest_lat: float = None,
     dest_lng: float = None,
+    _user=Depends(require_authenticated_user),
 ):
     from app.services.spatial import calculate_route_coverage, count_shelters_along_route
 

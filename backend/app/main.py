@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.config import settings
 from app.database import init_db, close_db
-from app.routers import decision, shelter, routes, alerts, timeslots, linkways
+from app.routers import auth, decision, shelter, routes, alerts, timeslots, linkways
 
 
 @asynccontextmanager
@@ -33,6 +33,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(decision.router, prefix="/api", tags=["Decision Engine"])
 app.include_router(shelter.router, prefix="/api", tags=["Shelter"])
 app.include_router(routes.router, prefix="/api", tags=["Routes"])

@@ -8,3 +8,4 @@ boto3==1.35.0
 geopandas==1.0.1
 shapely==2.0.6
 polyline
+PyJWT[crypto]==2.12.1
