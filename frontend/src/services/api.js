@@ -24,6 +24,7 @@ const MOCK = {
 };
 
 import axios from "axios";
+import polyline from "@mapbox/polyline";
 import { getStoredAuthToken } from "../auth/session";
 import {
   mockCheckRun,
@@ -88,12 +89,32 @@ export async function bestTimes(lat, lng, durationMin = 45) {
 // GET /api/plan-route?lat=1.35&lng=103.83&distance_km=5&loop=true
 // Contract: docs/api-contract.md#f4
 // =============================================
+const ROUTE_COLORS = ["#ef4444", "#3b82f6", "#22c55e"];
+
 export async function planRoute(lat, lng, distanceKm = 5, loop = true, destLat = null, destLng = null) {
   if (MOCK.planRoute) return mockPlanRoute(lat, lng, distanceKm, loop);
   const res = await api.get("/plan-route", {
     params: { lat, lng, distance_km: distanceKm, loop, dest_lat: destLat, dest_lng: destLng },
   });
-  return res.data;
+  const routes = res.data?.routes ?? [];
+  const features = routes.map((route, i) => {
+    const coords = route.polyline
+      ? polyline.decode(route.polyline).map(([la, ln]) => [ln, la])
+      : [];
+    return {
+      type: "Feature",
+      geometry: { type: "LineString", coordinates: coords },
+      properties: {
+        id: route.id,
+        distance_km: route.distance_km,
+        coverage_pct: route.coverage_pct,
+        shelters_along_route: route.shelters_along_route,
+        stroke: ROUTE_COLORS[i] ?? "#888",
+        "stroke-width": 6,
+      },
+    };
+  });
+  return { type: "FeatureCollection", features };
 }
 
 // =============================================
