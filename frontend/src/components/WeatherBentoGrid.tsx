@@ -125,7 +125,7 @@ export default function WeatherBentoGrid({ result }) {
     </div>
 
       <div className="space-y-2 rounded-2xl bg-surface-container-low p-6">
-        <Thermometer size={24} className="text-primary" />
+        <Thermometer size={20} className="text-primary" />
         <div>
           <span className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant">
             Temp
@@ -137,7 +137,7 @@ export default function WeatherBentoGrid({ result }) {
       </div>
 
       <div className="space-y-2 rounded-2xl bg-surface-container-low p-6">
-        <ForecastIcon size={24} className="text-primary-container" />
+        <ForecastIcon size={20} className="text-primary-container" />
         <div>
           <span className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant">
             Forecast

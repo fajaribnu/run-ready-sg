@@ -32,7 +32,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange }) 
                 : "text-on-surface-variant hover:bg-surface-container-low"
             )}
           >
-            <Icon size={20} fill={isActive ? "currentColor" : "none"} />
+            <Icon size={15} fill={isActive ? "currentColor" : "none"} />
             <span className="font-medium text-[10px] uppercase tracking-wider mt-1">
               {tab.label}
             </span>

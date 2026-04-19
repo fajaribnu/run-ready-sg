@@ -10,7 +10,7 @@ import { useLocation } from "../components/LocationProvider";
 type RouteStats = {
   distance: number;
   duration: number;
-  shelter: number;
+  coverage_pct: number;
   sheltersAlongRoute: number;
 };
 
@@ -39,7 +39,7 @@ export const RouteView = ({ isGuest, onRequireLogin }: RouteViewProps) => {
   const [stats, setStats] = useState<RouteStats>({
     distance: 0,
     duration: 0,
-    shelter: 0,
+    coverage_pct: 0,
     sheltersAlongRoute: 0,
   });
 
@@ -116,7 +116,7 @@ export const RouteView = ({ isGuest, onRequireLogin }: RouteViewProps) => {
       setStats({
         distance: firstProps.distance_km ?? distance,
         duration: Math.round((firstProps.distance_km ?? distance) * 6),
-        shelter: Math.round(firstProps.shelter_pct ?? 0),
+        coverage_pct: Math.round(firstProps.coverage_pct ?? 0),
         sheltersAlongRoute: firstProps.shelters_along_route ?? 0,
       });
 
@@ -137,7 +137,7 @@ export const RouteView = ({ isGuest, onRequireLogin }: RouteViewProps) => {
       setStats({
         distance: props.distance_km ?? distance,
         duration: Math.round((props.distance_km ?? distance) * 6),
-        shelter: Math.round(props.shelter_pct ?? 0),
+        coverage_pct: Math.round(props.coverage_pct ?? 0),
         sheltersAlongRoute: props.shelters_along_route ?? 0,
       });
     }

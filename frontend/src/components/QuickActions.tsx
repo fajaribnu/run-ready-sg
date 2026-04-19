@@ -28,12 +28,12 @@ export default function QuickActions({ onNavigate }: QuickActionsProps) {
           >
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-container-low text-primary transition-colors group-hover:bg-primary group-hover:text-white">
-                <action.icon size={20} />
+                <action.icon size={15} />
               </div>
               <span className="font-bold text-on-surface">{action.label}</span>
             </div>
 
-            <ChevronRight size={20} className="text-outline-variant" />
+            <ChevronRight size={15} className="text-outline-variant" />
           </button>
         ))}
       </div>

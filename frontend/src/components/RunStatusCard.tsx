@@ -24,12 +24,12 @@ export default function RunStatusCard({ result }) {
         >
           {isSafe ? (
             <CheckCircle2
-              size={48}
+              size={40}
               className="text-on-secondary-container"
             />
           ) : (
             <AlertTriangle
-              size={48}
+              size={40}
               className="text-on-error-container"
             />
           )}

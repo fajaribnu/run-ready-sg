@@ -44,25 +44,14 @@ export function RouteMapPanel({
         </div>
       </div> */}
 
-      {showRecenter && (
-        <button
-          onClick={onRecenter}
-          className={`absolute right-6 z-30 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-xl transition-opacity hover:opacity-90 active:scale-95 ${
-            navigationMode ? "bottom-24" : "bottom-6"
-          }`}
-        >
-          <Navigation size={24} fill="currentColor" />
-        </button>
-      )}
-
       {hasRoute && (
         <div className="absolute bottom-6 left-1/2 z-30 -translate-x-1/2">
           {!navigationMode ? (
             <button
               onClick={onStartNavigation}
-              className="flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-4 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
+              className="flex items-center justify-center gap-2 rounded-full bg-primary px-3 py-1 font-bold text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
             >
-              <Navigation size={20} />
+              <Navigation size={15} />
               Start navigation
             </button>
           ) : (
@@ -70,11 +59,22 @@ export function RouteMapPanel({
               onClick={onExitNavigation}
               className="flex items-center justify-center gap-2 rounded-full bg-surface-container-lowest px-6 py-4 font-bold text-on-surface shadow-lg transition-all hover:bg-surface-container-high active:scale-95"
             >
-              <XCircle size={20} />
+              <XCircle size={15} />
               Exit navigation
             </button>
           )}
         </div>
+      )}
+
+      {showRecenter && (
+        <button
+          onClick={onRecenter}
+          className={`absolute right-6 z-30 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-xl transition-opacity hover:opacity-90 active:scale-95 ${
+            navigationMode ? "bottom-24" : "bottom-6"
+          }`}
+        >
+          <Navigation size={15} fill="currentColor" />
+        </button>
       )}
     </section>
   );

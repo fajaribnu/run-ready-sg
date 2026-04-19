@@ -8,7 +8,7 @@ export default function ShelterControls({ onRecenter, showRecenter }) {
           onClick={onRecenter}
           className="w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center hover:opacity-90 transition-opacity active:scale-95"
         >
-          <Navigation size={24} fill="currentColor" />
+          <Navigation size={20} fill="currentColor" />
         </button>
       )}
     </div>

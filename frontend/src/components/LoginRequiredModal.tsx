@@ -63,7 +63,7 @@ export function LoginRequiredModal({
 
               {/* Icon */}
               <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                <Lock size={20} className="text-primary" />
+                <Lock size={15} className="text-primary" />
               </div>
 
               <h2 className="mb-2 text-xl font-semibold tracking-tight text-white">

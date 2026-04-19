@@ -26,9 +26,9 @@ export default function CheckRun({ loading, hasChecked, onCheckRunNow }) {
         </span>
 
         {loading ? (
-          <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
+          <Loader2 size={15} className="animate-spin [animation-duration:0.7s]" />
         ) : (
-          <Footprints size={20} fill="currentColor" />
+          <Footprints size={15} fill="currentColor" />
         )}
       </button>
     </section>

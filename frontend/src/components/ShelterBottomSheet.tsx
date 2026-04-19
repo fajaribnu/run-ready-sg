@@ -114,6 +114,13 @@ export default function ShelterBottomSheet({
           </>
         ) : (
           <>
+            <button
+              onClick={onExitNavigation}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-surface-container-high py-4 font-bold text-on-surface transition-all hover:bg-surface-container-low active:scale-95"
+            >
+              <XCircle size={20} />
+              Exit Navigation
+            </button>
             <div className="mb-6 text-center">
               <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary-container text-on-secondary-container">
                 <Navigation size={22} />
@@ -125,14 +132,6 @@ export default function ShelterBottomSheet({
                 Heading to {shelterName}
               </p>
             </div>
-
-            <button
-              onClick={onExitNavigation}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-surface-container-high py-4 font-bold text-on-surface transition-all hover:bg-surface-container-low active:scale-95"
-            >
-              <XCircle size={20} />
-              Exit Navigation
-            </button>
           </>
         )}
       </div>

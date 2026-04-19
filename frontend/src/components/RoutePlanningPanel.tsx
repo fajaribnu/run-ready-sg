@@ -15,7 +15,7 @@ type RoutePlanningPanelProps = {
   stats: {
     distance: number;
     duration: number;
-    shelter: number;
+    coverage_pct: number;
     sheltersAlongRoute: number;
   };
   mode: "distance" | "destination";
@@ -70,7 +70,7 @@ export function RoutePlanningPanel({
                 { label: "Duration", value: stats.duration, unit: "m" },
                 {
                   label: "Shelter",
-                  value: stats.shelter,
+                  value: stats.coverage_pct,
                   unit: "%",
                   color: "text-on-secondary-container",
                 },
@@ -95,14 +95,14 @@ export function RoutePlanningPanel({
             </div>
 
             <div className="flex items-start gap-4 rounded-2xl border border-secondary-container bg-secondary-container/30 p-6">
-              <CloudRain size={32} className="text-on-secondary-container" />
+              <CloudRain size={20} className="text-on-secondary-container" />
               <div>
                 <h4 className="font-headline font-bold text-on-secondary-container">
                   Weather Advisory
                 </h4>
                 <p className="text-sm leading-relaxed text-on-secondary-container/80">
                   Your generated route passes by {stats.sheltersAlongRoute} shelter
-                  points and keeps approximately {stats.shelter}% of the route under
+                  points and keeps approximately {stats.coverage_pct}% of the route under
                   shelter coverage.
                 </p>
               </div>
@@ -183,7 +183,7 @@ export function RoutePlanningPanel({
             </>
           ) : (
             <div className="flex items-center gap-4 rounded-2xl border border-outline-variant/10 bg-surface-container-low p-5">
-              <Navigation size={24} className={destSet ? "text-primary" : "text-outline"} />
+              <Navigation size={20} className={destSet ? "text-primary" : "text-outline"} />
               <p className="text-sm leading-relaxed text-outline">
                 {destSet
                   ? "Destination set — tap the map to change it."
@@ -199,22 +199,22 @@ export function RoutePlanningPanel({
           >
             {loading ? (
               <>
-                <Loader2 size={20} className="animate-spin [animation-duration:0.7s]" />
+                <Loader2 size={15} className="animate-spin [animation-duration:0.7s]" />
                 Generating...
               </>
             ) : !isLocationReady ? (
               <>
-                <MapPin size={20} />
+                <MapPin size={15} />
                 Getting your location...
               </>
             ) : mode === "destination" && !destSet ? (
               <>
-                <Navigation size={20} />
+                <Navigation size={15} />
                 Set destination on map
               </>
             ) : (
               <>
-                <Sparkles size={20} />
+                <Sparkles size={15} />
                 Generate route
               </>
             )}
