@@ -174,5 +174,6 @@ Frontend team mocks against this contract. Backend team keeps it updated.
 - Use `config.py` to load and validate env vars in backend
 
 ### AI Usage
-Log all AI tool usage in `ai-usage-log.md` as you go.
-Format: `| Date | Tool | What was generated | Team member |`
+Artificial Intelligence tools were used in a limited and supportive capacity during the development of this project. Specifically, AI was utilised to assist in high-level planning, including structuring the project workflow, breaking down features into manageable tasks, and coordinating task allocation across team members. It also provided guidance on architectural options and helped clarify implementation approaches during early design stages.
+
+Core system design decisions, algorithm implementations, and code development were carried out by the team. AI-generated suggestions were critically evaluated and adapted where necessary, rather than being directly adopted. This ensured that the final system reflects the team’s own understanding, design choices, and technical implementation.
