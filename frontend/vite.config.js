@@ -10,8 +10,7 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api": {
-        target: "http://ec2-47-129-11-44.ap-southeast-1.compute.amazonaws.com:8000",
-        // target: "http://localhost:8000",
+        target: "http://localhost:8000",
         changeOrigin: true,
       },
     },
